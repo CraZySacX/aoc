@@ -8,9 +8,10 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, SubCommand};
-use day1;
+use {day1, day2};
 use error::Result;
-use std::io::{self, Write};
+use std::fs::File;
+use std::io::{self, BufReader, Write};
 
 /// CLI Runtime
 pub fn run() -> Result<i32> {
@@ -29,11 +30,22 @@ pub fn run() -> Result<i32> {
                 .arg(Arg::with_name("value").required(true)),
         )
         .subcommand(
-            SubCommand::with_name("day2").about("Run the 'Checksum' solution (AoC 2017 - Day 2)"),
+            SubCommand::with_name("day2")
+                .about("Run the 'Checksum' solution (AoC 2017 - Day 2)")
+                .arg(
+                    Arg::with_name("file")
+                        .short("f")
+                        .long("file")
+                        .takes_value(true)
+                        .required(true)
+                        .default_value("cs_aoc2"),
+                )
+                .arg(Arg::with_name("algorithm").short("a")),
         )
         .subcommand(
             SubCommand::with_name("day3")
-                .about("Run the 'Spiral Memory' solution (AoC 2017 - Day 3)"),
+                .about("Run the 'Spiral Memory' solution (AoC 2017 - Day 3)")
+                .arg(Arg::with_name("value").required(true))
         )
         .get_matches();
 
@@ -48,6 +60,17 @@ pub fn run() -> Result<i32> {
             "{}",
             day1::val(value, day1_matches.is_present("lookahead"))
         )?;
+    } else if let Some(day2_matches) = matches.subcommand_matches("day2") {
+        let filename = day2_matches.value_of("file").ok_or("Invalid filename!")?;
+        let reader = BufReader::new(File::open(filename)?);
+        let checksum = day2::parse_and_checksum(reader, day2_matches.is_present("algorithm"))?;
+        writeln!(io::stdout(), "Checksum: {}", checksum)?;
+    } else if let Some(day3_matches) = matches.subcommand_matches("day3") {
+        let value = day3_matches.value_of("value").ok_or("This should never happen due to clap validation!")?;
+        writeln!(io::stdout(), "Steps: {}", 0)?;
+    } else {
+        writeln!(io::stdout(), "Please choose a day to run the solution for")?;
     }
+
     Ok(0)
 }

@@ -13,6 +13,7 @@ extern crate clap;
 extern crate error_chain;
 
 mod day1;
+mod day2;
 mod error;
 mod run;
 
