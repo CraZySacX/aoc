@@ -1,5 +1,6 @@
 //! Advent of Code - Day 3 Solution
 use error::Result;
+use std::collections::HashMap;
 use std::convert::TryFrom;
 
 /// Calculate the number of steps it will take to drain the given
@@ -59,6 +60,13 @@ fn generate_next_n_tuples(start_tuple: &mut (i32, i32), shell: u32, count: u32) 
     }
 
     Ok(())
+}
+
+fn tuple_map(_max_value: u32) -> Result<u32> {
+    let mut tuple_map: HashMap<(i32, i32), u32> = HashMap::new();
+    tuple_map.insert((0,0), 1);
+    
+    Ok(0)
 }
 
 #[cfg(test)]
