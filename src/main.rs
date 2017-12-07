@@ -8,12 +8,14 @@
 
 //! `aoc` 0.1.0
 #![deny(missing_docs)]
+#![feature(try_from)]
 extern crate clap;
 #[macro_use]
 extern crate error_chain;
 
 mod day1;
 mod day2;
+mod day3;
 mod error;
 mod run;
 

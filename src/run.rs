@@ -8,7 +8,7 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, SubCommand};
-use {day1, day2};
+use {day1, day2, day3};
 use error::Result;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
@@ -45,7 +45,7 @@ pub fn run() -> Result<i32> {
         .subcommand(
             SubCommand::with_name("day3")
                 .about("Run the 'Spiral Memory' solution (AoC 2017 - Day 3)")
-                .arg(Arg::with_name("value").required(true))
+                .arg(Arg::with_name("value").required(true)),
         )
         .get_matches();
 
@@ -66,8 +66,14 @@ pub fn run() -> Result<i32> {
         let checksum = day2::parse_and_checksum(reader, day2_matches.is_present("algorithm"))?;
         writeln!(io::stdout(), "Checksum: {}", checksum)?;
     } else if let Some(day3_matches) = matches.subcommand_matches("day3") {
-        let value = day3_matches.value_of("value").ok_or("This should never happen due to clap validation!")?;
-        writeln!(io::stdout(), "Steps: {}", 0)?;
+        let value = day3_matches
+            .value_of("value")
+            .ok_or("This should never happen due to clap validation!")?;
+        writeln!(
+            io::stdout(),
+            "Steps: {}",
+            day3::calculate_steps(value.parse::<u32>()?)?
+        )?;
     } else {
         writeln!(io::stdout(), "Please choose a day to run the solution for")?;
     }
