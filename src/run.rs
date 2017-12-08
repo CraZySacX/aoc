@@ -8,7 +8,7 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, SubCommand};
-use {day1, day2, day3, day4, day5};
+use {day1, day2, day3, day4, day5, day6};
 use error::Result;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
@@ -105,6 +105,26 @@ pub fn run() -> Result<i32> {
                         .help("Run the alrgorithm to calculate the value for the 2nd star"),
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("day6")
+                .about(
+                    "Run the 'Memory Reallocation' solution                    (AoC 2017 - Day 6)",
+                )
+                .arg(
+                    Arg::with_name("file")
+                        .short("f")
+                        .long("file")
+                        .takes_value(true)
+                        .required(true)
+                        .default_value("data/day6/blocks_list"),
+                )
+                .arg(
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
+                ),
+        )
         .get_matches();
 
     let mut result: u32 = 0;
@@ -137,6 +157,10 @@ pub fn run() -> Result<i32> {
         let filename = day5_matches.value_of("file").ok_or("Invalid filename!")?;
         let reader = BufReader::new(File::open(filename)?);
         result = day5::jumps_until_exit(reader, day5_matches.is_present("second"))?;
+    } else if let Some(day6_matches) = matches.subcommand_matches("day6") {
+        let filename = day6_matches.value_of("file").ok_or("Invalid filename!")?;
+        let reader = BufReader::new(File::open(filename)?);
+        result = day6::reallocations_until_match(reader, day6_matches.is_present("second"))?;
     } else {
         writeln!(io::stderr(), "Please choose a day to run the solution for")?;
     }
