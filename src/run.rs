@@ -23,9 +23,10 @@ pub fn run() -> Result<i32> {
             SubCommand::with_name("day1")
                 .about("Run the 'Inverse Captcha' solution (AoC 2017 - Day 1)")
                 .arg(
-                    Arg::with_name("lookahead")
-                        .short("l")
-                        .help("Change the lookeahead from the default of 1, to (input length) / 2"),
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
                 )
                 .arg(Arg::with_name("value").required(true)),
         )
@@ -40,7 +41,12 @@ pub fn run() -> Result<i32> {
                         .required(true)
                         .default_value("cs_aoc2"),
                 )
-                .arg(Arg::with_name("algorithm").short("a")),
+                .arg(
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
+                ),
         )
         .subcommand(
             SubCommand::with_name("day3")
@@ -64,12 +70,12 @@ pub fn run() -> Result<i32> {
         writeln!(
             io::stdout(),
             "{}",
-            day1::val(value, day1_matches.is_present("lookahead"))
+            day1::val(value, day1_matches.is_present("second"))
         )?;
     } else if let Some(day2_matches) = matches.subcommand_matches("day2") {
         let filename = day2_matches.value_of("file").ok_or("Invalid filename!")?;
         let reader = BufReader::new(File::open(filename)?);
-        let checksum = day2::parse_and_checksum(reader, day2_matches.is_present("algorithm"))?;
+        let checksum = day2::parse_and_checksum(reader, day2_matches.is_present("second"))?;
         writeln!(io::stdout(), "Checksum: {}", checksum)?;
     } else if let Some(day3_matches) = matches.subcommand_matches("day3") {
         let value = day3_matches
