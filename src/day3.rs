@@ -5,9 +5,9 @@ use std::convert::TryFrom;
 
 /// Calculate the number of steps it will take to drain the given
 /// value out of the (0,0) port.
-pub fn calculate_steps(value: u32) -> Result<i32> {
+pub fn calculate_steps(value: u32) -> Result<u32> {
     let final_tuple = calculate_tuple(value)?;
-    manhattan_distance(final_tuple, (0, 0))
+    Ok(TryFrom::try_from(manhattan_distance(final_tuple, (0, 0))?)?)
 }
 
 /// Calculate (x,y) tuple for a given value.
@@ -134,10 +134,10 @@ mod test {
 
     #[test]
     fn steps() {
-        assert_eq!(calculate_steps(1).unwrap_or(-1), 0);
-        assert_eq!(calculate_steps(12).unwrap_or(-1), 3);
-        assert_eq!(calculate_steps(23).unwrap_or(-1), 2);
-        assert_eq!(calculate_steps(1024).unwrap_or(-1), 31);
+        assert_eq!(calculate_steps(1).unwrap_or(1), 0);
+        assert_eq!(calculate_steps(12).unwrap_or(0), 3);
+        assert_eq!(calculate_steps(23).unwrap_or(0), 2);
+        assert_eq!(calculate_steps(1024).unwrap_or(0), 31);
     }
 
     #[test]
