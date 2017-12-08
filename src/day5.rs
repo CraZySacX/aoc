@@ -5,7 +5,6 @@ use std::io::BufRead;
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn jumps_until_exit<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    let mut jumps = 0;
     let mut jump_vec = Vec::new();
 
     for line_result in reader.lines() {
@@ -13,24 +12,16 @@ pub fn jumps_until_exit<T: BufRead>(reader: T, second_star: bool) -> Result<u32>
         jump_vec.push(line.parse::<i32>()?);
     }
 
-    if second_star {
-        // Not implemented.
-    } else {
-        jumps = jump_away(&mut jump_vec)?;
-    }
-
-    Ok(jumps)
+    Ok(jump_away(&mut jump_vec, second_star)?)
 }
 
 /// Find an exit
-fn jump_away(jump_vec: &mut Vec<i32>) -> Result<u32> {
-    // use std::io::{self, Write};
+fn jump_away(jump_vec: &mut Vec<i32>, crazy_jumps: bool) -> Result<u32> {
     let list_len = jump_vec.len();
     let mut step = 0;
     let mut current_idx: i32 = 0;
 
     loop {
-        // write!(io::stdout(), "Current Idx: {}", current_idx)?;
         if current_idx < 0 {
             break;
         }
@@ -39,9 +30,15 @@ fn jump_away(jump_vec: &mut Vec<i32>) -> Result<u32> {
 
         if idx < list_len {
             let next_idx = jump_vec[idx];
-            // write!(io::stdout(), ", Next Idx: {}", next_idx)?;
-            jump_vec[idx] = next_idx + 1;
-            // writeln!(io::stdout(), ", Vec afte Mut: {:?}", jump_vec)?;
+            jump_vec[idx] = if crazy_jumps {
+                if next_idx > 2 {
+                    next_idx - 1
+                } else {
+                    next_idx + 1
+                }
+            } else {
+                next_idx + 1
+            };
             current_idx += next_idx;
         } else {
             break;
@@ -59,6 +56,7 @@ mod test {
 
     #[test]
     fn jump_away_count() {
-        assert_eq!(jump_away(&mut vec![0, 3, 0, 1, -3]).unwrap_or(0), 5);
+        assert_eq!(jump_away(&mut vec![0, 3, 0, 1, -3], false).unwrap_or(0), 5);
+        assert_eq!(jump_away(&mut vec![0, 3, 0, 1, -3], true).unwrap_or(0), 10);
     }
 }
