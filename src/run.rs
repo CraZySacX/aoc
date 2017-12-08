@@ -8,7 +8,7 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, SubCommand};
-use {day1, day2, day3};
+use {day1, day2, day3, day4};
 use error::Result;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
@@ -21,7 +21,7 @@ pub fn run() -> Result<i32> {
         .about("Run Advent of Code 2017 daily problems")
         .subcommand(
             SubCommand::with_name("day1")
-                .about("Run the 'Inverse Captcha' solution (AoC 2017 - Day 1)")
+                .about("Run the 'Inverse Captcha' solution          (AoC 2017 - Day 1)")
                 .arg(
                     Arg::with_name("second")
                         .short("s")
@@ -32,14 +32,14 @@ pub fn run() -> Result<i32> {
         )
         .subcommand(
             SubCommand::with_name("day2")
-                .about("Run the 'Checksum' solution        (AoC 2017 - Day 2)")
+                .about("Run the 'Checksum' solution                 (AoC 2017 - Day 2)")
                 .arg(
                     Arg::with_name("file")
                         .short("f")
                         .long("file")
                         .takes_value(true)
                         .required(true)
-                        .default_value("cs_aoc2"),
+                        .default_value("data/day2/cs_aoc2_actual"),
                 )
                 .arg(
                     Arg::with_name("second")
@@ -50,7 +50,7 @@ pub fn run() -> Result<i32> {
         )
         .subcommand(
             SubCommand::with_name("day3")
-                .about("Run the 'Spiral Memory' solution   (AoC 2017 - Day 3)")
+                .about("Run the 'Spiral Memory' solution            (AoC 2017 - Day 3)")
                 .arg(
                     Arg::with_name("second")
                         .short("s")
@@ -58,6 +58,24 @@ pub fn run() -> Result<i32> {
                         .help("Run the alrgorithm to calculate the value for the 2nd star"),
                 )
                 .arg(Arg::with_name("value").required(true)),
+        )
+        .subcommand(
+            SubCommand::with_name("day4")
+                .about("Run the 'High Entropy Passphrases' solution (AoC 2017 - Day 4)")
+                .arg(
+                    Arg::with_name("file")
+                        .short("f")
+                        .long("file")
+                        .takes_value(true)
+                        .required(true)
+                        .default_value("data/day4/passphrase_list"),
+                )
+                .arg(
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
+                ),
         )
         .get_matches();
 
@@ -83,6 +101,10 @@ pub fn run() -> Result<i32> {
         } else {
             result = day3::calculate_steps(value.parse::<u32>()?)?;
         }
+    } else if let Some(day4_matches) = matches.subcommand_matches("day4") {
+        let filename = day4_matches.value_of("file").ok_or("Invalid filename!")?;
+        let reader = BufReader::new(File::open(filename)?);
+        result = day4::count_valid_passphrases(reader, day4_matches.is_present("second"))?;
     } else {
         writeln!(io::stderr(), "Please choose a day to run the solution for")?;
     }
