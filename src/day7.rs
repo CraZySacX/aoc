@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::io::BufRead;
 
 /// Day 7 Node
+#[derive(Clone)]
 struct Node {
     /// Node ID
     id: usize,
@@ -32,7 +33,20 @@ pub fn build_tree<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     assign_parents(&mut nodes, &mut children)?;
 
     if second_star {
-        Ok(0)
+        let idx = find_root(&nodes)?;
+        assign_children(&mut nodes, &children)?;
+        let root = nodes.get(idx).ok_or("Invalid root node")?;
+        let mut curr_weights = children_weight(&nodes, root).expect("");
+        let mut curr_tuple = are_my_children_balanced(&curr_weights, 0).expect("");
+        let mut is_balanced = curr_tuple.2;
+
+        while !is_balanced {
+            let node = nodes.get(curr_tuple.0).ok_or("").expect("");
+            curr_weights = children_weight(&nodes, node).expect("");
+            curr_tuple = are_my_children_balanced(&curr_weights, curr_tuple.1).expect("");
+            is_balanced = curr_tuple.2
+        }
+        Ok(curr_tuple.1)
     } else {
         let idx = find_root(&nodes)?;
         let node = nodes.get(idx).ok_or("Not a good index")?;
@@ -109,48 +123,110 @@ fn find_root(nodes: &[Node]) -> Result<usize> {
     }
 }
 
+/// Traverse the vectors, assigning proper children vectors.
+fn assign_children(nodes: &mut Vec<Node>, children: &HashMap<usize, Vec<String>>) -> Result<()> {
+    let mut child_ids: HashMap<usize, Vec<usize>> = HashMap::new();
+
+    for (k, v) in children {
+        let mut child_id_vec = Vec::new();
+
+        for child_name in v {
+            for node in nodes.iter() {
+                if &node.name == child_name {
+                    child_id_vec.push(node.id);
+                }
+            }
+        }
+
+        child_ids.insert(*k, child_id_vec);
+    }
+
+    for (k, v) in child_ids {
+        let mut node = nodes.get_mut(k).ok_or("Invalid node id")?;
+        node.children = Some(v);
+    }
+
+    Ok(())
+}
+
+/// Traverse the tree accumulating weights
+fn children_weight(nodes: &[Node], start_node: &Node) -> Result<Vec<(usize, u32)>> {
+    let mut weights = Vec::new();
+    if start_node.children.is_none() {
+        weights.push((start_node.id, start_node.weight));
+    } else {
+        let node_clone = (*start_node).clone();
+        let children = node_clone.children.ok_or("Bad children")?;
+
+        for node_id in children {
+            let node = nodes.get(node_id).ok_or("Cannot find child node")?;
+            let total_child_weight: u32 = children_weight(nodes, node)?
+                .iter()
+                .fold(0, |acc, x| acc + x.1);
+            weights.push((node_id, total_child_weight));
+        }
+
+        weights.push((node_clone.id, node_clone.weight));
+    }
+    Ok(weights)
+}
+
+/// Check weights
+fn are_my_children_balanced(outer: &[(usize, u32)], diff: u32) -> Result<(usize, u32, bool)> {
+    let len = outer.len() - 1;
+    let mut inner = vec![(0, 0); outer.len()];
+    inner.copy_from_slice(outer);
+
+    for (i, x) in outer.iter().enumerate().take(len) {
+        for y in inner.iter().take(len).skip(i + 1) {
+            let outer_id = x.0;
+            let inner_id = y.0;
+            let ov = x.1;
+            let iv = y.1;
+
+            if ov == iv {
+                continue;
+            }
+            if ov < iv {
+                return Ok((inner_id, (iv - ov), false));
+            } else {
+                return Ok((outer_id, (ov - iv), false));
+            }
+        }
+    }
+    Ok((outer[len].0, outer[len].1 - diff, true))
+}
+
 #[cfg(test)]
 mod test {
-    use super::{assign_parents, find_root, parse_line, Node};
+    use super::{are_my_children_balanced, assign_children, assign_parents, children_weight,
+                find_root, parse_line, Node};
+    use error::Result;
     use std::collections::HashMap;
 
+    fn setup_tree(nodes: &mut Vec<Node>, children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
+        parse_line("pbga (66)", 0, nodes, children)?;
+        parse_line("xhth (57)", 1, nodes, children)?;
+        parse_line("ebii (61)", 2, nodes, children)?;
+        parse_line("havc (66)", 3, nodes, children)?;
+        parse_line("ktlj (57)", 4, nodes, children)?;
+        parse_line("fwft (72) -> ktlj, cntj, xhth", 5, nodes, children)?;
+        parse_line("qoyq (66)", 6, nodes, children)?;
+        parse_line("padx (45) -> pbga, havc, qoyq", 7, nodes, children)?;
+        parse_line("tknk (41) -> ugml, padx, fwft", 8, nodes, children)?;
+        parse_line("jptl (61)", 9, nodes, children)?;
+        parse_line("ugml (68) -> gyxo, ebii, jptl", 10, nodes, children)?;
+        parse_line("gyxo (61)", 11, nodes, children)?;
+        parse_line("cntj (57)", 12, nodes, children)?;
+        assign_parents(nodes, children)?;
+        Ok(())
+    }
+
     #[test]
-    fn build_a_tree() {
+    fn find_the_root() {
         let mut nodes: Vec<Node> = Vec::new();
         let mut children: HashMap<usize, Vec<String>> = HashMap::new();
-        parse_line("pbga (66)", 0, &mut nodes, &mut children).expect("");
-        parse_line("xhth (57)", 1, &mut nodes, &mut children).expect("");
-        parse_line("ebii (61)", 2, &mut nodes, &mut children).expect("");
-        parse_line("havc (66)", 3, &mut nodes, &mut children).expect("");
-        parse_line("ktlj (57)", 4, &mut nodes, &mut children).expect("");
-        parse_line(
-            "fwft (72) -> ktlj, cntj, xhth",
-            5,
-            &mut nodes,
-            &mut children,
-        ).expect("");
-        parse_line("qoyq (66)", 6, &mut nodes, &mut children).expect("");
-        parse_line(
-            "padx (45) -> pbga, havc, qoyq",
-            7,
-            &mut nodes,
-            &mut children,
-        ).expect("");
-        parse_line(
-            "tknk (41) -> ugml, padx, fwft",
-            8,
-            &mut nodes,
-            &mut children,
-        ).expect("");
-        parse_line("jptl (61)", 9, &mut nodes, &mut children).expect("");
-        parse_line(
-            "ugml (68) -> gyxo, ebii, jptl",
-            10,
-            &mut nodes,
-            &mut children,
-        ).expect("");
-        parse_line("gyxo (61)", 11, &mut nodes, &mut children).expect("");
-        parse_line("cntj (57)", 12, &mut nodes, &mut children).expect("");
+        setup_tree(&mut nodes, &mut children).expect("Unable to setup tree");
         assert_eq!(nodes.len(), 13);
         assert_eq!(children.len(), 4);
         let mut keys_vec: Vec<usize> = children.keys().cloned().collect();
@@ -158,5 +234,30 @@ mod test {
         assert_eq!(keys_vec, vec![5, 7, 8, 10]);
         assign_parents(&mut nodes, &mut children).expect("");
         assert_eq!(find_root(&nodes).unwrap_or(0), 8);
+    }
+
+    #[test]
+    fn find_the_change() {
+        let mut nodes: Vec<Node> = Vec::new();
+        let mut children: HashMap<usize, Vec<String>> = HashMap::new();
+        setup_tree(&mut nodes, &mut children).expect("Unable to setup tree");
+        assign_children(&mut nodes, &mut children).expect("Unable to assign children");
+        let node = nodes.get(8).ok_or("").expect("");
+        let mut curr_weights = children_weight(&nodes, node).expect("");
+        assert_eq!(curr_weights, vec![(10, 251), (7, 243), (5, 243), (8, 41)]);
+        let mut curr_tuple = are_my_children_balanced(&curr_weights, 0).expect("");
+        assert_eq!(curr_tuple, (10, 8, false));
+        let mut is_balanced = curr_tuple.2;
+
+        while !is_balanced {
+            let node = nodes.get(curr_tuple.0).ok_or("").expect("");
+            curr_weights = children_weight(&nodes, node).expect("");
+            assert_eq!(curr_weights, vec![(11, 61), (2, 61), (9, 61), (10, 68)]);
+            curr_tuple = are_my_children_balanced(&curr_weights, curr_tuple.1).expect("");
+            assert_eq!(curr_tuple, (10, 60, true));
+            is_balanced = curr_tuple.2
+        }
+
+        assert_eq!(curr_tuple.1, 60);
     }
 }
