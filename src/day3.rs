@@ -62,16 +62,75 @@ fn generate_next_n_tuples(start_tuple: &mut (i32, i32), shell: u32, count: u32) 
     Ok(())
 }
 
-fn tuple_map(_max_value: u32) -> Result<u32> {
+/// Find the next biggest value after the given maximum value.
+pub fn next_biggest(max_value: u32) -> Result<u32> {
     let mut tuple_map: HashMap<(i32, i32), u32> = HashMap::new();
-    tuple_map.insert((0,0), 1);
-    
-    Ok(0)
+    let mut current_tuple = (0, 0);
+    tuple_map.insert(current_tuple, 1);
+
+    for shell in 1.. {
+        let shell_len = 8 * shell;
+        let side_len = shell_len / 4;
+        let max_y: i32 = shell;
+        let min_x: i32 = -shell;
+        let min_y: i32 = -shell;
+
+        for idx in 0..shell_len {
+            if idx == 0 {
+                current_tuple.0 += 1;
+            } else if current_tuple.1 < max_y && idx <= side_len {
+                current_tuple.1 += 1;
+            } else if current_tuple.0 > min_x && idx <= side_len * 2 {
+                current_tuple.0 -= 1;
+            } else if current_tuple.1 > min_y && idx <= side_len * 3 {
+                current_tuple.1 -= 1;
+            } else {
+                current_tuple.0 += 1;
+            }
+
+            let value = calculate_tuple_val(current_tuple, &tuple_map)?;
+            if value <= max_value {
+                tuple_map.insert(current_tuple, value);
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    Err("Unable to find next biggest value".into())
+}
+
+/// Calculate the value for the given tuple given the tuple map
+fn calculate_tuple_val(tuple: (i32, i32), tuple_map: &HashMap<(i32, i32), u32>) -> Result<u32> {
+    let x = tuple.0;
+    let y = tuple.1;
+
+    // Add 8 nearest neighbors.  Only previously populated neighbors will have values (`Some(x)`).
+    // The rest will return `None` on get.
+    let mut results = Vec::new();
+    // Add current column (not including self)
+    results.push(tuple_map.get(&(x, y + 1)));
+    results.push(tuple_map.get(&(x, y - 1)));
+
+    // Add one column to right
+    results.push(tuple_map.get(&(x + 1, y)));
+    results.push(tuple_map.get(&(x + 1, y + 1)));
+    results.push(tuple_map.get(&(x + 1, y - 1)));
+
+    // Add one column to left
+    results.push(tuple_map.get(&(x - 1, y)));
+    results.push(tuple_map.get(&(x - 1, y + 1)));
+    results.push(tuple_map.get(&(x - 1, y - 1)));
+
+    Ok(results
+        .iter()
+        .filter(|x| x.is_some())
+        .fold(0, |sum, i| sum + i.expect("Invalid tuple_map value")))
 }
 
 #[cfg(test)]
 mod test {
-    use super::calculate_steps;
+    use super::{calculate_steps, next_biggest};
 
     #[test]
     fn steps() {
@@ -79,5 +138,15 @@ mod test {
         assert_eq!(calculate_steps(12).unwrap_or(-1), 3);
         assert_eq!(calculate_steps(23).unwrap_or(-1), 2);
         assert_eq!(calculate_steps(1024).unwrap_or(-1), 31);
+    }
+
+    #[test]
+    fn next_biggests() {
+        assert_eq!(next_biggest(1).unwrap_or(0), 2);
+        assert_eq!(next_biggest(5).unwrap_or(0), 10);
+        assert_eq!(next_biggest(11).unwrap_or(0), 23);
+        assert_eq!(next_biggest(26).unwrap_or(0), 54);
+        assert_eq!(next_biggest(59).unwrap_or(0), 122);
+        assert_eq!(next_biggest(362).unwrap_or(0), 747);
     }
 }

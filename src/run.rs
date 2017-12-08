@@ -45,6 +45,12 @@ pub fn run() -> Result<i32> {
         .subcommand(
             SubCommand::with_name("day3")
                 .about("Run the 'Spiral Memory' solution (AoC 2017 - Day 3)")
+                .arg(
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
+                )
                 .arg(Arg::with_name("value").required(true)),
         )
         .get_matches();
@@ -69,11 +75,20 @@ pub fn run() -> Result<i32> {
         let value = day3_matches
             .value_of("value")
             .ok_or("This should never happen due to clap validation!")?;
-        writeln!(
-            io::stdout(),
-            "Steps: {}",
-            day3::calculate_steps(value.parse::<u32>()?)?
-        )?;
+
+        if day3_matches.is_present("second") {
+            writeln!(
+                io::stdout(),
+                "Next biggest: {}",
+                day3::next_biggest(value.parse::<u32>()?)?
+            )?;
+        } else {
+            writeln!(
+                io::stdout(),
+                "Steps: {}",
+                day3::calculate_steps(value.parse::<u32>()?)?
+            )?;
+        }
     } else {
         writeln!(io::stdout(), "Please choose a day to run the solution for")?;
     }
