@@ -2,6 +2,7 @@
 use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_1;
 use error::Result;
+use run::AoCYear;
 
 /// The Advent of Code Day 1 `SubCommand`.
 pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
@@ -17,7 +18,7 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
 }
 
 /// Find the solution.
-pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+pub fn find_solution(matches: &ArgMatches, _year: &AoCYear) -> Result<u32> {
     let value = matches
         .value_of("value")
         .ok_or("This should never happen due to clap validation!")?;

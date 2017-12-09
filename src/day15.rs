@@ -1,14 +1,30 @@
 //! Advent of Code - Day 15 Solution
-use clap::{App, ArgMatches, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_15;
 use error::Result;
+use run::AoCYear;
 
 /// Advent of Code Day 15 `SubCommand`
 pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
-    SubCommand::with_name("day15").about(DAY_15)
+    SubCommand::with_name("day15")
+        .about(DAY_15)
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day15/data_file"),
+        )
 }
 
 /// Find the solution.
-pub fn find_solution(_matches: &ArgMatches) -> Result<u32> {
+pub fn find_solution(_matches: &ArgMatches, _year: &AoCYear) -> Result<u32> {
     Err("Not Implemented!".into())
 }

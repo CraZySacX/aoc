@@ -2,6 +2,7 @@
 use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_8;
 use error::{Error, Result};
+use run::AoCYear;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::fs::File;
@@ -100,7 +101,7 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
 }
 
 /// Find the solution.
-pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+pub fn find_solution(matches: &ArgMatches, _year: &AoCYear) -> Result<u32> {
     let filename = matches.value_of("file").ok_or("Invalid filename!")?;
     let reader = BufReader::new(File::open(filename)?);
     Ok(largest_register_value(
