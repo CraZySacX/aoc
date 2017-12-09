@@ -1,9 +1,10 @@
 //! Advent of Code - Day 6 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_6;
 use error::Result;
 use std::collections::HashSet;
-use std::io::BufRead;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 /// Advent of Code Day 6 `SubCommand`
 pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
@@ -25,8 +26,18 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
+    let reader = BufReader::new(File::open(filename)?);
+    Ok(reallocations_until_match(
+        reader,
+        matches.is_present("second"),
+    )?)
+}
+
 /// Parse the file at `filename` and generate the checksum.
-pub fn reallocations_until_match<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+fn reallocations_until_match<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut reallocations = 0;
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());

@@ -1,9 +1,10 @@
 //! Advent of Code - Day 7 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_7;
 use error::Result;
 use std::collections::HashMap;
-use std::io::BufRead;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 /// Day 7 Node
 #[derive(Clone)]
@@ -42,8 +43,15 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
+    let reader = BufReader::new(File::open(filename)?);
+    Ok(build_tree(reader, matches.is_present("second"))?)
+}
+
 /// Parse the file at `filename` and generate the checksum.
-pub fn build_tree<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+fn build_tree<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     use std::io::{self, Write};
     let mut nodes: Vec<Node> = Vec::new();
     let mut children: HashMap<usize, Vec<String>> = HashMap::new();

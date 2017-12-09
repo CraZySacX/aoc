@@ -1,9 +1,10 @@
 //! Advent of Code - Day 2 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_2;
 use error::Result;
 use std::cmp;
-use std::io::BufRead;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 /// Advent of Code Day 2 `SubCommand`
 pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
@@ -25,8 +26,15 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
+    let reader = BufReader::new(File::open(filename)?);
+    Ok(parse_and_checksum(reader, matches.is_present("second"))?)
+}
+
 /// Parse the file at `filename` and generate the checksum.
-pub fn parse_and_checksum<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
+fn parse_and_checksum<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
     let mut checksum = 0;
 
     for line_result in reader.lines() {

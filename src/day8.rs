@@ -1,10 +1,11 @@
 //! Advent of Code - Day 8 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_8;
 use error::{Error, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;
-use std::io::BufRead;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 /// Register commands
 enum Command {
@@ -98,8 +99,18 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
+    let reader = BufReader::new(File::open(filename)?);
+    Ok(largest_register_value(
+        reader,
+        matches.is_present("second"),
+    )?)
+}
+
 /// Calculate the largest value in a register.
-pub fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut register_map = HashMap::new();
     let mut commands = Vec::new();
 

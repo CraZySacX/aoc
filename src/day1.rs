@@ -1,5 +1,5 @@
 //! Advent of Code - Day 1 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_1;
 use error::Result;
 
@@ -16,8 +16,17 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         .arg(Arg::with_name("value").required(true))
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let value = matches
+        .value_of("value")
+        .ok_or("This should never happen due to clap validation!")?;
+
+    Ok(val(value, matches.is_present("second"))?)
+}
+
 /// Calculate the 'inverse captcha' value for a byte array.
-pub fn val(input: &str, lookahead: bool) -> Result<u32> {
+fn val(input: &str, lookahead: bool) -> Result<u32> {
     let byte_arr = input.as_bytes();
     let len = byte_arr.len();
     let la_idx = if lookahead { len / 2 } else { 1 };

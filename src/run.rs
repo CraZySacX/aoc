@@ -11,8 +11,7 @@ use {day1, day10, day11, day12, day13, day14, day15, day16, day17, day18, day19,
      day9};
 use clap::App;
 use error::Result;
-use std::fs::File;
-use std::io::{self, BufReader, Write};
+use std::io::{self, Write};
 
 /// CLI Runtime
 pub fn run() -> Result<i32> {
@@ -47,55 +46,27 @@ pub fn run() -> Result<i32> {
         .subcommand(day24::subcommand())
         .get_matches();
 
-    let mut result: u32 = 0;
-
-    if let Some(day1_matches) = matches.subcommand_matches("day01") {
-        let value = day1_matches
-            .value_of("value")
-            .ok_or("This should never happen due to clap validation!")?;
-
-        result = day1::val(value, day1_matches.is_present("second"))?;
+    let result = if let Some(day1_matches) = matches.subcommand_matches("day01") {
+        day1::find_solution(day1_matches)?
     } else if let Some(day2_matches) = matches.subcommand_matches("day02") {
-        let filename = day2_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day2::parse_and_checksum(reader, day2_matches.is_present("second"))?;
+        day2::find_solution(day2_matches)?
     } else if let Some(day3_matches) = matches.subcommand_matches("day03") {
-        let value = day3_matches
-            .value_of("value")
-            .ok_or("This should never happen due to clap validation!")?;
-
-        if day3_matches.is_present("second") {
-            result = day3::next_biggest(value.parse::<u32>()?)?;
-        } else {
-            result = day3::calculate_steps(value.parse::<u32>()?)?;
-        }
+        day3::find_solution(day3_matches)?
     } else if let Some(day4_matches) = matches.subcommand_matches("day04") {
-        let filename = day4_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day4::count_valid_passphrases(reader, day4_matches.is_present("second"))?;
+        day4::find_solution(day4_matches)?
     } else if let Some(day5_matches) = matches.subcommand_matches("day05") {
-        let filename = day5_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day5::jumps_until_exit(reader, day5_matches.is_present("second"))?;
+        day5::find_solution(day5_matches)?
     } else if let Some(day6_matches) = matches.subcommand_matches("day06") {
-        let filename = day6_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day6::reallocations_until_match(reader, day6_matches.is_present("second"))?;
+        day6::find_solution(day6_matches)?
     } else if let Some(day7_matches) = matches.subcommand_matches("day07") {
-        let filename = day7_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day7::build_tree(reader, day7_matches.is_present("second"))?;
+        day7::find_solution(day7_matches)?
     } else if let Some(day8_matches) = matches.subcommand_matches("day08") {
-        let filename = day8_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day8::largest_register_value(reader, day8_matches.is_present("second"))?;
+        day8::find_solution(day8_matches)?
     } else if let Some(day9_matches) = matches.subcommand_matches("day09") {
-        let filename = day9_matches.value_of("file").ok_or("Invalid filename!")?;
-        let reader = BufReader::new(File::open(filename)?);
-        result = day9::process_stream(reader, day9_matches.is_present("second"))?;
+        day9::find_solution(day9_matches)?
     } else {
-        writeln!(io::stderr(), "Please choose a day to run the solution for")?;
-    }
+        return Err("Unable to determine the day you wish to run".into());
+    };
 
     writeln!(io::stdout(), "{}", result)?;
     Ok(0)

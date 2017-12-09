@@ -1,9 +1,10 @@
 //! Advent of Code - Day 4 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_4;
 use error::Result;
 use std::collections::HashSet;
-use std::io::BufRead;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::iter::FromIterator;
 
 /// Advent of Code Day 4 `SubCommand`
@@ -26,8 +27,18 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
         )
 }
 
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
+    let reader = BufReader::new(File::open(filename)?);
+    Ok(count_valid_passphrases(
+        reader,
+        matches.is_present("second"),
+    )?)
+}
+
 /// Parse the file at `filename` and generate the checksum.
-pub fn count_valid_passphrases<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+fn count_valid_passphrases<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut count = 0;
 
     for line_result in reader.lines() {

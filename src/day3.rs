@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 Solution
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg, ArgMatches, SubCommand};
 use constants::DAY_3;
 use error::Result;
 use std::collections::HashMap;
@@ -16,6 +16,19 @@ pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
                 .help("Run the alrgorithm to calculate the value for the 2nd star"),
         )
         .arg(Arg::with_name("value").required(true))
+}
+
+/// Find the solution.
+pub fn find_solution(matches: &ArgMatches) -> Result<u32> {
+    let value = matches
+        .value_of("value")
+        .ok_or("This should never happen due to clap validation!")?;
+
+    Ok(if matches.is_present("second") {
+        next_biggest(value.parse::<u32>()?)?
+    } else {
+        calculate_steps(value.parse::<u32>()?)?
+    })
 }
 
 /// Calculate the number of steps it will take to drain the given
