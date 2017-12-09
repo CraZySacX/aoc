@@ -3,19 +3,25 @@ use error::Result;
 use std::io::BufRead;
 
 /// Calculate the largest value in a register.
-pub fn process_stream<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    let mut score = 0;
+pub fn process_stream<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+    let mut score = (0, 0);
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
         score = process_line_as_chars(line)?;
     }
-    Ok(score)
+
+    if second_star {
+        Ok(score.1)
+    } else {
+        Ok(score.0)
+    }
 }
 
 /// Process a line as a stream of chars.
-fn process_line_as_chars(line: &str) -> Result<u32> {
+fn process_line_as_chars(line: &str) -> Result<(u32, u32)> {
     let mut scores: Vec<u32> = Vec::new();
     let mut current_nesting = 0;
+    let mut garbage_count = 0;
     let mut in_garbage = false;
     let mut skip_next = false;
 
@@ -45,12 +51,13 @@ fn process_line_as_chars(line: &str) -> Result<u32> {
                 continue;
             }
             _ if in_garbage => {
+                garbage_count += 1;
                 continue;
             }
             _ => return Err("Unknown character encountered!".into()),
         }
     }
-    Ok(scores.iter().fold(0, |acc, x| acc + x))
+    Ok((scores.iter().fold(0, |acc, x| acc + x), garbage_count))
 }
 
 #[cfg(test)]
@@ -58,23 +65,56 @@ mod test {
     use super::process_line_as_chars;
 
     #[test]
-    fn simple_streams() {
-        assert_eq!(process_line_as_chars("{}").unwrap_or(0), 1);
-        assert_eq!(process_line_as_chars("{{{}}}").unwrap_or(0), 6);
-        assert_eq!(process_line_as_chars("{{},{}}").unwrap_or(0), 5);
-        assert_eq!(process_line_as_chars("{{{},{},{{}}}}").unwrap_or(0), 16);
-        assert_eq!(process_line_as_chars("{<a>,<a>,<a>,<a>}").unwrap_or(0), 1);
+    fn stream_score() {
+        assert_eq!(process_line_as_chars("{}").unwrap_or((0, 0)).0, 1);
+        assert_eq!(process_line_as_chars("{{{}}}").unwrap_or((0, 0)).0, 6);
+        assert_eq!(process_line_as_chars("{{},{}}").unwrap_or((0, 0)).0, 5);
         assert_eq!(
-            process_line_as_chars("{{<ab>},{<ab>},{<ab>},{<ab>}}").unwrap_or(0),
+            process_line_as_chars("{{{},{},{{}}}}").unwrap_or((0, 0)).0,
+            16
+        );
+        assert_eq!(
+            process_line_as_chars("{<a>,<a>,<a>,<a>}")
+                .unwrap_or((0, 0))
+                .0,
+            1
+        );
+        assert_eq!(
+            process_line_as_chars("{{<ab>},{<ab>},{<ab>},{<ab>}}")
+                .unwrap_or((0, 0))
+                .0,
             9
         );
         assert_eq!(
-            process_line_as_chars("{{<!!>},{<!!>},{<!!>},{<!!>}}").unwrap_or(0),
+            process_line_as_chars("{{<!!>},{<!!>},{<!!>},{<!!>}}")
+                .unwrap_or((0, 0))
+                .0,
             9
         );
         assert_eq!(
-            process_line_as_chars("{{<a!>},{<a!>},{<a!>},{<ab>}}").unwrap_or(0),
+            process_line_as_chars("{{<a!>},{<a!>},{<a!>},{<ab>}}")
+                .unwrap_or((0, 0))
+                .0,
             3
         )
+    }
+
+    #[test]
+    fn garbage_score() {
+        assert_eq!(process_line_as_chars("<>").unwrap_or((0, 1)).1, 0);
+        assert_eq!(
+            process_line_as_chars("<random characters>")
+                .unwrap_or((0, 0))
+                .1,
+            17
+        );
+        assert_eq!(process_line_as_chars("<<<<>").unwrap_or((0, 0)).1, 3);
+        assert_eq!(process_line_as_chars("<{!>}>").unwrap_or((0, 0)).1, 2);
+        assert_eq!(process_line_as_chars("<!!>").unwrap_or((0, 0)).1, 0);
+        assert_eq!(process_line_as_chars("<!!!>>").unwrap_or((0, 0)).1, 0);
+        assert_eq!(
+            process_line_as_chars("<{o\"i!a,<{i<a>").unwrap_or((0, 0)).1,
+            10
+        );
     }
 }
