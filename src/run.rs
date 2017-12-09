@@ -8,7 +8,7 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, SubCommand};
-use {day1, day2, day3, day4, day5, day6, day7, day8};
+use {day1, day2, day3, day4, day5, day6, day7, day8, day9};
 use error::Result;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
@@ -165,6 +165,26 @@ pub fn run() -> Result<i32> {
                         .help("Run the alrgorithm to calculate the value for the 2nd star"),
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("day9")
+                .about(
+                    "Run the 'Stream Processing' solution                      (AoC 2017 - Day 9)",
+                )
+                .arg(
+                    Arg::with_name("file")
+                        .short("f")
+                        .long("file")
+                        .takes_value(true)
+                        .required(true)
+                        .default_value("data/day9/stream"),
+                )
+                .arg(
+                    Arg::with_name("second")
+                        .short("s")
+                        .long("second")
+                        .help("Run the alrgorithm to calculate the value for the 2nd star"),
+                ),
+        )
         .get_matches();
 
     let mut result: u32 = 0;
@@ -209,6 +229,10 @@ pub fn run() -> Result<i32> {
         let filename = day8_matches.value_of("file").ok_or("Invalid filename!")?;
         let reader = BufReader::new(File::open(filename)?);
         result = day8::largest_register_value(reader, day8_matches.is_present("second"))?;
+    } else if let Some(day9_matches) = matches.subcommand_matches("day9") {
+        let filename = day9_matches.value_of("file").ok_or("Invalid filename!")?;
+        let reader = BufReader::new(File::open(filename)?);
+        result = day9::process_stream(reader, day9_matches.is_present("second"))?;
     } else {
         writeln!(io::stderr(), "Please choose a day to run the solution for")?;
     }
