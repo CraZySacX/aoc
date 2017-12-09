@@ -77,7 +77,7 @@ struct RegisterCommand {
 }
 
 /// Calculate the largest value in a register.
-pub fn largest_register_value<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut register_map = HashMap::new();
     let mut commands = Vec::new();
 
@@ -86,14 +86,31 @@ pub fn largest_register_value<T: BufRead>(reader: T, _second_star: bool) -> Resu
         generate_register_map_entry_and_command(line, &mut register_map, &mut commands)?;
     }
 
-    for command in &commands {
-        if check_condition(&register_map, &command.condition)? {
-            execute_command(&mut register_map, command)?
-        }
-    }
+    if second_star {
+        let mut maximum_attained = ::std::i32::MIN;
 
-    let max = register_map.values().max().ok_or("No max found")?;
-    Ok(TryFrom::try_from(*max)?)
+        for command in &commands {
+            if check_condition(&register_map, &command.condition).expect("") {
+                execute_command(&mut register_map, command).expect("");
+            }
+            let max = register_map.values().max().ok_or("No max found").expect("");
+
+            if *max > maximum_attained {
+                maximum_attained = *max;
+            }
+        }
+
+        Ok(TryFrom::try_from(maximum_attained)?)
+    } else {
+        for command in &commands {
+            if check_condition(&register_map, &command.condition)? {
+                execute_command(&mut register_map, command)?
+            }
+        }
+
+        let max = register_map.values().max().ok_or("No max found")?;
+        Ok(TryFrom::try_from(*max)?)
+    }
 }
 
 /// Generate a register map entry and the associated command
