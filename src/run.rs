@@ -64,6 +64,36 @@ pub fn run() -> Result<i32> {
         day8::find_solution(day8_matches)?
     } else if let Some(day9_matches) = matches.subcommand_matches("day09") {
         day9::find_solution(day9_matches)?
+    } else if let Some(day10_matches) = matches.subcommand_matches("day10") {
+        day10::find_solution(day10_matches)?
+    } else if let Some(day11_matches) = matches.subcommand_matches("day11") {
+        day11::find_solution(day11_matches)?
+    } else if let Some(day12_matches) = matches.subcommand_matches("day12") {
+        day12::find_solution(day12_matches)?
+    } else if let Some(day13_matches) = matches.subcommand_matches("day13") {
+        day13::find_solution(day13_matches)?
+    } else if let Some(day14_matches) = matches.subcommand_matches("day14") {
+        day14::find_solution(day14_matches)?
+    } else if let Some(day15_matches) = matches.subcommand_matches("day15") {
+        day15::find_solution(day15_matches)?
+    } else if let Some(day16_matches) = matches.subcommand_matches("day16") {
+        day16::find_solution(day16_matches)?
+    } else if let Some(day17_matches) = matches.subcommand_matches("day17") {
+        day17::find_solution(day17_matches)?
+    } else if let Some(day18_matches) = matches.subcommand_matches("day18") {
+        day18::find_solution(day18_matches)?
+    } else if let Some(day19_matches) = matches.subcommand_matches("day19") {
+        day19::find_solution(day19_matches)?
+    } else if let Some(day20_matches) = matches.subcommand_matches("day20") {
+        day20::find_solution(day20_matches)?
+    } else if let Some(day21_matches) = matches.subcommand_matches("day21") {
+        day21::find_solution(day21_matches)?
+    } else if let Some(day22_matches) = matches.subcommand_matches("day22") {
+        day22::find_solution(day22_matches)?
+    } else if let Some(day23_matches) = matches.subcommand_matches("day23") {
+        day23::find_solution(day23_matches)?
+    } else if let Some(day24_matches) = matches.subcommand_matches("day24") {
+        day24::find_solution(day24_matches)?
     } else {
         return Err("Unable to determine the day you wish to run".into());
     };
