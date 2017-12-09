@@ -1,4 +1,6 @@
 //! Advent of Code - Day 8 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_8;
 use error::{Error, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;
@@ -76,6 +78,26 @@ struct RegisterCommand {
     condition: Condition,
 }
 
+/// Advent of Code Day 8 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day08")
+        .about(DAY_8)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day8/register_commands"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
+
 /// Calculate the largest value in a register.
 pub fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut register_map = HashMap::new();
@@ -114,11 +136,7 @@ pub fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Resul
 }
 
 /// Generate a register map entry and the associated command
-fn generate_register_map_entry_and_command(
-    line: &str,
-    register_map: &mut HashMap<String, i32>,
-    commands: &mut Vec<RegisterCommand>,
-) -> Result<()> {
+fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
     let line_desc: Vec<&str> = line.split_whitespace().collect();
     let name_str = line_desc.get(0).ok_or("Invalid register name!")?;
     let name = String::from(*name_str);
@@ -169,10 +187,7 @@ fn check_condition(register_map: &HashMap<String, i32>, condition: &Condition) -
 }
 
 /// Execute the given command
-fn execute_command(
-    register_map: &mut HashMap<String, i32>,
-    register_command: &RegisterCommand,
-) -> Result<()> {
+fn execute_command(register_map: &mut HashMap<String, i32>, register_command: &RegisterCommand) -> Result<()> {
     let map_entry = register_map
         .entry(register_command.register.clone())
         .or_insert(0);
@@ -187,15 +202,11 @@ fn execute_command(
 
 #[cfg(test)]
 mod test {
-    use super::{check_condition, execute_command, generate_register_map_entry_and_command,
-                RegisterCommand};
+    use super::{check_condition, execute_command, generate_register_map_entry_and_command, RegisterCommand};
     use error::Result;
     use std::collections::HashMap;
 
-    fn generate_map_entry(
-        register_map: &mut HashMap<String, i32>,
-        commands: &mut Vec<RegisterCommand>,
-    ) -> Result<()> {
+    fn generate_map_entry(register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
         generate_register_map_entry_and_command("b inc 5 if a > 1", register_map, commands)?;
         generate_register_map_entry_and_command("a inc 1 if b < 5", register_map, commands)?;
         generate_register_map_entry_and_command("c dec -10 if a >= 1", register_map, commands)?;

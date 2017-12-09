@@ -1,7 +1,22 @@
 //! Advent of Code - Day 3 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_3;
 use error::Result;
 use std::collections::HashMap;
 use std::convert::TryFrom;
+
+/// Advent of Code Day 3 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day03")
+        .about(DAY_3)
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+        .arg(Arg::with_name("value").required(true))
+}
 
 /// Calculate the number of steps it will take to drain the given
 /// value out of the (0,0) port.
@@ -122,10 +137,9 @@ fn calculate_tuple_val(tuple: (i32, i32), tuple_map: &HashMap<(i32, i32), u32>) 
     results.push(tuple_map.get(&(x - 1, y + 1)));
     results.push(tuple_map.get(&(x - 1, y - 1)));
 
-    Ok(results
-        .iter()
-        .filter(|x| x.is_some())
-        .fold(0, |sum, i| sum + i.expect("Invalid tuple_map value")))
+    Ok(results.iter().filter(|x| x.is_some()).fold(0, |sum, i| {
+        sum + i.expect("Invalid tuple_map value")
+    }))
 }
 
 #[cfg(test)]

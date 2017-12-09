@@ -1,6 +1,28 @@
 //! Advent of Code - Day 9 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_9;
 use error::Result;
 use std::io::BufRead;
+
+/// Advent of Code Day 9 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day09")
+        .about(DAY_9)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day9/stream"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
 
 /// Calculate the largest value in a register.
 pub fn process_stream<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

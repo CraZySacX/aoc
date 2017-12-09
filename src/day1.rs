@@ -1,5 +1,20 @@
 //! Advent of Code - Day 1 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_1;
 use error::Result;
+
+/// The Advent of Code Day 1 `SubCommand`.
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day01")
+        .about(DAY_1)
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+        .arg(Arg::with_name("value").required(true))
+}
 
 /// Calculate the 'inverse captcha' value for a byte array.
 pub fn val(input: &str, lookahead: bool) -> Result<u32> {

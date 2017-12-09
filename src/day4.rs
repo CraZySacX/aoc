@@ -1,8 +1,30 @@
 //! Advent of Code - Day 4 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_4;
 use error::Result;
 use std::collections::HashSet;
 use std::io::BufRead;
 use std::iter::FromIterator;
+
+/// Advent of Code Day 4 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day04")
+        .about(DAY_4)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day4/passphrase_list"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn count_valid_passphrases<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

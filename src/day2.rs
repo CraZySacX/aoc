@@ -1,7 +1,29 @@
 //! Advent of Code - Day 2 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_2;
 use error::Result;
 use std::cmp;
 use std::io::BufRead;
+
+/// Advent of Code Day 2 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day02")
+        .about(DAY_2)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day2/cs_aoc2_actual"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn parse_and_checksum<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
@@ -68,8 +90,8 @@ fn row_evenly_divisible_value(line: &str) -> Result<u32> {
 #[cfg(test)]
 mod test {
     use super::parse_and_checksum;
-    use super::row_min_max_diff;
     use super::row_evenly_divisible_value;
+    use super::row_min_max_diff;
     use std::io::BufReader;
 
     #[test]

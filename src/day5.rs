@@ -1,7 +1,29 @@
 //! Advent of Code - Day 5 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_5;
 use error::Result;
 use std::convert::TryFrom;
 use std::io::BufRead;
+
+/// Advent of Code Day 5 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day05")
+        .about(DAY_5)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day5/jump_list"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn jumps_until_exit<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

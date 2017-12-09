@@ -1,7 +1,29 @@
 //! Advent of Code - Day 6 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_6;
 use error::Result;
 use std::collections::HashSet;
 use std::io::BufRead;
+
+/// Advent of Code Day 6 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day06")
+        .about(DAY_6)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day6/blocks_list"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
+}
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn reallocations_until_match<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

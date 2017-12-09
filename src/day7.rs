@@ -1,4 +1,6 @@
 //! Advent of Code - Day 7 Solution
+use clap::{App, Arg, SubCommand};
+use constants::DAY_7;
 use error::Result;
 use std::collections::HashMap;
 use std::io::BufRead;
@@ -18,6 +20,26 @@ struct Node {
     /// Node Children
     #[allow(dead_code)]
     children: Option<Vec<usize>>,
+}
+
+/// Advent of Code Day 7 `SubCommand`
+pub fn subcommand<'a, 'b>() -> App<'a, 'b> {
+    SubCommand::with_name("day07")
+        .about(DAY_7)
+        .arg(
+            Arg::with_name("file")
+                .short("f")
+                .long("file")
+                .takes_value(true)
+                .required(true)
+                .default_value("data/day7/node_list"),
+        )
+        .arg(
+            Arg::with_name("second")
+                .short("s")
+                .long("second")
+                .help("Run the alrgorithm to calculate the value for the 2nd star"),
+        )
 }
 
 /// Parse the file at `filename` and generate the checksum.
@@ -56,12 +78,7 @@ pub fn build_tree<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 /// Parse a node description line, and add the nodes and children to the appropriate structures.
-fn parse_line(
-    line: &str,
-    id: usize,
-    nodes: &mut Vec<Node>,
-    children: &mut HashMap<usize, Vec<String>>,
-) -> Result<()> {
+fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
     let node_def: Vec<&str> = line.split(" -> ").collect();
 
     let node_desc = node_def.get(0).ok_or("Unable to get node description")?;
@@ -160,9 +177,10 @@ fn children_weight(nodes: &[Node], start_node: &Node) -> Result<Vec<(usize, u32)
 
         for node_id in children {
             let node = nodes.get(node_id).ok_or("Cannot find child node")?;
-            let total_child_weight: u32 = children_weight(nodes, node)?
-                .iter()
-                .fold(0, |acc, x| acc + x.1);
+            let total_child_weight: u32 =
+                children_weight(nodes, node)?.iter().fold(0, |acc, x| {
+                    acc + x.1
+                });
             weights.push((node_id, total_child_weight));
         }
 
@@ -199,8 +217,7 @@ fn are_my_children_balanced(outer: &[(usize, u32)], diff: u32) -> Result<(usize,
 
 #[cfg(test)]
 mod test {
-    use super::{are_my_children_balanced, assign_children, assign_parents, children_weight,
-                find_root, parse_line, Node};
+    use super::{are_my_children_balanced, assign_children, assign_parents, children_weight, find_root, parse_line, Node};
     use error::Result;
     use std::collections::HashMap;
 
