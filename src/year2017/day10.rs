@@ -108,19 +108,27 @@ mod two_star {
     fn solution() {
         let mut hash = Vec::new();
         super::parse_list_and_hash(&mut hash, "", 256, true).expect("");
-        let hex = super::squash_and_hex(&hash).expect("");
-        assert_eq!(hex, "a2582a3a0e66e6e86e3812dcb672a272");
+        assert_eq!(
+            super::squash_and_hex(&hash).expect(""),
+            "a2582a3a0e66e6e86e3812dcb672a272"
+        );
         hash.clear();
         super::parse_list_and_hash(&mut hash, "AoC 2017", 256, true).expect("");
-        let hex = super::squash_and_hex(&hash).expect("");
-        assert_eq!(hex, "33efeb34ea91902bb2f59c9920caa6cd");
+        assert_eq!(
+            super::squash_and_hex(&hash).expect(""),
+            "33efeb34ea91902bb2f59c9920caa6cd"
+        );
         hash.clear();
         super::parse_list_and_hash(&mut hash, "1,2,3", 256, true).expect("");
-        let hex = super::squash_and_hex(&hash).expect("");
-        assert_eq!(hex, "3efbe78a8d82f29979031a4aa0b16a9d");
+        assert_eq!(
+            super::squash_and_hex(&hash).expect(""),
+            "3efbe78a8d82f29979031a4aa0b16a9d"
+        );
         hash.clear();
         super::parse_list_and_hash(&mut hash, "1,2,4", 256, true).expect("");
-        let hex = super::squash_and_hex(&hash).expect("");
-        assert_eq!(hex, "63960835bcdc130f0b66d7ff4f6a5a8e");
+        assert_eq!(
+            super::squash_and_hex(&hash).expect(""),
+            "63960835bcdc130f0b66d7ff4f6a5a8e"
+        );
     }
 }

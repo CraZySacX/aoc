@@ -17,6 +17,7 @@ mod constants;
 mod year2017;
 mod error;
 mod run;
+mod utils;
 
 use std::io::{self, Write};
 use std::process;

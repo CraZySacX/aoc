@@ -14,6 +14,8 @@ use error::Result;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
+use std::time::Instant;
+use utils::{self, Prefix};
 use year2017;
 
 /// Advent of Code Year
@@ -139,6 +141,14 @@ pub fn run() -> Result<i32> {
                 .required(true)
                 .help("Specify the year you wish to work with"),
         )
+        .arg(
+            Arg::with_name("time")
+                .short("t")
+                .long("time")
+                .help("Generate benchmark time, in s, ms, us, or ns")
+                .takes_value(true)
+                .possible_values(&["ns", "us", "ms", "s"]),
+        )
         .subcommand(subcommand(&AoCDay::AOCD01))
         .subcommand(subcommand(&AoCDay::AOCD02))
         .subcommand(subcommand(&AoCDay::AOCD03))
@@ -195,10 +205,25 @@ pub fn run() -> Result<i32> {
         _ => return Err("Unable to determine the day you wish to run".into()),
     };
 
+    let now = Instant::now();
     writeln!(
         io::stdout(),
         "{}",
         find_solution(match_tuple.0, &year, &match_tuple.1)?
     )?;
+    let duration = now.elapsed();
+
+    if let Some(output_type) = matches.value_of("time") {
+        let prefix: Prefix = TryFrom::try_from(output_type)?;
+
+        let elapsed = match prefix {
+            Prefix::Nanos => utils::as_ns(&duration)?,
+            Prefix::Micros => utils::as_us(&duration)?,
+            Prefix::Millis => utils::as_ms(&duration)?,
+            Prefix::Seconds => utils::as_s(&duration)?,
+        };
+
+        writeln!(io::stdout(), "Elapsed: {}{}", elapsed, output_type)?;
+    }
     Ok(0)
 }
