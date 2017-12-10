@@ -11,10 +11,10 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 use constants;
 use error::Error;
 use error::Result;
-use seventeen;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
+use year2017;
 
 /// Advent of Code Year
 pub enum AoCYear {
@@ -119,7 +119,7 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
     let is_second_star = matches.is_present("second");
 
     match *year {
-        AoCYear::AOC2017 => Ok(seventeen::find_solution(reader, day, is_second_star)?),
+        AoCYear::AOC2017 => Ok(year2017::find_solution(reader, day, is_second_star)?),
         _ => Err("Not implemented!".into()),
     }
 }

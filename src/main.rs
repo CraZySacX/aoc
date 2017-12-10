@@ -14,7 +14,7 @@ extern crate clap;
 extern crate error_chain;
 
 mod constants;
-mod seventeen;
+mod year2017;
 mod error;
 mod run;
 
