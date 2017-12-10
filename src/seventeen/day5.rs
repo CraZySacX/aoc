@@ -1,19 +1,10 @@
 //! Advent of Code - Day 5 Solution
 use error::Result;
-use run::AoCYear;
 use std::convert::TryFrom;
 use std::io::BufRead;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(jumps_until_exit(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Parse the file at `filename` and generate the checksum.
-fn jumps_until_exit<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut jump_vec = Vec::new();
 
     for line_result in reader.lines() {

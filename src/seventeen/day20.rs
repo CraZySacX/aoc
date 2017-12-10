@@ -1,12 +1,24 @@
 //! Advent of Code - Day 20 Solution
 use error::Result;
-use run::AoCYear;
 use std::io::BufRead;
 
-/// Find the solution.
-#[cfg_attr(feature = "cargo-clippy", allow(needless_pass_by_value))]
-pub fn find_solution<T: BufRead>(_reader: T, year: &AoCYear, _second_star: bool) -> Result<u32> {
-    match *year {
-        _ => Err("Not Implemented!".into()),
+/// Find the solution for Advent of Code 2017
+pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+    for line_result in reader.lines() {
+        let _line = &line_result.unwrap_or_else(|_| "".to_string());
+    }
+    Ok(0)
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn one_star_2017() {
+        assert!(true);
+    }
+
+    #[test]
+    fn two_star_2017() {
+        assert!(true);
     }
 }

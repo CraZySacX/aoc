@@ -11,8 +11,7 @@ use clap::{App, Arg, ArgMatches, SubCommand};
 use constants;
 use error::Error;
 use error::Result;
-use seventeen::{day1, day10, day11, day12, day13, day14, day15, day16, day17, day18, day19, day2, day20, day21, day22, day23, day24, day3, day4, day5, day6,
-                day7, day8, day9};
+use seventeen;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
@@ -119,31 +118,9 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
     let reader = BufReader::new(File::open(filename)?);
     let is_second_star = matches.is_present("second");
 
-    match *day {
-        AoCDay::AOCD01 => day1::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD02 => day2::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD03 => day3::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD04 => day4::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD05 => day5::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD06 => day6::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD07 => day7::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD08 => day8::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD09 => day9::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD10 => day10::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD11 => day11::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD12 => day12::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD13 => day13::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD14 => day14::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD15 => day15::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD16 => day16::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD17 => day17::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD18 => day18::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD19 => day19::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD20 => day20::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD21 => day21::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD22 => day22::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD23 => day23::find_solution(reader, year, is_second_star),
-        AoCDay::AOCD24 => day24::find_solution(reader, year, is_second_star),
+    match *year {
+        AoCYear::AOC2017 => Ok(seventeen::find_solution(reader, day, is_second_star)?),
+        _ => Err("Not implemented!".into()),
     }
 }
 

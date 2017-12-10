@@ -1,20 +1,11 @@
 //! Advent of Code - Day 3 Solution
 use error::Result;
-use run::AoCYear;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::io::BufRead;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(parse_and_spiral(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Parse the file at `filename` and generate the checksum.
-fn parse_and_spiral<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut checksum = 0;
 
     for line_result in reader.lines() {

@@ -1,6 +1,5 @@
 //! Advent of Code - Day 8 Solution
 use error::{Error, Result};
-use run::AoCYear;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::io::BufRead;
@@ -77,16 +76,8 @@ struct RegisterCommand {
     condition: Condition,
 }
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(largest_register_value(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Calculate the largest value in a register.
-fn largest_register_value<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut register_map = HashMap::new();
     let mut commands = Vec::new();
 

@@ -1,19 +1,10 @@
 //! Advent of Code - Day 6 Solution
 use error::Result;
-use run::AoCYear;
 use std::collections::HashSet;
 use std::io::BufRead;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(reallocations_until_match(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Parse the file at `filename` and generate the checksum.
-fn reallocations_until_match<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut reallocations = 0;
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());

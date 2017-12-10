@@ -1,19 +1,10 @@
 //! Advent of Code - Day 2 Solution
 use error::Result;
-use run::AoCYear;
 use std::cmp;
 use std::io::BufRead;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(parse_and_checksum(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Parse the file at `filename` and generate the checksum.
-fn parse_and_checksum<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
     let mut checksum = 0;
 
     for line_result in reader.lines() {
@@ -76,7 +67,7 @@ fn row_evenly_divisible_value(line: &str) -> Result<u32> {
 
 #[cfg(test)]
 mod test {
-    use super::parse_and_checksum;
+    use super::find_solution;
     use super::row_evenly_divisible_value;
     use super::row_min_max_diff;
     use std::io::BufReader;
@@ -107,12 +98,12 @@ mod test {
     #[test]
     fn total_min_max_diff_checksum() {
         let reader = BufReader::new("5 1 9 5\n7 5 3\n2 4 6 8".as_bytes());
-        assert_eq!(parse_and_checksum(reader, false).unwrap_or_else(|_| 0), 18);
+        assert_eq!(find_solution(reader, false).unwrap_or_else(|_| 0), 18);
     }
 
     #[test]
     fn total_evenly_divisible_val_checksum() {
         let reader = BufReader::new("5 9 2 8\n9 4 7 3\n3 8 6 5".as_bytes());
-        assert_eq!(parse_and_checksum(reader, true).unwrap_or_else(|_| 0), 9);
+        assert_eq!(find_solution(reader, true).unwrap_or_else(|_| 0), 9);
     }
 }

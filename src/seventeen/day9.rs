@@ -1,18 +1,9 @@
 //! Advent of Code - Day 9 Solution
 use error::Result;
-use run::AoCYear;
 use std::io::BufRead;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(process_stream(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Calculate the largest value in a register.
-fn process_stream<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut score = (0, 0);
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());

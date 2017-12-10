@@ -1,20 +1,11 @@
 //! Advent of Code - Day 4 Solution
 use error::Result;
-use run::AoCYear;
 use std::collections::HashSet;
 use std::io::BufRead;
 use std::iter::FromIterator;
 
-/// Find the solution.
-pub fn find_solution<T: BufRead>(reader: T, year: &AoCYear, second_star: bool) -> Result<u32> {
-    match *year {
-        AoCYear::AOC2017 => Ok(count_valid_passphrases(reader, second_star)?),
-        _ => Err("Not Implemented".into()),
-    }
-}
-
 /// Parse the file at `filename` and generate the checksum.
-fn count_valid_passphrases<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut count = 0;
 
     for line_result in reader.lines() {
