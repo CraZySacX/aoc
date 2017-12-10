@@ -179,24 +179,49 @@ fn execute_command(register_map: &mut HashMap<String, i32>, register_command: &R
 }
 
 #[cfg(test)]
-mod test {
-    use super::{check_condition, execute_command, generate_register_map_entry_and_command, RegisterCommand};
-    use error::Result;
+fn generate_map_entry(register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
+    generate_register_map_entry_and_command("b inc 5 if a > 1", register_map, commands)?;
+    generate_register_map_entry_and_command("a inc 1 if b < 5", register_map, commands)?;
+    generate_register_map_entry_and_command("c dec -10 if a >= 1", register_map, commands)?;
+    generate_register_map_entry_and_command("c inc -20 if c == 10", register_map, commands)?;
+    Ok(())
+}
+
+#[cfg(test)]
+mod one_star {
     use std::collections::HashMap;
 
-    fn generate_map_entry(register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
-        generate_register_map_entry_and_command("b inc 5 if a > 1", register_map, commands)?;
-        generate_register_map_entry_and_command("a inc 1 if b < 5", register_map, commands)?;
-        generate_register_map_entry_and_command("c dec -10 if a >= 1", register_map, commands)?;
-        generate_register_map_entry_and_command("c inc -20 if c == 10", register_map, commands)?;
-        Ok(())
-    }
-
     #[test]
-    fn register_list() {
+    fn solution() {
         let mut register_map = HashMap::new();
         let mut commands = Vec::new();
-        generate_map_entry(&mut register_map, &mut commands).expect("");
+        super::generate_map_entry(&mut register_map, &mut commands).expect("");
+        assert_eq!(register_map.len(), 3);
+        assert_eq!(commands.len(), 4);
+        assert_eq!(*register_map.get(&"a".to_string()).ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get(&"b".to_string()).ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get(&"c".to_string()).ok_or("").expect(""), 0);
+
+        for command in &commands {
+            if super::check_condition(&register_map, &command.condition).expect("") {
+                super::execute_command(&mut register_map, command).expect("");
+            }
+        }
+
+        let max = register_map.values().max().ok_or("No max found").expect("");
+        assert_eq!(*max, 1);
+    }
+}
+
+#[cfg(test)]
+mod two_star {
+    use std::collections::HashMap;
+
+    #[test]
+    fn solution() {
+        let mut register_map = HashMap::new();
+        let mut commands = Vec::new();
+        super::generate_map_entry(&mut register_map, &mut commands).expect("");
         assert_eq!(register_map.len(), 3);
         assert_eq!(commands.len(), 4);
         assert_eq!(*register_map.get(&"a".to_string()).ok_or("").expect(""), 0);
@@ -206,8 +231,8 @@ mod test {
         let mut maximum_attained = ::std::i32::MIN;
 
         for command in &commands {
-            if check_condition(&register_map, &command.condition).expect("") {
-                execute_command(&mut register_map, command).expect("");
+            if super::check_condition(&register_map, &command.condition).expect("") {
+                super::execute_command(&mut register_map, command).expect("");
             }
             let max = register_map.values().max().ok_or("No max found").expect("");
 

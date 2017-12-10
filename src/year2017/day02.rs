@@ -66,44 +66,30 @@ fn row_evenly_divisible_value(line: &str) -> Result<u32> {
 }
 
 #[cfg(test)]
-mod test {
-    use super::find_solution;
-    use super::row_evenly_divisible_value;
-    use super::row_min_max_diff;
-    use std::io::BufReader;
-
+mod one_star {
     #[test]
-    fn row_min_max_diffs() {
-        assert_eq!(row_min_max_diff("5 1 9 5").unwrap_or_else(|_| 0), 8);
-        assert_eq!(row_min_max_diff("7 5 3").unwrap_or_else(|_| 0), 4);
-        assert_eq!(row_min_max_diff("2 4 6 8").unwrap_or_else(|_| 0), 6);
+    fn solution() {
+        assert_eq!(super::row_min_max_diff("5 1 9 5").unwrap_or_else(|_| 0), 8);
+        assert_eq!(super::row_min_max_diff("7 5 3").unwrap_or_else(|_| 0), 4);
+        assert_eq!(super::row_min_max_diff("2 4 6 8").unwrap_or_else(|_| 0), 6);
     }
+}
 
+#[cfg(test)]
+mod two_star {
     #[test]
-    fn row_evenly_divisible_values() {
+    fn solution() {
         assert_eq!(
-            row_evenly_divisible_value("5 9 2 8").unwrap_or_else(|_| 0),
+            super::row_evenly_divisible_value("5 9 2 8").unwrap_or_else(|_| 0),
             4
         );
         assert_eq!(
-            row_evenly_divisible_value("9 4 7 3").unwrap_or_else(|_| 0),
+            super::row_evenly_divisible_value("9 4 7 3").unwrap_or_else(|_| 0),
             3
         );
         assert_eq!(
-            row_evenly_divisible_value("3 8 6 5").unwrap_or_else(|_| 0),
+            super::row_evenly_divisible_value("3 8 6 5").unwrap_or_else(|_| 0),
             2
         );
-    }
-
-    #[test]
-    fn total_min_max_diff_checksum() {
-        let reader = BufReader::new("5 1 9 5\n7 5 3\n2 4 6 8".as_bytes());
-        assert_eq!(find_solution(reader, false).unwrap_or_else(|_| 0), 18);
-    }
-
-    #[test]
-    fn total_evenly_divisible_val_checksum() {
-        let reader = BufReader::new("5 9 2 8\n9 4 7 3\n3 8 6 5".as_bytes());
-        assert_eq!(find_solution(reader, true).unwrap_or_else(|_| 0), 9);
     }
 }

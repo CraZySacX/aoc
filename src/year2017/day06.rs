@@ -72,12 +72,17 @@ fn reallocate_memory(line: &str, find_again: bool) -> Result<u32> {
 }
 
 #[cfg(test)]
-mod test {
-    use super::reallocate_memory;
-
+mod one_star {
     #[test]
-    fn reallocate() {
-        assert_eq!(reallocate_memory("0 2 7 0", false).unwrap_or(0), 5);
-        assert_eq!(reallocate_memory("0 2 7 0", true).unwrap_or(0), 4);
+    fn solution() {
+        assert_eq!(super::reallocate_memory("0 2 7 0", false).unwrap_or(0), 5);
+    }
+}
+
+#[cfg(test)]
+mod two_star {
+    #[test]
+    fn solution() {
+        assert_eq!(super::reallocate_memory("0 2 7 0", true).unwrap_or(0), 4);
     }
 }

@@ -51,12 +51,23 @@ fn jump_away(jump_vec: &mut Vec<i32>, crazy_jumps: bool) -> Result<u32> {
 }
 
 #[cfg(test)]
-mod test {
-    use super::jump_away;
-
+mod one_star {
     #[test]
-    fn jump_away_count() {
-        assert_eq!(jump_away(&mut vec![0, 3, 0, 1, -3], false).unwrap_or(0), 5);
-        assert_eq!(jump_away(&mut vec![0, 3, 0, 1, -3], true).unwrap_or(0), 10);
+    fn solution() {
+        assert_eq!(
+            super::jump_away(&mut vec![0, 3, 0, 1, -3], false).unwrap_or(0),
+            5
+        );
+    }
+}
+
+#[cfg(test)]
+mod two_star {
+    #[test]
+    fn solution() {
+        assert_eq!(
+            super::jump_away(&mut vec![0, 3, 0, 1, -3], true).unwrap_or(0),
+            10
+        );
     }
 }

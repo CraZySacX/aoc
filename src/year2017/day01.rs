@@ -32,19 +32,24 @@ fn val(input: &str, lookahead: bool) -> Result<u32> {
 }
 
 #[cfg(test)]
-mod test {
+mod one_star {
     use super::val;
 
     #[test]
-    fn default_lookahead_of_1() {
+    fn solution() {
         assert_eq!(val("1221", false).unwrap_or(0), 3);
         assert_eq!(val("1111", false).unwrap_or(0), 4);
         assert_eq!(val("1234", false).unwrap_or(0), 0);
         assert_eq!(val("91212129", false).unwrap_or(0), 9);
     }
+}
+
+#[cfg(test)]
+mod two_star {
+    use super::val;
 
     #[test]
-    fn lookahead_of_half_len() {
+    fn solution() {
         assert_eq!(val("1212", true).unwrap_or(0), 6);
         assert_eq!(val("1221", true).unwrap_or(0), 0);
         assert_eq!(val("123425", true).unwrap_or(0), 4);

@@ -146,24 +146,25 @@ fn calculate_tuple_val(tuple: (i32, i32), tuple_map: &HashMap<(i32, i32), u32>) 
 }
 
 #[cfg(test)]
-mod test {
-    use super::{calculate_steps, next_biggest};
-
+mod one_star {
     #[test]
-    fn steps() {
-        assert_eq!(calculate_steps(1).unwrap_or(1), 0);
-        assert_eq!(calculate_steps(12).unwrap_or(0), 3);
-        assert_eq!(calculate_steps(23).unwrap_or(0), 2);
-        assert_eq!(calculate_steps(1024).unwrap_or(0), 31);
+    fn solution() {
+        assert_eq!(super::calculate_steps(1).unwrap_or(1), 0);
+        assert_eq!(super::calculate_steps(12).unwrap_or(0), 3);
+        assert_eq!(super::calculate_steps(23).unwrap_or(0), 2);
+        assert_eq!(super::calculate_steps(1024).unwrap_or(0), 31);
     }
+}
 
+#[cfg(test)]
+mod two_star {
     #[test]
-    fn next_biggests() {
-        assert_eq!(next_biggest(1).unwrap_or(0), 2);
-        assert_eq!(next_biggest(5).unwrap_or(0), 10);
-        assert_eq!(next_biggest(11).unwrap_or(0), 23);
-        assert_eq!(next_biggest(26).unwrap_or(0), 54);
-        assert_eq!(next_biggest(59).unwrap_or(0), 122);
-        assert_eq!(next_biggest(362).unwrap_or(0), 747);
+    fn solution() {
+        assert_eq!(super::next_biggest(1).unwrap_or(0), 2);
+        assert_eq!(super::next_biggest(5).unwrap_or(0), 10);
+        assert_eq!(super::next_biggest(11).unwrap_or(0), 23);
+        assert_eq!(super::next_biggest(26).unwrap_or(0), 54);
+        assert_eq!(super::next_biggest(59).unwrap_or(0), 122);
+        assert_eq!(super::next_biggest(362).unwrap_or(0), 747);
     }
 }

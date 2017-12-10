@@ -3,15 +3,15 @@ use error::Result;
 use run::AoCDay;
 use std::io::BufRead;
 
-pub mod day1;
-pub mod day2;
-pub mod day3;
-pub mod day4;
-pub mod day5;
-pub mod day6;
-pub mod day7;
-pub mod day8;
-pub mod day9;
+pub mod day01;
+pub mod day02;
+pub mod day03;
+pub mod day04;
+pub mod day05;
+pub mod day06;
+pub mod day07;
+pub mod day08;
+pub mod day09;
 pub mod day10;
 pub mod day11;
 pub mod day12;
@@ -31,15 +31,15 @@ pub mod day24;
 /// Find the solution.
 pub fn find_solution<T: BufRead>(reader: T, day: &AoCDay, is_second_star: bool) -> Result<u32> {
     match *day {
-        AoCDay::AOCD01 => day1::find_solution(reader, is_second_star),
-        AoCDay::AOCD02 => day2::find_solution(reader, is_second_star),
-        AoCDay::AOCD03 => day3::find_solution(reader, is_second_star),
-        AoCDay::AOCD04 => day4::find_solution(reader, is_second_star),
-        AoCDay::AOCD05 => day5::find_solution(reader, is_second_star),
-        AoCDay::AOCD06 => day6::find_solution(reader, is_second_star),
-        AoCDay::AOCD07 => day7::find_solution(reader, is_second_star),
-        AoCDay::AOCD08 => day8::find_solution(reader, is_second_star),
-        AoCDay::AOCD09 => day9::find_solution(reader, is_second_star),
+        AoCDay::AOCD01 => day01::find_solution(reader, is_second_star),
+        AoCDay::AOCD02 => day02::find_solution(reader, is_second_star),
+        AoCDay::AOCD03 => day03::find_solution(reader, is_second_star),
+        AoCDay::AOCD04 => day04::find_solution(reader, is_second_star),
+        AoCDay::AOCD05 => day05::find_solution(reader, is_second_star),
+        AoCDay::AOCD06 => day06::find_solution(reader, is_second_star),
+        AoCDay::AOCD07 => day07::find_solution(reader, is_second_star),
+        AoCDay::AOCD08 => day08::find_solution(reader, is_second_star),
+        AoCDay::AOCD09 => day09::find_solution(reader, is_second_star),
         AoCDay::AOCD10 => day10::find_solution(reader, is_second_star),
         AoCDay::AOCD11 => day11::find_solution(reader, is_second_star),
         AoCDay::AOCD12 => day12::find_solution(reader, is_second_star),

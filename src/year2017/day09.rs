@@ -61,11 +61,11 @@ fn process_line_as_chars(line: &str) -> Result<(u32, u32)> {
 }
 
 #[cfg(test)]
-mod test {
+mod one_star {
     use super::process_line_as_chars;
 
     #[test]
-    fn stream_score() {
+    fn solution() {
         assert_eq!(process_line_as_chars("{}").unwrap_or((0, 0)).0, 1);
         assert_eq!(process_line_as_chars("{{{}}}").unwrap_or((0, 0)).0, 6);
         assert_eq!(process_line_as_chars("{{},{}}").unwrap_or((0, 0)).0, 5);
@@ -98,9 +98,14 @@ mod test {
             3
         )
     }
+}
+
+#[cfg(test)]
+mod two_star {
+    use super::process_line_as_chars;
 
     #[test]
-    fn garbage_score() {
+    fn solution() {
         assert_eq!(process_line_as_chars("<>").unwrap_or((0, 1)).1, 0);
         assert_eq!(
             process_line_as_chars("<random characters>")

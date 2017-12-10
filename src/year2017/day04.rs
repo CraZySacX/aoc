@@ -50,22 +50,23 @@ fn check_for_anagrams(line: &str) -> Result<bool> {
 }
 
 #[cfg(test)]
-mod test {
-    use super::{check_for_anagrams, check_for_duplicates};
-
+mod one_star {
     #[test]
-    fn check_line_for_duplicates() {
-        assert!(check_for_duplicates("aa bb cc dd").unwrap_or(false));
-        assert!(check_for_duplicates("aa bb cc aaa").unwrap_or(false));
-        assert!(!check_for_duplicates("aa bb cc aa").unwrap_or(true));
+    fn solution() {
+        assert!(super::check_for_duplicates("aa bb cc dd").unwrap_or(false));
+        assert!(super::check_for_duplicates("aa bb cc aaa").unwrap_or(false));
+        assert!(!super::check_for_duplicates("aa bb cc aa").unwrap_or(true));
     }
+}
 
+#[cfg(test)]
+mod two_star {
     #[test]
-    fn check_line_for_anagrams() {
-        assert!(check_for_anagrams("abcde fghij").unwrap_or(false));
-        assert!(!check_for_anagrams("abcde xyz ecdab").unwrap_or(true));
-        assert!(check_for_anagrams("a ab abc abd abf abj").unwrap_or(false));
-        assert!(check_for_anagrams("iiii oiii ooii oooi oooo").unwrap_or(false));
-        assert!(!check_for_anagrams("oiii ioii iioi iiio").unwrap_or(true));
+    fn solution() {
+        assert!(super::check_for_anagrams("abcde fghij").unwrap_or(false));
+        assert!(!super::check_for_anagrams("abcde xyz ecdab").unwrap_or(true));
+        assert!(super::check_for_anagrams("a ab abc abd abf abj").unwrap_or(false));
+        assert!(super::check_for_anagrams("iiii oiii ooii oooi oooo").unwrap_or(false));
+        assert!(!super::check_for_anagrams("oiii ioii iioi iiio").unwrap_or(true));
     }
 }
