@@ -4,24 +4,39 @@ use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Find the solution for Advent of Code 2017
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut result = 0;
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
-        result = parse_and_go(line)?;
+        result = parse_and_go(line, second_star)?;
     }
     Ok(result)
 }
 
 /// Parse the input and go.
-fn parse_and_go(line: &str) -> Result<u32> {
+fn parse_and_go(line: &str, second_star: bool) -> Result<u32> {
     let steps: Vec<&str> = line.split(',').collect();
     let mut coords = (0, 0, 0);
-    
+    let mut max_distance = 0;
+
     for step in steps {
         move_in_direction(step, &mut coords)?;
+        let curr_distance = manhattan_distance_from_origin(coords)?;
+
+        if curr_distance > max_distance {
+            max_distance = curr_distance;
+        }
     }
 
+    if second_star {
+        Ok(max_distance)
+    } else {
+        Ok(manhattan_distance_from_origin(coords)?)
+    }
+}
+
+/// Calculate manhattan distance
+fn manhattan_distance_from_origin(coords: (i32, i32, i32)) -> Result<u32> {
     let distance = (coords.0.abs() + coords.1.abs() + coords.2.abs()) / 2;
     Ok(TryFrom::try_from(distance)?)
 }
@@ -62,10 +77,10 @@ fn move_in_direction(direction: &str, coords: &mut (i32, i32, i32)) -> Result<()
 mod one_star {
     #[test]
     fn solution() {
-        assert_eq!(super::parse_and_go("ne,ne,ne").unwrap_or(0), 3);
-        assert_eq!(super::parse_and_go("ne,ne,sw,sw").unwrap_or(1), 0);
-        assert_eq!(super::parse_and_go("ne,ne,s,s").unwrap_or(0), 2);
-        assert_eq!(super::parse_and_go("se,sw,se,sw,sw").unwrap_or(0), 3);
+        assert_eq!(super::parse_and_go("ne,ne,ne", false).unwrap_or(0), 3);
+        assert_eq!(super::parse_and_go("ne,ne,sw,sw", false).unwrap_or(1), 0);
+        assert_eq!(super::parse_and_go("ne,ne,s,s", false).unwrap_or(0), 2);
+        assert_eq!(super::parse_and_go("se,sw,se,sw,sw", false).unwrap_or(0), 3);
     }
 }
 
@@ -73,6 +88,9 @@ mod one_star {
 mod two_star {
     #[test]
     fn solution() {
-        assert!(true);
+        assert_eq!(super::parse_and_go("ne,ne,ne", true).unwrap_or(0), 3);
+        assert_eq!(super::parse_and_go("ne,ne,sw,sw", true).unwrap_or(0), 2);
+        assert_eq!(super::parse_and_go("ne,ne,s,s", true).unwrap_or(0), 2);
+        assert_eq!(super::parse_and_go("se,sw,se,sw,sw", true).unwrap_or(0), 3);
     }
 }
