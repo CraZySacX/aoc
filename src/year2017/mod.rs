@@ -27,6 +27,7 @@ pub mod day21;
 pub mod day22;
 pub mod day23;
 pub mod day24;
+pub mod day25;
 
 /// Find the solution.
 pub fn find_solution<T: BufRead>(reader: T, day: &AoCDay, is_second_star: bool) -> Result<u32> {
@@ -55,5 +56,6 @@ pub fn find_solution<T: BufRead>(reader: T, day: &AoCDay, is_second_star: bool) 
         AoCDay::AOCD22 => day22::find_solution(reader, is_second_star),
         AoCDay::AOCD23 => day23::find_solution(reader, is_second_star),
         AoCDay::AOCD24 => day24::find_solution(reader, is_second_star),
+        AoCDay::AOCD25 => day25::find_solution(reader, is_second_star),
     }
 }

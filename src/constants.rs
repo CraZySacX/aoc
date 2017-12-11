@@ -49,6 +49,8 @@ pub const DAY_22: &str = "day22";
 pub const DAY_23: &str = "day23";
 /// Day 24
 pub const DAY_24: &str = "day24";
+/// Day 25
+pub const DAY_25: &str = "day25";
 
 /// Advent of Code Day 1 about string
 pub const DAY_1_ABOUT: &str = "Run the 'Inverse Captcha' solution                        (Advent of Code 2017 - Day 01)";
@@ -98,55 +100,59 @@ pub const DAY_22_ABOUT: &str = "                                                
 pub const DAY_23_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 23)";
 /// Advent of Code Day 24 about string
 pub const DAY_24_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 24)";
+/// Advent of Code Day 25 about string
+pub const DAY_25_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 25)";
 
 /// Day 1 Path
 pub const DAY_1_PATH: &str = "data/day1/data_file";
-/// Day 1 Path
+/// Day 2 Path
 pub const DAY_2_PATH: &str = "data/day2/data_file";
-/// Day 1 Path
+/// Day 3 Path
 pub const DAY_3_PATH: &str = "data/day3/data_file";
-/// Day 1 Path
+/// Day 4 Path
 pub const DAY_4_PATH: &str = "data/day4/data_file";
-/// Day 1 Path
+/// Day 5 Path
 pub const DAY_5_PATH: &str = "data/day5/data_file";
-/// Day 1 Path
+/// Day 6 Path
 pub const DAY_6_PATH: &str = "data/day6/data_file";
-/// Day 1 Path
+/// Day 7 Path
 pub const DAY_7_PATH: &str = "data/day7/data_file";
-/// Day 1 Path
+/// Day 8 Path
 pub const DAY_8_PATH: &str = "data/day8/data_file";
-/// Day 1 Path
+/// Day 9 Path
 pub const DAY_9_PATH: &str = "data/day9/data_file";
-/// Day 1 Path
+/// Day 10 Path
 pub const DAY_10_PATH: &str = "data/day10/data_file";
-/// Day 1 Path
+/// Day 11 Path
 pub const DAY_11_PATH: &str = "data/day11/data_file";
-/// Day 1 Path
+/// Day 12 Path
 pub const DAY_12_PATH: &str = "data/day12/data_file";
-/// Day 1 Path
+/// Day 13 Path
 pub const DAY_13_PATH: &str = "data/day13/data_file";
-/// Day 1 Path
+/// Day 14 Path
 pub const DAY_14_PATH: &str = "data/day14/data_file";
-/// Day 1 Path
+/// Day 15 Path
 pub const DAY_15_PATH: &str = "data/day15/data_file";
-/// Day 1 Path
+/// Day 16 Path
 pub const DAY_16_PATH: &str = "data/day16/data_file";
-/// Day 1 Path
+/// Day 17 Path
 pub const DAY_17_PATH: &str = "data/day17/data_file";
-/// Day 1 Path
+/// Day 18 Path
 pub const DAY_18_PATH: &str = "data/day18/data_file";
-/// Day 1 Path
+/// Day 19 Path
 pub const DAY_19_PATH: &str = "data/day19/data_file";
-/// Day 1 Path
+/// Day 20 Path
 pub const DAY_20_PATH: &str = "data/day20/data_file";
-/// Day 1 Path
+/// Day 21 Path
 pub const DAY_21_PATH: &str = "data/day21/data_file";
-/// Day 1 Path
+/// Day 22 Path
 pub const DAY_22_PATH: &str = "data/day22/data_file";
-/// Day 1 Path
+/// Day 23 Path
 pub const DAY_23_PATH: &str = "data/day23/data_file";
-/// Day 1 Path
+/// Day 24 Path
 pub const DAY_24_PATH: &str = "data/day24/data_file";
+/// Day 25 Path
+pub const DAY_25_PATH: &str = "data/day25/data_file";
 
 /// Get the constants tuple for a given day.
 pub fn get_day_tuple<'a>(day: &AoCDay) -> (&'a str, &'a str, &'a str) {
@@ -175,5 +181,6 @@ pub fn get_day_tuple<'a>(day: &AoCDay) -> (&'a str, &'a str, &'a str) {
         AoCDay::AOCD22 => (DAY_22, DAY_22_ABOUT, DAY_22_PATH),
         AoCDay::AOCD23 => (DAY_23, DAY_23_ABOUT, DAY_23_PATH),
         AoCDay::AOCD24 => (DAY_24, DAY_24_ABOUT, DAY_24_PATH),
+        AoCDay::AOCD25 => (DAY_25, DAY_25_ABOUT, DAY_25_PATH),
     }
 }

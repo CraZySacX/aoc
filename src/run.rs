@@ -90,6 +90,8 @@ pub enum AoCDay {
     AOCD23,
     /// Day 24
     AOCD24,
+    /// Day 25
+    AOCD25,
 }
 
 /// Advent of Code `SubCommand`
@@ -173,6 +175,7 @@ pub fn run() -> Result<i32> {
         .subcommand(subcommand(&AoCDay::AOCD22))
         .subcommand(subcommand(&AoCDay::AOCD23))
         .subcommand(subcommand(&AoCDay::AOCD24))
+        .subcommand(subcommand(&AoCDay::AOCD25))
         .get_matches();
 
     let year: AoCYear = TryFrom::try_from(matches.value_of("year").ok_or("Invalid year!")?)?;
