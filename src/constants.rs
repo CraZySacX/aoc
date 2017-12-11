@@ -69,9 +69,9 @@ pub const DAY_8_ABOUT: &str = "Run the 'I Heard You Like Registers' solution    
 /// Advent of Code Day 9 about string
 pub const DAY_9_ABOUT: &str = "Run the 'Stream Processing' solution                      (Advent of Code 2017 - Day 09)";
 /// Advent of Code Day 10 about string
-pub const DAY_10_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 10)";
+pub const DAY_10_ABOUT: &str = "Knot Hash                                                 (Advent of Code 2017 - Day 10)";
 /// Advent of Code Day 11 about string
-pub const DAY_11_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 11)";
+pub const DAY_11_ABOUT: &str = "Hex Ed                                                    (Advent of Code 2017 - Day 11)";
 /// Advent of Code Day 12 about string
 pub const DAY_12_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 12)";
 /// Advent of Code Day 13 about string
