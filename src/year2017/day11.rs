@@ -1,5 +1,6 @@
 //! Advent of Code - Day 11 Solution
 use error::Result;
+use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Find the solution for Advent of Code 2017
@@ -15,15 +16,56 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
 /// Parse the input and go.
 fn parse_and_go(line: &str) -> Result<u32> {
     let steps: Vec<&str> = line.split(',').collect();
+    let mut coords = (0, 0, 0);
+    
+    for step in steps {
+        move_in_direction(step, &mut coords)?;
+    }
 
-    Ok(0)
+    let distance = (coords.0.abs() + coords.1.abs() + coords.2.abs()) / 2;
+    Ok(TryFrom::try_from(distance)?)
+}
+
+/// Adjust the coordinates given a movement command.
+fn move_in_direction(direction: &str, coords: &mut (i32, i32, i32)) -> Result<()> {
+    match direction {
+        "n" => {
+            coords.1 += 1;
+            coords.2 -= 1;
+        }
+        "ne" => {
+            coords.0 += 1;
+            coords.2 -= 1;
+        }
+        "se" => {
+            coords.0 += 1;
+            coords.1 -= 1;
+        }
+        "s" => {
+            coords.1 -= 1;
+            coords.2 += 1;
+        }
+        "sw" => {
+            coords.0 -= 1;
+            coords.2 += 1;
+        }
+        "nw" => {
+            coords.0 -= 1;
+            coords.1 += 1;
+        }
+        _ => return Err("Invalid movement direction".into()),
+    }
+    Ok(())
 }
 
 #[cfg(test)]
 mod one_star {
     #[test]
     fn solution() {
-        assert!(true);
+        assert_eq!(super::parse_and_go("ne,ne,ne").unwrap_or(0), 3);
+        assert_eq!(super::parse_and_go("ne,ne,sw,sw").unwrap_or(1), 0);
+        assert_eq!(super::parse_and_go("ne,ne,s,s").unwrap_or(0), 2);
+        assert_eq!(super::parse_and_go("se,sw,se,sw,sw").unwrap_or(0), 3);
     }
 }
 
