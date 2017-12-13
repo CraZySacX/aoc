@@ -16,6 +16,7 @@ use std::fs::File;
 use std::io::{self, BufReader, Write};
 use std::time::Instant;
 use utils::{self, Prefix};
+use year2016;
 use year2017;
 
 /// Advent of Code Year
@@ -124,6 +125,7 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
 
     match *year {
         AoCYear::AOC2017 => Ok(year2017::find_solution(reader, day, is_second_star)?),
+        AoCYear::AOC2016 => Ok(year2016::find_solution(reader, day, is_second_star)?),
         _ => Err("Not implemented!".into()),
     }
 }
