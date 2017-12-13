@@ -77,7 +77,7 @@ pub const DAY_11_ABOUT: &str = "Hex Ed                                          
 /// Advent of Code Day 12 about string
 pub const DAY_12_ABOUT: &str = "Digital Plumber                                           (Advent of Code 2017 - Day 12)";
 /// Advent of Code Day 13 about string
-pub const DAY_13_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 13)";
+pub const DAY_13_ABOUT: &str = "Packet Scanners                                           (Advent of Code 2017 - Day 13)";
 /// Advent of Code Day 14 about string
 pub const DAY_14_ABOUT: &str = "                                                          (Advent of Code 2017 - Day 14)";
 /// Advent of Code Day 15 about string
