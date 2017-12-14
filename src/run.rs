@@ -14,6 +14,7 @@ use error::Result;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
+use std::path::PathBuf;
 use std::time::Instant;
 use utils::{self, Prefix};
 use year2016;
@@ -27,6 +28,16 @@ pub enum AoCYear {
     AOC2016,
     /// Advent of Code 2017
     AOC2017,
+}
+
+impl<'a> From<&'a AoCYear> for &'a str {
+    fn from(year: &AoCYear) -> Self {
+        match *year {
+            AoCYear::AOC2015 => "2015",
+            AoCYear::AOC2016 => "2016",
+            AoCYear::AOC2017 => "2017",
+        }
+    }
 }
 
 impl<'a> TryFrom<&'a str> for AoCYear {
@@ -95,19 +106,49 @@ pub enum AoCDay {
     AOCD25,
 }
 
+impl<'a> From<&'a AoCDay> for &'a str {
+    fn from(year: &AoCDay) -> Self {
+        match *year {
+            AoCDay::AOCD01 => constants::DAY_1,
+            AoCDay::AOCD02 => constants::DAY_2,
+            AoCDay::AOCD03 => constants::DAY_3,
+            AoCDay::AOCD04 => constants::DAY_4,
+            AoCDay::AOCD05 => constants::DAY_5,
+            AoCDay::AOCD06 => constants::DAY_6,
+            AoCDay::AOCD07 => constants::DAY_7,
+            AoCDay::AOCD08 => constants::DAY_8,
+            AoCDay::AOCD09 => constants::DAY_9,
+            AoCDay::AOCD10 => constants::DAY_10,
+            AoCDay::AOCD11 => constants::DAY_11,
+            AoCDay::AOCD12 => constants::DAY_12,
+            AoCDay::AOCD13 => constants::DAY_13,
+            AoCDay::AOCD14 => constants::DAY_14,
+            AoCDay::AOCD15 => constants::DAY_15,
+            AoCDay::AOCD16 => constants::DAY_16,
+            AoCDay::AOCD17 => constants::DAY_17,
+            AoCDay::AOCD18 => constants::DAY_18,
+            AoCDay::AOCD19 => constants::DAY_19,
+            AoCDay::AOCD20 => constants::DAY_20,
+            AoCDay::AOCD21 => constants::DAY_21,
+            AoCDay::AOCD22 => constants::DAY_22,
+            AoCDay::AOCD23 => constants::DAY_23,
+            AoCDay::AOCD24 => constants::DAY_24,
+            AoCDay::AOCD25 => constants::DAY_25,
+        }
+    }
+}
+
 /// Advent of Code `SubCommand`
 fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
-    let constant_tuple = constants::get_day_tuple(day);
-
-    SubCommand::with_name(constant_tuple.0)
-        .about(constant_tuple.1)
+    SubCommand::with_name(day.into())
+        .about(constants::get_day_about(day))
         .arg(
             Arg::with_name("file")
                 .short("f")
                 .long("file")
                 .takes_value(true)
                 .required(true)
-                .default_value(constant_tuple.2),
+                .default_value("data_file"),
         )
         .arg(
             Arg::with_name("second")
@@ -119,8 +160,14 @@ fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
 
 /// Find the solution.
 pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Result<u32> {
-    let filename = matches.value_of("file").ok_or("Invalid filename!")?;
-    let reader = BufReader::new(File::open(filename)?);
+    let year_str: &str = year.into();
+    let day_str: &str = day.into();
+    let mut filepath = PathBuf::from("data");
+    filepath.push(year_str);
+    filepath.push(day_str);
+    filepath.push(matches.value_of("file").ok_or("Invalid filename!")?);
+
+    let reader = BufReader::new(File::open(filepath)?);
     let is_second_star = matches.is_present("second");
 
     match *year {
@@ -207,6 +254,7 @@ pub fn run() -> Result<i32> {
         (constants::DAY_22, Some(matches)) => (matches, AoCDay::AOCD22),
         (constants::DAY_23, Some(matches)) => (matches, AoCDay::AOCD23),
         (constants::DAY_24, Some(matches)) => (matches, AoCDay::AOCD24),
+        (constants::DAY_25, Some(matches)) => (matches, AoCDay::AOCD25),
         _ => return Err("Unable to determine the day you wish to run".into()),
     };
 
