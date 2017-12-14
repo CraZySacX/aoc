@@ -1,4 +1,4 @@
-//! Advent of Code - Day 6 Solution
+//! Advent of Code - Day 6 "Memory Reallocation" Solution
 use error::Result;
 use std::collections::HashSet;
 use std::io::BufRead;

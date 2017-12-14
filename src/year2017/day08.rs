@@ -1,4 +1,4 @@
-//! Advent of Code - Day 8 Solution
+//! Advent of Code - Day 8 "I Heard You Like Registers" Solution
 use error::{Error, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;

@@ -1,4 +1,4 @@
-//! Advent of Code - Day 10 Solution
+//! Advent of Code - Day 10 "Knot Hash" Solution
 use error::Result;
 use std::io::BufRead;
 

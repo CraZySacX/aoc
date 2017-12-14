@@ -1,4 +1,4 @@
-//! Advent of Code - Day 7 Solution
+//! Advent of Code - Day 7 "Recursive Circus" Solution
 use error::Result;
 use std::collections::HashMap;
 use std::io::BufRead;

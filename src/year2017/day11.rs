@@ -1,4 +1,4 @@
-//! Advent of Code - Day 11 Solution
+//! Advent of Code - Day 11 "Hex Ed" Solution
 use error::Result;
 use std::convert::TryFrom;
 use std::io::BufRead;

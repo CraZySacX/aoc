@@ -1,4 +1,4 @@
-//! Advent of Code - Day 9 Solution
+//! Advent of Code - Day 9 "Stream Processing" Solution
 use error::Result;
 use std::io::BufRead;
 

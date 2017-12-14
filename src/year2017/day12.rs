@@ -1,4 +1,4 @@
-//! Advent of Code - Day 12 Solution
+//! Advent of Code - Day 12 "Digital Plumber" Solution
 use error::Result;
 use std::collections::{HashMap, HashSet};
 use std::convert::TryFrom;

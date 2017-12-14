@@ -1,4 +1,4 @@
-//! Advent of Code - Day 2 Solution
+//! Advent of Code - Day 2 "Corruption Checksum" Solution
 use error::Result;
 use std::cmp;
 use std::io::BufRead;

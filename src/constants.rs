@@ -1,5 +1,124 @@
 //! Constants
-use run::AoCDay;
+use error::{Error, Result};
+use std::convert::TryFrom;
+
+/// Advent of Code Year
+pub enum AoCYear {
+    /// Advent of Code 2015
+    AOC2015,
+    /// Advent of Code 2016
+    AOC2016,
+    /// Advent of Code 2017
+    AOC2017,
+}
+
+impl<'a> From<&'a AoCYear> for &'a str {
+    fn from(year: &AoCYear) -> Self {
+        match *year {
+            AoCYear::AOC2015 => "2015",
+            AoCYear::AOC2016 => "2016",
+            AoCYear::AOC2017 => "2017",
+        }
+    }
+}
+
+impl<'a> TryFrom<&'a str> for AoCYear {
+    type Error = Error;
+    fn try_from(year: &str) -> Result<Self> {
+        match year {
+            "2015" => Ok(AoCYear::AOC2015),
+            "2016" => Ok(AoCYear::AOC2016),
+            "2017" => Ok(AoCYear::AOC2017),
+            _ => Err("Unable to convert to year!".into()),
+        }
+    }
+}
+
+/// Advent of Code Days
+pub enum AoCDay {
+    /// Day 1
+    AOCD01,
+    /// Day 2
+    AOCD02,
+    /// Day 3
+    AOCD03,
+    /// Day 4
+    AOCD04,
+    /// Day 5
+    AOCD05,
+    /// Day 6
+    AOCD06,
+    /// Day 7
+    AOCD07,
+    /// Day 8
+    AOCD08,
+    /// Day 9
+    AOCD09,
+    /// Day 10
+    AOCD10,
+    /// Day 11
+    AOCD11,
+    /// Day 12
+    AOCD12,
+    /// Day 13
+    AOCD13,
+    /// Day 14
+    AOCD14,
+    /// Day 15
+    AOCD15,
+    /// Day 16
+    AOCD16,
+    /// Day 17
+    AOCD17,
+    /// Day 18
+    AOCD18,
+    /// Day 19
+    AOCD19,
+    /// Day 20
+    AOCD20,
+    /// Day 21
+    AOCD21,
+    /// Day 22
+    AOCD22,
+    /// Day 23
+    AOCD23,
+    /// Day 24
+    AOCD24,
+    /// Day 25
+    AOCD25,
+}
+
+impl<'a> From<&'a AoCDay> for &'a str {
+    fn from(year: &AoCDay) -> Self {
+        match *year {
+            AoCDay::AOCD01 => DAY_1,
+            AoCDay::AOCD02 => DAY_2,
+            AoCDay::AOCD03 => DAY_3,
+            AoCDay::AOCD04 => DAY_4,
+            AoCDay::AOCD05 => DAY_5,
+            AoCDay::AOCD06 => DAY_6,
+            AoCDay::AOCD07 => DAY_7,
+            AoCDay::AOCD08 => DAY_8,
+            AoCDay::AOCD09 => DAY_9,
+            AoCDay::AOCD10 => DAY_10,
+            AoCDay::AOCD11 => DAY_11,
+            AoCDay::AOCD12 => DAY_12,
+            AoCDay::AOCD13 => DAY_13,
+            AoCDay::AOCD14 => DAY_14,
+            AoCDay::AOCD15 => DAY_15,
+            AoCDay::AOCD16 => DAY_16,
+            AoCDay::AOCD17 => DAY_17,
+            AoCDay::AOCD18 => DAY_18,
+            AoCDay::AOCD19 => DAY_19,
+            AoCDay::AOCD20 => DAY_20,
+            AoCDay::AOCD21 => DAY_21,
+            AoCDay::AOCD22 => DAY_22,
+            AoCDay::AOCD23 => DAY_23,
+            AoCDay::AOCD24 => DAY_24,
+            AoCDay::AOCD25 => DAY_25,
+        }
+    }
+}
 
 /// Day 1
 pub const DAY_1: &str = "day01";
@@ -53,55 +172,55 @@ pub const DAY_24: &str = "day24";
 pub const DAY_25: &str = "day25";
 
 /// Advent of Code Day 1 about string
-pub const DAY_1_ABOUT: &str = "Inverse Captcha                        (Advent of Code 2017 - Day 01)";
+const DAY_1_ABOUT: &str = "Advent of Code - Day 01";
 /// Advent of Code Day 2 about string
-pub const DAY_2_ABOUT: &str = "Corruption Checksum                    (Advent of Code 2017 - Day 02)";
+const DAY_2_ABOUT: &str = "Advent of Code - Day 02";
 /// Advent of Code Day 3 about string
-pub const DAY_3_ABOUT: &str = "Spiral Memory                          (Advent of Code 2017 - Day 03)";
+const DAY_3_ABOUT: &str = "Advent of Code - Day 03";
 /// Advent of Code Day 4 about string
-pub const DAY_4_ABOUT: &str = "High Entropy Passphrases               (Advent of Code 2017 - Day 04)";
+const DAY_4_ABOUT: &str = "Advent of Code - Day 04";
 /// Advent of Code Day 5 about string
-pub const DAY_5_ABOUT: &str = "A Maze of Twisty Trampolines All Alike (Advent of Code 2017 - Day 05)";
+const DAY_5_ABOUT: &str = "Advent of Code - Day 05";
 /// Advent of Code Day 6 about string
-pub const DAY_6_ABOUT: &str = "Memory Reallocation                    (Advent of Code 2017 - Day 06)";
+const DAY_6_ABOUT: &str = "Advent of Code - Day 06";
 /// Advent of Code Day 7 about string
-pub const DAY_7_ABOUT: &str = "Recursive Circus                       (Advent of Code 2017 - Day 07)";
+const DAY_7_ABOUT: &str = "Advent of Code - Day 07";
 /// Advent of Code Day 8 about string
-pub const DAY_8_ABOUT: &str = "I Heard You Like Registers             (Advent of Code 2017 - Day 08)";
+const DAY_8_ABOUT: &str = "Advent of Code - Day 08";
 /// Advent of Code Day 9 about string
-pub const DAY_9_ABOUT: &str = "Stream Processing                      (Advent of Code 2017 - Day 09)";
+const DAY_9_ABOUT: &str = "Advent of Code - Day 09";
 /// Advent of Code Day 10 about string
-pub const DAY_10_ABOUT: &str = "Knot Hash                              (Advent of Code 2017 - Day 10)";
+const DAY_10_ABOUT: &str = "Advent of Code - Day 10";
 /// Advent of Code Day 11 about string
-pub const DAY_11_ABOUT: &str = "Hex Ed                                 (Advent of Code 2017 - Day 11)";
+const DAY_11_ABOUT: &str = "Advent of Code - Day 11";
 /// Advent of Code Day 12 about string
-pub const DAY_12_ABOUT: &str = "Digital Plumber                        (Advent of Code 2017 - Day 12)";
+const DAY_12_ABOUT: &str = "Advent of Code - Day 12";
 /// Advent of Code Day 13 about string
-pub const DAY_13_ABOUT: &str = "Packet Scanners                        (Advent of Code 2017 - Day 13)";
+const DAY_13_ABOUT: &str = "Advent of Code - Day 13";
 /// Advent of Code Day 14 about string
-pub const DAY_14_ABOUT: &str = "                                       (Advent of Code 2017 - Day 14)";
+const DAY_14_ABOUT: &str = "Advent of Code - Day 14";
 /// Advent of Code Day 15 about string
-pub const DAY_15_ABOUT: &str = "                                       (Advent of Code 2017 - Day 15)";
+const DAY_15_ABOUT: &str = "Advent of Code - Day 15";
 /// Advent of Code Day 16 about string
-pub const DAY_16_ABOUT: &str = "                                       (Advent of Code 2017 - Day 16)";
+const DAY_16_ABOUT: &str = "Advent of Code - Day 16";
 /// Advent of Code Day 17 about string
-pub const DAY_17_ABOUT: &str = "                                       (Advent of Code 2017 - Day 17)";
+const DAY_17_ABOUT: &str = "Advent of Code - Day 17";
 /// Advent of Code Day 18 about string
-pub const DAY_18_ABOUT: &str = "                                       (Advent of Code 2017 - Day 18)";
+const DAY_18_ABOUT: &str = "Advent of Code - Day 18";
 /// Advent of Code Day 19 about string
-pub const DAY_19_ABOUT: &str = "                                       (Advent of Code 2017 - Day 19)";
+const DAY_19_ABOUT: &str = "Advent of Code - Day 19";
 /// Advent of Code Day 20 about string
-pub const DAY_20_ABOUT: &str = "                                       (Advent of Code 2017 - Day 20)";
+const DAY_20_ABOUT: &str = "Advent of Code - Day 20";
 /// Advent of Code Day 21 about string
-pub const DAY_21_ABOUT: &str = "                                       (Advent of Code 2017 - Day 21)";
+const DAY_21_ABOUT: &str = "Advent of Code - Day 21";
 /// Advent of Code Day 22 about string
-pub const DAY_22_ABOUT: &str = "                                       (Advent of Code 2017 - Day 22)";
+const DAY_22_ABOUT: &str = "Advent of Code - Day 22";
 /// Advent of Code Day 23 about string
-pub const DAY_23_ABOUT: &str = "                                       (Advent of Code 2017 - Day 23)";
+const DAY_23_ABOUT: &str = "Advent of Code - Day 23";
 /// Advent of Code Day 24 about string
-pub const DAY_24_ABOUT: &str = "                                       (Advent of Code 2017 - Day 24)";
+const DAY_24_ABOUT: &str = "Advent of Code - Day 24";
 /// Advent of Code Day 25 about string
-pub const DAY_25_ABOUT: &str = "                                       (Advent of Code 2017 - Day 25)";
+const DAY_25_ABOUT: &str = "Advent of Code - Day 25";
 
 /// Get the constants tuple for a given day.
 pub fn get_day_about<'a>(day: &AoCDay) -> &'a str {

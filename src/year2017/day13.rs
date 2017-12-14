@@ -1,4 +1,4 @@
-//! Advent of Code - Day 13 Solution
+//! Advent of Code - Day 13 "Packet Scanners" Solution
 use error::Result;
 use std::collections::HashMap;
 use std::convert::TryFrom;

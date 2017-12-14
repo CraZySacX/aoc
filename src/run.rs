@@ -8,8 +8,7 @@
 
 //! `aoc` runtime
 use clap::{App, Arg, ArgMatches, SubCommand};
-use constants;
-use error::Error;
+use constants::{self, AoCDay, AoCYear};
 use error::Result;
 use std::convert::TryFrom;
 use std::fs::File;
@@ -20,124 +19,6 @@ use utils::{self, Prefix};
 use year2015;
 use year2016;
 use year2017;
-
-/// Advent of Code Year
-pub enum AoCYear {
-    /// Advent of Code 2015
-    AOC2015,
-    /// Advent of Code 2016
-    AOC2016,
-    /// Advent of Code 2017
-    AOC2017,
-}
-
-impl<'a> From<&'a AoCYear> for &'a str {
-    fn from(year: &AoCYear) -> Self {
-        match *year {
-            AoCYear::AOC2015 => "2015",
-            AoCYear::AOC2016 => "2016",
-            AoCYear::AOC2017 => "2017",
-        }
-    }
-}
-
-impl<'a> TryFrom<&'a str> for AoCYear {
-    type Error = Error;
-    fn try_from(year: &str) -> Result<Self> {
-        match year {
-            "2015" => Ok(AoCYear::AOC2015),
-            "2016" => Ok(AoCYear::AOC2016),
-            "2017" => Ok(AoCYear::AOC2017),
-            _ => Err("Unable to convert to year!".into()),
-        }
-    }
-}
-
-/// Advent of Code Days
-pub enum AoCDay {
-    /// Day 1
-    AOCD01,
-    /// Day 2
-    AOCD02,
-    /// Day 3
-    AOCD03,
-    /// Day 4
-    AOCD04,
-    /// Day 5
-    AOCD05,
-    /// Day 6
-    AOCD06,
-    /// Day 7
-    AOCD07,
-    /// Day 8
-    AOCD08,
-    /// Day 9
-    AOCD09,
-    /// Day 10
-    AOCD10,
-    /// Day 11
-    AOCD11,
-    /// Day 12
-    AOCD12,
-    /// Day 13
-    AOCD13,
-    /// Day 14
-    AOCD14,
-    /// Day 15
-    AOCD15,
-    /// Day 16
-    AOCD16,
-    /// Day 17
-    AOCD17,
-    /// Day 18
-    AOCD18,
-    /// Day 19
-    AOCD19,
-    /// Day 20
-    AOCD20,
-    /// Day 21
-    AOCD21,
-    /// Day 22
-    AOCD22,
-    /// Day 23
-    AOCD23,
-    /// Day 24
-    AOCD24,
-    /// Day 25
-    AOCD25,
-}
-
-impl<'a> From<&'a AoCDay> for &'a str {
-    fn from(year: &AoCDay) -> Self {
-        match *year {
-            AoCDay::AOCD01 => constants::DAY_1,
-            AoCDay::AOCD02 => constants::DAY_2,
-            AoCDay::AOCD03 => constants::DAY_3,
-            AoCDay::AOCD04 => constants::DAY_4,
-            AoCDay::AOCD05 => constants::DAY_5,
-            AoCDay::AOCD06 => constants::DAY_6,
-            AoCDay::AOCD07 => constants::DAY_7,
-            AoCDay::AOCD08 => constants::DAY_8,
-            AoCDay::AOCD09 => constants::DAY_9,
-            AoCDay::AOCD10 => constants::DAY_10,
-            AoCDay::AOCD11 => constants::DAY_11,
-            AoCDay::AOCD12 => constants::DAY_12,
-            AoCDay::AOCD13 => constants::DAY_13,
-            AoCDay::AOCD14 => constants::DAY_14,
-            AoCDay::AOCD15 => constants::DAY_15,
-            AoCDay::AOCD16 => constants::DAY_16,
-            AoCDay::AOCD17 => constants::DAY_17,
-            AoCDay::AOCD18 => constants::DAY_18,
-            AoCDay::AOCD19 => constants::DAY_19,
-            AoCDay::AOCD20 => constants::DAY_20,
-            AoCDay::AOCD21 => constants::DAY_21,
-            AoCDay::AOCD22 => constants::DAY_22,
-            AoCDay::AOCD23 => constants::DAY_23,
-            AoCDay::AOCD24 => constants::DAY_24,
-            AoCDay::AOCD25 => constants::DAY_25,
-        }
-    }
-}
 
 /// Advent of Code `SubCommand`
 fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {

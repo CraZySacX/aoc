@@ -1,4 +1,4 @@
-//! Advent of Code - Day 3 Solution
+//! Advent of Code - Day 3 "Spiral Memory" Solution
 use error::Result;
 use std::collections::HashMap;
 use std::convert::TryFrom;

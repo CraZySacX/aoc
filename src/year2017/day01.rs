@@ -1,4 +1,4 @@
-//! Advent of Code - Day 1 Solution
+//! Advent of Code - Day 1 "Inverse Captcha" Solution
 use error::Result;
 use std::io::BufRead;
 
