@@ -13,6 +13,7 @@ extern crate clap;
 #[macro_use]
 extern crate error_chain;
 extern crate ndarray;
+extern crate regex;
 
 mod constants;
 mod year2015;

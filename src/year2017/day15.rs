@@ -37,7 +37,7 @@ fn check_x_for_matches(init_a: u64, init_b: u64, count: u32, second_star: bool) 
 
 /// Calculate the next value for `A` or `B`.
 fn calculate_next(prev: u64, is_a: bool, is_second_star: bool) -> Result<u64> {
-    let next = (if is_a { 16807 * prev } else { 48271 * prev }) % 2147483647;
+    let next = (if is_a { 16_807 * prev } else { 48_271 * prev }) % 2_147_483_647;
 
     if is_second_star {
         if next % if is_a { 4 } else { 8 } == 0 {
