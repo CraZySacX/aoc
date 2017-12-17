@@ -14,19 +14,36 @@ enum Move {
 }
 
 /// Find the solution for Advent of Code 2017
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     use std::io::{self, Write};
     let mut moves: Vec<Move> = Vec::new();
     let mut dancers = vec![
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'
     ];
+    let orig = dancers.clone();
 
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
         generate_moves(line, &mut moves)?;
     }
 
-    apply_moves(&moves, &mut dancers)?;
+    if second_star {
+        // The trick here is the patten repeats.  So we only need
+        // to calculate 1_000_000_000 % repeat to figure this one out.
+        let mut repeat = 0;
+        for i in 0..1_000_000_000 {
+            apply_moves(&moves, &mut dancers)?;
+            if dancers == orig {
+                repeat = i + 1;
+                break;
+            }
+        }
+        for _ in 0..(1_000_000_000 % repeat) {
+            apply_moves(&moves, &mut dancers)?;
+        }
+    } else {
+        apply_moves(&moves, &mut dancers)?;
+    }
     for i in dancers {
         write!(io::stdout(), "{}", i)?;
     }
@@ -74,16 +91,14 @@ fn generate_moves(line: &str, moves: &mut Vec<Move>) -> Result<()> {
 }
 
 /// Apply moves
-fn apply_moves(moves: &[Move], dancers: &mut Vec<char>) -> Result<()> {
-    // use std::io::{self, Write};
+fn apply_moves(moves: &[Move], dancers: &mut [char]) -> Result<()> {
     for mov in moves {
         match *mov {
-            Move::Spin(ref x) => for _ in 0..*x {
-                let last = dancers.pop().ok_or("invalid pop")?;
-                dancers.insert(0, last);
-            },
+            Move::Spin(ref x) => {
+                let len = dancers.len();
+                dancers.rotate(len - *x as usize);
+            }
             Move::Exchange(ref x, ref y) => {
-                // writeln!(io::stdout(), "Exchanging {} and {}", x, y)?;
                 let first = dancers[*x as usize];
                 let second = dancers[*y as usize];
                 dancers[*y as usize] = first;
@@ -110,7 +125,6 @@ fn apply_moves(moves: &[Move], dancers: &mut Vec<char>) -> Result<()> {
                     }
                 }
 
-                // writeln!(io::stdout(), "x: {}, y: {}", idx_x, idx_y)?;
                 dancers[idx_y] = *x;
                 dancers[idx_x] = *y;
             }
