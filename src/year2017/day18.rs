@@ -21,8 +21,10 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         commands.push(parse_command(line)?);
     }
 
+    // TODO: Commands should be a hashmap of u32 -> command, so jumps can be based on id.
     initialize_register_map(&commands, &mut register_map)?;
 
+    // TODO: Once commands have id, make this a loop, that runs until a valid 'rcv'.
     for command in commands {
         run_command(command, &mut register_map)?;
     }
