@@ -170,10 +170,10 @@ mod one_star {
         assert_eq!(*register_map.get(&"last_sound".to_string()).ok_or(0).expect(""), 4);
         let command_8 = super::parse_command("set a 0").expect("");
         super::run_command(command_8, &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 0);
+        assert_eq!(*register_map.get(&"a".to_string()).ok_or(1).expect(""), 0);
         let command_9 = super::parse_command("rcv a").expect("");
         super::run_command(command_9, &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 0);
+        assert_eq!(*register_map.get(&"a".to_string()).ok_or(1).expect(""), 0);
     }
 }
 
