@@ -11,6 +11,9 @@ error_chain!{
     foreign_links {
         Io(::std::io::Error);
         ParseInt(::std::num::ParseIntError);
+        Recv(::std::sync::mpsc::RecvError);
+        RecvTimeout(::std::sync::mpsc::RecvTimeoutError);
+        SendError(::std::sync::mpsc::SendError<i64>);
         Regex(::regex::Error);
         TryFromInt(::std::num::TryFromIntError);
     }
