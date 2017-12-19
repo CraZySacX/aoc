@@ -77,12 +77,11 @@ fn thread_me() -> Result<u32> {
         }
     });
 
-    match receiver2.recv_timeout(Duration::from_millis(5_000)) {
-        Ok(_) => Ok(0),
-        Err(_) => {
-            writeln!(io::stdout(), "")?;
-            Ok(1)
-        },
+    if receiver2.recv_timeout(Duration::from_millis(5_000)).is_ok() {
+        Ok(0)
+    } else {
+        writeln!(io::stdout(), "")?;
+        Ok(1)
     }
 }
 
