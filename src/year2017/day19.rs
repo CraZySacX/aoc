@@ -32,37 +32,36 @@ impl fmt::Display for Direction {
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    use std::io::{self, Write};
     let mut network_map: Array2<u8> = Array2::zeros((201, 201));
     for (idx, line_result) in reader.lines().enumerate() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
         fill_row(line, idx, &mut network_map);
     }
-    let letters = traverse_map(&network_map)?;
+
+    let (letters, steps) = traverse_map(&network_map)?;
     writeln!(io::stdout(), "{}", letters)?;
-    Ok(0)
+
+    Ok(steps)
 }
 
 /// Fill a row in the network map array.
 fn fill_row(line: &str, row: usize, network_map: &mut Array2<u8>) {
     for (idx, bit) in line.as_bytes().iter().enumerate() {
-        writeln!(io::stdout(), "{},{}", row, idx).expect("");
         network_map[[row, idx]] = *bit;
     }
 }
 
 /// Traverse the map.
-fn traverse_map(network_map: &Array2<u8>) -> Result<String> {
-    use std::io::{self, Write};
+fn traverse_map(network_map: &Array2<u8>) -> Result<(String, u32)> {
     let mut bytes = Vec::new();
     let mut curr_row = 0;
     let mut curr_col = 0;
     let max_col = network_map.cols();
     let max_row = network_map.rows();
     let mut curr_direction = Direction::Down;
+    let mut steps = 0;
 
     loop {
-        writeln!(io::stdout(), "{},{}", curr_row, curr_col)?;
         if curr_row == max_row {
             return Err(format!("Invalid row value: {}", curr_row).into());
         }
@@ -78,7 +77,6 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<String> {
                     // We are still in the first row.  We need to find
                     // the down byte.
                     curr_col += 1;
-                    continue;
                 } else {
                     break;
                 }
@@ -90,7 +88,7 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<String> {
                     Direction::Right => curr_col += 1,
                     Direction::Left => curr_col -= 1,
                 }
-                continue;
+                steps += 1;
             }
             43 => {
                 let (next_row, next_col) = get_next_neighbor(
@@ -105,6 +103,7 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<String> {
                 curr_row = next_row;
                 curr_col = next_col;
                 curr_direction = next_direction;
+                steps += 1;
             }
             x => {
                 bytes.push(x);
@@ -115,20 +114,12 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<String> {
                     Direction::Left => curr_col -= 1,
                     Direction::Right => curr_col += 1,
                 }
-
-                continue;
+                steps += 1;
             }
         }
     }
 
-    writeln!(
-        io::stdout(),
-        "[{},{}] => moving {}",
-        curr_row,
-        curr_col,
-        curr_direction
-    )?;
-    Ok(String::from_utf8_lossy(&bytes).into_owned())
+    Ok((String::from_utf8_lossy(&bytes).into_owned(), steps))
 }
 
 /// Check the three nearest neighbors for the next valid direction.
@@ -201,7 +192,10 @@ mod one_star {
         assert_eq!(network_map[[4, 5]], 124);
         fill_row("     +B-+  +--+", 5, &mut network_map);
         assert_eq!(network_map[[5, 5]], 43);
-        assert_eq!(traverse_map(&network_map).expect(""), "ABCDEF");
+        assert_eq!(
+            traverse_map(&network_map).expect(""),
+            ("ABCDEF".to_string(), 38)
+        );
     }
 }
 
