@@ -12,6 +12,7 @@ struct Particle {
     md: usize,
 }
 
+#[derive(Clone, PartialEq)]
 struct Coords {
     x: i64,
     y: i64,
@@ -31,7 +32,7 @@ struct Acc {
 }
 
 /// Find the solution for Advent of Code 2017
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     use std::io::{self, Write};
     let mut particle_map: HashMap<usize, Particle> = HashMap::new();
     let coords_re = Regex::new(r"p=< *(-?\d+),(-?\d+),(-?\d+)>")?;
@@ -43,13 +44,25 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         add_particle_to_map(idx, line, &mut particle_map, &coords_re, &vel_re, &acc_re)?;
     }
 
-    for _ in 0..10_000 {
+    for _ in 0..1000 {
         for mut particle in particle_map.values_mut() {
             update_particle(&mut particle)?;
         }
-        let idx = find_minimum_md(&particle_map)?;
-        write!(io::stdout(), "{}\r", idx)?;
+
+        if second_star {
+            let matches = find_collisions(&particle_map)?;
+
+            for idx in matches {
+                particle_map.remove(&idx);
+            }
+            writeln!(io::stdout(), "{}", particle_map.len())?;
+        } else {
+            let idx = find_minimum_md(&particle_map)?;
+            writeln!(io::stdout(), "{}", idx)?;
+        }
     }
+
+    writeln!(io::stdout(), "")?;
     Ok(0)
 }
 
@@ -146,6 +159,28 @@ fn find_minimum_md(particle_map: &HashMap<usize, Particle>) -> Result<usize> {
     }
 
     Ok(idx)
+}
+
+/// Remove collisions
+fn find_collisions(particle_map: &HashMap<usize, Particle>) -> Result<Vec<usize>> {
+    let all_coords: HashMap<usize, Coords> = particle_map
+        .iter()
+        .map(|(k, p)| (*k, p.coords.clone()))
+        .collect();
+    let mut matches = Vec::new();
+
+    for (k, v) in particle_map {
+        for (j, c1) in &all_coords {
+            if *c1 == v.coords && j != k {
+                matches.push(*k);
+            }
+        }
+    }
+
+    matches.sort();
+    matches.dedup();
+
+    Ok(matches)
 }
 
 #[cfg(test)]
