@@ -148,17 +148,12 @@ fn update_particle(particle: &mut Particle) -> Result<()> {
 
 /// Find the minimum Manhattan distance in the map.
 fn find_minimum_md(particle_map: &HashMap<usize, Particle>) -> Result<usize> {
-    let mut minimum_md = usize::max_value();
-    let mut idx = usize::max_value();
+    let (min_idx, _) = particle_map
+        .iter()
+        .min_by_key(|&(_, particle)| particle.md)
+        .ok_or("No minimum found")?;
 
-    for (k, particle) in particle_map {
-        if particle.md < minimum_md {
-            minimum_md = particle.md;
-            idx = *k;
-        }
-    }
-
-    Ok(idx)
+    Ok(*min_idx)
 }
 
 /// Remove collisions
