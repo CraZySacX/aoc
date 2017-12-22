@@ -177,7 +177,7 @@ fn input_to_output(
                 }
                 rotate(&mut to_check);
             }
-        },
+        }
         (3, 3) => {
             let mut to_check = input.clone();
             for _ in 0..4 {
@@ -198,7 +198,7 @@ fn input_to_output(
                 }
                 rotate(&mut to_check);
             }
-        },
+        }
         _ => return Err("invalid array dimensions".into()),
     }
     Err("No match found!".into())
@@ -212,7 +212,7 @@ mod one_star {
 
     #[test]
     fn solution() {
-        use std::io::{self, Write};
+        // use std::io::{self, Write};
 
         let two_by_two_re = Regex::new("([.#]{2}/[.#]{2}) => (.*)").expect("");
         let three_by_three_re = Regex::new("([.#]{3}/[.#]{3}/[.#]{3}) => (.*)").expect("");
@@ -235,12 +235,12 @@ mod one_star {
         assert_eq!(two_by_two.len(), 1);
         assert_eq!(three_by_three.len(), 1);
 
-        let mut test = Array2::from_shape_vec((2,2), vec![0,1,2,3]).expect("");
-        writeln!(io::stdout(), "orig:\n{}", test).expect("");
+        let mut test = Array2::from_shape_vec((2, 2), vec![0, 1, 2, 3]).expect("");
+        // writeln!(io::stdout(), "orig:\n{}", test).expect("");
         test.swap_axes(0, 1);
-        writeln!(io::stdout(), "trans:\n{}", test).expect("");
+        // writeln!(io::stdout(), "trans:\n{}", test).expect("");
         test.invert_axis(Axis(1));
-        writeln!(io::stdout(), "rot:\n{}", test).expect("");
+        // writeln!(io::stdout(), "rot:\n{}", test).expect("");
         // let output = super::input_to_output(&input, &two_by_two, &three_by_three).expect("");
         // assert_eq!(output.dim(), (4, 4));
 
