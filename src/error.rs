@@ -14,6 +14,7 @@ error_chain!{
         Recv(::std::sync::mpsc::RecvError);
         RecvTimeout(::std::sync::mpsc::RecvTimeoutError);
         SendError(::std::sync::mpsc::SendError<i64>);
+        Shape(::ndarray::ShapeError);
         Regex(::regex::Error);
         TryFromInt(::std::num::TryFromIntError);
     }

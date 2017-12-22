@@ -5,29 +5,47 @@ use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::io::BufRead;
 
+/// A particle has x,y,z coords, a velocity, an acceleration,
+/// and a Manhattan Distance from the origin.
 struct Particle {
+    /// x,y,z coords
     coords: Coords,
+    /// particle velocity
     vel: Velocity,
+    /// particle acceleration
     acc: Acc,
+    /// Manhattan Distance from origin.
     md: usize,
 }
 
+/// 3-d coordinates
 #[derive(Clone, PartialEq)]
 struct Coords {
+    /// x coordinate
     x: i64,
+    /// y coordinate
     y: i64,
+    /// z coordinate
     z: i64,
 }
 
+/// particle velocity
 struct Velocity {
+    /// velocity in the x-direciton.
     vx: i64,
+    /// velocity in the y-direciton.
     vy: i64,
+    /// velocity in the z-direciton.
     vz: i64,
 }
 
+/// particle acceleration
 struct Acc {
+    /// acceleration in the x direction.
     ax: i64,
+    /// acceleration in the x direction.
     ay: i64,
+    /// acceleration in the x direction.
     az: i64,
 }
 
@@ -67,6 +85,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 /// Add a particle to the particle map
+#[cfg_attr(feature = "cargo-clippy", allow(similar_names))]
 fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize, Particle>, coords_re: &Regex, vel_re: &Regex, acc_re: &Regex) -> Result<()> {
     let parts: Vec<&str> = line.split(", ").collect();
 
