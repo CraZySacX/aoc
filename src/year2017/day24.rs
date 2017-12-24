@@ -17,13 +17,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     // use std::io::{self, Write};
     let mut all = reader
         .lines()
-        .filter_map(|l_res| {
-            if let Ok(l) = l_res {
-                Some(to_component(&l))
-            } else {
-                None
-            }
-        })
+        .filter_map(to_component)
         .collect::<HashSet<Component>>();
 
     let mut scores = Vec::new();
@@ -51,14 +45,18 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 /// Convert a String to a Component
-fn to_component(line: &str) -> Component {
-    let parts = line.split('/')
-        .map(|s| s.parse::<u32>().expect(""))
-        .collect::<Vec<u32>>();
+fn to_component(line_res: ::std::result::Result<String, ::std::io::Error>) -> Option<Component> {
+    if let Ok(line) = line_res {
+        let parts = line.split('/')
+            .map(|s| s.parse::<u32>().expect(""))
+            .collect::<Vec<u32>>();
 
-    Component {
-        left: parts[0],
-        right: parts[1],
+        Some(Component {
+            left: parts[0],
+            right: parts[1],
+        })
+    } else {
+        None
     }
 }
 
