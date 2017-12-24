@@ -25,31 +25,30 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     initialize_register_map(&commands, &mut register_map)?;
 
-    let mut mul_count = 0;
-
-    if second_star {
+    let mul_count = if second_star {
         let b = 106_700;
         let c = 123_700;
         let mut h = 0;
-        for b in (b..c + 1).step_by(17) {
+        for b in (b..=c).step_by(17) {
             if !primal::is_prime(b) {
                 h += 1
             }
         }
-        mul_count = h;
+        h
     } else {
         let mut id = 0;
-
+        let mut count = 0;
         loop {
             if id < 0 || id == TryFrom::try_from(commands.len())? {
                 break;
             }
             let next_command = commands.get(&id).ok_or("invalid command")?;
-            let (new_id, new_mul_count) = run_command((id, next_command), &mut register_map, mul_count)?;
+            let (new_id, new_mul_count) = run_command((id, next_command), &mut register_map, count)?;
             id = new_id;
-            mul_count = new_mul_count;
+            count = new_mul_count;
         }
-    }
+        count
+    };
 
     Ok(mul_count)
 }
