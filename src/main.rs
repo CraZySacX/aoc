@@ -18,6 +18,7 @@ extern crate itertools;
 extern crate bytecount;
 extern crate ndarray;
 extern crate pathfinding;
+extern crate primal;
 extern crate regex;
 
 mod constants;
