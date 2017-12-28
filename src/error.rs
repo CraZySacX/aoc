@@ -10,6 +10,7 @@
 error_chain!{
     foreign_links {
         Io(::std::io::Error);
+        ParseChar(::std::char::ParseCharError);
         ParseInt(::std::num::ParseIntError);
         Recv(::std::sync::mpsc::RecvError);
         RecvTimeout(::std::sync::mpsc::RecvTimeoutError);
