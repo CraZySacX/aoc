@@ -1,8 +1,9 @@
 //! Advent of Code - Day 25 Solution
 use error::{Error, Result};
 use regex::Regex;
-use std::collections::{HashMap, VecDeque};
+use std::collections::{BTreeMap, VecDeque};
 use std::convert::TryFrom;
+use std::fmt;
 use std::io::BufRead;
 
 /// The direction to move on the tape
@@ -31,6 +32,19 @@ impl<'a> TryFrom<&'a str> for Move {
     }
 }
 
+impl fmt::Display for Move {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            fmt,
+            "{}",
+            match *self {
+                Move::Left => "left",
+                Move::Right => "right",
+            }
+        )
+    }
+}
+
 /// A state definition.
 #[derive(Debug, Default)]
 struct State {
@@ -48,14 +62,25 @@ struct State {
     one_next: char,
 }
 
+impl fmt::Display for State {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        write!(fmt, "State {{ ")?;
+        write!(fmt, "zero_write: {}, ", self.zero_write)?;
+        write!(fmt, "zero_move: {}, ", self.zero_move)?;
+        write!(fmt, "zero_next: {}, ", self.zero_next)?;
+        write!(fmt, "one_write: {}, ", self.one_write)?;
+        write!(fmt, "one_move: {}, ", self.one_move)?;
+        write!(fmt, "one_next: {} }}", self.one_next)
+    }
+}
+
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    use std::io::{self, Write};
-    let mut tape: VecDeque<u8> = VecDeque::with_capacity(1_000_000);
-    let mut states: HashMap<char, State> = HashMap::new();
+    let mut tape: VecDeque<u8> = VecDeque::with_capacity(10_000_000);
+    let mut states: BTreeMap<char, State> = BTreeMap::new();
 
-    for mut slot in &mut tape {
-        *slot = 0;
+    for _ in 0..10_000_000 {
+        tape.push_back(0);
     }
 
     let begin_re = Regex::new(r"^Begin in state ([A-Z])\.$")?;
@@ -73,13 +98,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     let mut curr_val = 0;
 
     for line in reader.lines().filter_map(|x| x.ok()) {
-        writeln!(io::stdout(), "Parsing line: {}", line)?;
         if begin_re.is_match(&line) {
             let caps = begin_re.captures(&line).ok_or("invalid begin captures")?;
             let state_str = caps.get(1).ok_or("invalid state value")?.as_str();
             let val = state_str.parse::<char>()?;
             start_state = val;
-            writeln!(io::stdout(), "Found beginning state: {}", start_state)?;
         } else if dc_re.is_match(&line) {
             let caps = dc_re
                 .captures(&line)
@@ -89,7 +112,6 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
                 .as_str();
             let steps = steps_str.parse::<usize>()?;
             step_count = steps;
-            writeln!(io::stdout(), "Checksum after: {}", step_count)?;
         } else if in_state_re.is_match(&line) {
             let caps = in_state_re
                 .captures(&line)
@@ -99,7 +121,6 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             parsing_state = true;
             curr_state = val;
             states.insert(val, Default::default());
-            writeln!(io::stdout(), "In state definition: {}", curr_state)?;
         } else if if_curr_re.is_match(&line) && parsing_state {
             let caps = if_curr_re
                 .captures(&line)
@@ -148,7 +169,6 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
                 return Err("Invalid curr value".into());
             }
         } else if line.is_empty() && parsing_state {
-            writeln!(io::stdout(), "Leaving state definition: {}", curr_state)?;
             parsing_state = false;
         } else if line.is_empty() {
             // Do nothing.
@@ -157,10 +177,32 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         }
     }
 
-    for state in states {
-        writeln!(io::stdout(), "{:?}", state)?;
+    let mut curr_idx = 5_000_000;
+    curr_state = start_state;
+
+    for _ in 0..step_count {
+        let tape_val = tape.get_mut(curr_idx).ok_or("invalid tape value")?;
+        let state = states.get(&curr_state).ok_or("invalid state value")?;
+
+        if *tape_val == 0 {
+            *tape_val = state.zero_write;
+            match state.zero_move {
+                Move::Left => curr_idx -= 1,
+                Move::Right => curr_idx += 1,
+            }
+            curr_state = state.zero_next;
+        } else {
+            *tape_val = state.one_write;
+            match state.one_move {
+                Move::Left => curr_idx -= 1,
+                Move::Right => curr_idx += 1,
+            }
+            curr_state = state.one_next;
+        }
     }
-    Ok(0)
+
+    let count = tape.iter().filter(|x| **x == 1).count();
+    Ok(TryFrom::try_from(count)?)
 }
 
 #[cfg(test)]
