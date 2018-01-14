@@ -87,7 +87,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     }
 
     if second_star {
-        let mut maximum_attained = ::std::i32::MIN;
+        let mut maximum_attained = i32::min_value();
 
         for command in &commands {
             if check_condition(&register_map, &command.condition).expect("") {

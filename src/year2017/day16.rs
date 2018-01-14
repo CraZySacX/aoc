@@ -96,7 +96,7 @@ fn apply_moves(moves: &[Move], dancers: &mut [char]) -> Result<()> {
         match *mov {
             Move::Spin(ref x) => {
                 let len = dancers.len();
-                dancers.rotate(len - *x as usize);
+                dancers.rotate_left(len - *x as usize);
             }
             Move::Exchange(ref x, ref y) => {
                 let first = dancers[*x as usize];
