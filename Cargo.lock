@@ -20,7 +20,7 @@ dependencies = [
  "error-chain 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.7.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "ndarray 0.10.14 (registry+https://github.com/rust-lang/crates.io-index)",
- "pathfinding 0.6.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pathfinding 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "primal 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -194,12 +194,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "pathfinding"
-version = "0.6.9"
+version = "0.6.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "fixedbitset 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.7.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "num-traits 0.1.43 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-traits 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "ordermap 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -395,7 +395,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum num-traits 0.1.43 (registry+https://github.com/rust-lang/crates.io-index)" = "92e5113e9fd4cc14ded8e499429f396a20f98c772a47cc8622a736e1ec843c31"
 "checksum num-traits 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e7de20f146db9d920c45ee8ed8f71681fd9ade71909b48c3acbd766aa504cf10"
 "checksum ordermap 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "88fc9d511a8e8d3adc7ba9f4b8f9683a2eface9c14b652ad77f975c4f95c787b"
-"checksum pathfinding 0.6.9 (registry+https://github.com/rust-lang/crates.io-index)" = "726c02dff6fe58487388752b3937724c3e452a5b2a1994702c9c03e80a2c0099"
+"checksum pathfinding 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)" = "edf284ec276b62fb6330cafc80a14ec234fc8dcaecb4bdbfc438d4ad84a8c44d"
 "checksum primal 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "0e31b86efadeaeb1235452171a66689682783149a6249ff334a2c5d8218d00a4"
 "checksum primal-bit 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "686a64e2f50194c64942992af5799e6b6e8775b8f88c607d72ed0a2fd58b9b21"
 "checksum primal-check 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "8e65f96c0a171f887198c274392c99a116ef65aa7f53f3b6d4902f493965c2d1"
