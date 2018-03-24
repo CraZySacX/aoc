@@ -140,9 +140,10 @@ fn calculate_tuple_val(tuple: (i32, i32), tuple_map: &HashMap<(i32, i32), u32>) 
     results.push(tuple_map.get(&(x - 1, y + 1)));
     results.push(tuple_map.get(&(x - 1, y - 1)));
 
-    Ok(results.iter().filter(|x| x.is_some()).fold(0, |sum, i| {
-        sum + i.expect("Invalid tuple_map value")
-    }))
+    Ok(results
+        .iter()
+        .filter(|x| x.is_some())
+        .fold(0, |sum, i| sum + i.expect("Invalid tuple_map value")))
 }
 
 #[cfg(test)]

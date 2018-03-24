@@ -37,10 +37,7 @@ fn reallocate_memory(line: &str, find_again: bool) -> Result<u32> {
         let max_vec = vals_vec.clone();
         let pos_vec = vals_vec.clone();
         let max = max_vec.iter().max().ok_or("Unable to find max")?;
-        let pos = pos_vec
-            .iter()
-            .position(|&x| x == *max)
-            .ok_or("Unable to find pos of max")?;
+        let pos = pos_vec.iter().position(|&x| x == *max).ok_or("Unable to find pos of max")?;
 
         // Reset the max to 0
         vals_vec[pos] = 0;

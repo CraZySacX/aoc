@@ -37,14 +37,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Add a layer to the layer map.
 fn add_layer_to_map(line: &str, layer_map: &mut HashMap<usize, u32>) -> Result<()> {
     let layer_desc_vec: Vec<&str> = line.split(": ").collect();
-    let layer = layer_desc_vec
-        .get(0)
-        .ok_or("Invalid layer number")?
-        .parse::<usize>()?;
-    let depth = layer_desc_vec
-        .get(1)
-        .ok_or("Invalid depty number")?
-        .parse::<u32>()?;
+    let layer = layer_desc_vec.get(0).ok_or("Invalid layer number")?.parse::<usize>()?;
+    let depth = layer_desc_vec.get(1).ok_or("Invalid depty number")?.parse::<u32>()?;
 
     layer_map.insert(layer, depth);
 
@@ -53,10 +47,7 @@ fn add_layer_to_map(line: &str, layer_map: &mut HashMap<usize, u32>) -> Result<(
 
 /// Find the maximum layer number.
 fn find_maximum_layer(layer_map: &HashMap<usize, u32>) -> Result<usize> {
-    let max_layer = layer_map
-        .keys()
-        .max()
-        .ok_or("Unable to find maximum layer")?;
+    let max_layer = layer_map.keys().max().ok_or("Unable to find maximum layer")?;
     Ok(*max_layer)
 }
 
@@ -167,9 +158,6 @@ mod two_star {
         // assert_eq!(super::traverse_firewall(&mut layers, 9).expect(""), 0);
         // layers.clear();
         // super::setup_initial_state(maximum_layer, &layer_map, &mut layers).expect("");
-        assert_eq!(
-            super::traverse_firewall(&mut layers, 10, true).expect(""),
-            0
-        );
+        assert_eq!(super::traverse_firewall(&mut layers, 10, true).expect(""), 0);
     }
 }

@@ -63,11 +63,7 @@ fn parse_command(command: &str) -> Result<(String, String, Option<Value>)> {
         } else {
             Value::Register(token_strs[2].to_string())
         };
-        Ok((
-            token_strs[0].to_string(),
-            token_strs[1].to_string(),
-            Some(value),
-        ))
+        Ok((token_strs[0].to_string(), token_strs[1].to_string(), Some(value)))
     } else if token_strs.len() == 2 {
         Ok((token_strs[0].to_string(), token_strs[1].to_string(), None))
     } else {

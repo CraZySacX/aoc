@@ -8,7 +8,7 @@
 
 //! `aoc` 0.1.0
 #![deny(missing_docs)]
-#![feature(inclusive_range_syntax, iterator_step_by, slice_rotate, try_from)]
+#![feature(iterator_step_by, slice_rotate, try_from)]
 extern crate clap;
 #[macro_use]
 extern crate error_chain;
@@ -22,12 +22,12 @@ extern crate primal;
 extern crate regex;
 
 mod constants;
-mod year2015;
-mod year2016;
-mod year2017;
 mod error;
 mod run;
 mod utils;
+mod year2015;
+mod year2016;
+mod year2017;
 
 use std::io::{self, Write};
 use std::process;

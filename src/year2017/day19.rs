@@ -91,14 +91,7 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<(String, u32)> {
                 steps += 1;
             }
             43 => {
-                let (next_row, next_col) = get_next_neighbor(
-                    curr_row,
-                    curr_col,
-                    max_row,
-                    max_col,
-                    &curr_direction,
-                    network_map,
-                )?;
+                let (next_row, next_col) = get_next_neighbor(curr_row, curr_col, max_row, max_col, &curr_direction, network_map)?;
                 let next_direction = get_next_dir(curr_row, curr_col, next_row, next_col, &curr_direction)?;
                 curr_row = next_row;
                 curr_col = next_col;
@@ -192,10 +185,7 @@ mod one_star {
         assert_eq!(network_map[[4, 5]], 124);
         fill_row("     +B-+  +--+", 5, &mut network_map);
         assert_eq!(network_map[[5, 5]], 43);
-        assert_eq!(
-            traverse_map(&network_map).expect(""),
-            ("ABCDEF".to_string(), 38)
-        );
+        assert_eq!(traverse_map(&network_map).expect(""), ("ABCDEF".to_string(), 38));
     }
 }
 

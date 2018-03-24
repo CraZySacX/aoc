@@ -119,17 +119,11 @@ fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMa
     let name_str = line_desc.get(0).ok_or("Invalid register name!")?;
     let name = String::from(*name_str);
     let command_str = line_desc.get(1).ok_or("Invalid command!")?;
-    let value = line_desc
-        .get(2)
-        .ok_or("Invalid command value")?
-        .parse::<i32>()?;
+    let value = line_desc.get(2).ok_or("Invalid command value")?.parse::<i32>()?;
     let command_register_str = line_desc.get(4).ok_or("Invalid command register!")?;
     let command_register = String::from(*command_register_str);
     let operator_str = line_desc.get(5).ok_or("Invalid operator!")?;
-    let condition_value = line_desc
-        .get(6)
-        .ok_or("Invalid condition value!")?
-        .parse::<i32>()?;
+    let condition_value = line_desc.get(6).ok_or("Invalid condition value!")?.parse::<i32>()?;
 
     register_map.entry(name.clone()).or_insert(0);
 
@@ -149,9 +143,7 @@ fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMa
 
 /// Check the command condition
 fn check_condition(register_map: &HashMap<String, i32>, condition: &Condition) -> Result<bool> {
-    let register_value = register_map
-        .get(&condition.register)
-        .ok_or("Cannot read value from register")?;
+    let register_value = register_map.get(&condition.register).ok_or("Cannot read value from register")?;
     let condition_value = &condition.value;
 
     match condition.op {
@@ -166,9 +158,7 @@ fn check_condition(register_map: &HashMap<String, i32>, condition: &Condition) -
 
 /// Execute the given command
 fn execute_command(register_map: &mut HashMap<String, i32>, register_command: &RegisterCommand) -> Result<()> {
-    let map_entry = register_map
-        .entry(register_command.register.clone())
-        .or_insert(0);
+    let map_entry = register_map.entry(register_command.register.clone()).or_insert(0);
 
     match register_command.command {
         Command::Inc => *map_entry += register_command.value,
