@@ -79,8 +79,17 @@ mod one_star {
 mod two_star {
     #[test]
     fn solution() {
-        assert_eq!(super::row_evenly_divisible_value("5 9 2 8").unwrap_or_else(|_| 0), 4);
-        assert_eq!(super::row_evenly_divisible_value("9 4 7 3").unwrap_or_else(|_| 0), 3);
-        assert_eq!(super::row_evenly_divisible_value("3 8 6 5").unwrap_or_else(|_| 0), 2);
+        assert_eq!(
+            super::row_evenly_divisible_value("5 9 2 8").unwrap_or_else(|_| 0),
+            4
+        );
+        assert_eq!(
+            super::row_evenly_divisible_value("9 4 7 3").unwrap_or_else(|_| 0),
+            3
+        );
+        assert_eq!(
+            super::row_evenly_divisible_value("3 8 6 5").unwrap_or_else(|_| 0),
+            2
+        );
     }
 }

@@ -141,7 +141,11 @@ pub fn run() -> Result<i32> {
     };
 
     let now = Instant::now();
-    writeln!(io::stdout(), "{}", find_solution(match_tuple.0, &year, &match_tuple.1)?)?;
+    writeln!(
+        io::stdout(),
+        "{}",
+        find_solution(match_tuple.0, &year, &match_tuple.1)?
+    )?;
     let duration = now.elapsed();
 
     if let Some(output_type) = matches.value_of("time") {

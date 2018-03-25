@@ -69,11 +69,34 @@ mod one_star {
         assert_eq!(process_line_as_chars("{}").unwrap_or((0, 0)).0, 1);
         assert_eq!(process_line_as_chars("{{{}}}").unwrap_or((0, 0)).0, 6);
         assert_eq!(process_line_as_chars("{{},{}}").unwrap_or((0, 0)).0, 5);
-        assert_eq!(process_line_as_chars("{{{},{},{{}}}}").unwrap_or((0, 0)).0, 16);
-        assert_eq!(process_line_as_chars("{<a>,<a>,<a>,<a>}").unwrap_or((0, 0)).0, 1);
-        assert_eq!(process_line_as_chars("{{<ab>},{<ab>},{<ab>},{<ab>}}").unwrap_or((0, 0)).0, 9);
-        assert_eq!(process_line_as_chars("{{<!!>},{<!!>},{<!!>},{<!!>}}").unwrap_or((0, 0)).0, 9);
-        assert_eq!(process_line_as_chars("{{<a!>},{<a!>},{<a!>},{<ab>}}").unwrap_or((0, 0)).0, 3)
+        assert_eq!(
+            process_line_as_chars("{{{},{},{{}}}}").unwrap_or((0, 0)).0,
+            16
+        );
+        assert_eq!(
+            process_line_as_chars("{<a>,<a>,<a>,<a>}")
+                .unwrap_or((0, 0))
+                .0,
+            1
+        );
+        assert_eq!(
+            process_line_as_chars("{{<ab>},{<ab>},{<ab>},{<ab>}}")
+                .unwrap_or((0, 0))
+                .0,
+            9
+        );
+        assert_eq!(
+            process_line_as_chars("{{<!!>},{<!!>},{<!!>},{<!!>}}")
+                .unwrap_or((0, 0))
+                .0,
+            9
+        );
+        assert_eq!(
+            process_line_as_chars("{{<a!>},{<a!>},{<a!>},{<ab>}}")
+                .unwrap_or((0, 0))
+                .0,
+            3
+        )
     }
 }
 
@@ -84,11 +107,19 @@ mod two_star {
     #[test]
     fn solution() {
         assert_eq!(process_line_as_chars("<>").unwrap_or((0, 1)).1, 0);
-        assert_eq!(process_line_as_chars("<random characters>").unwrap_or((0, 0)).1, 17);
+        assert_eq!(
+            process_line_as_chars("<random characters>")
+                .unwrap_or((0, 0))
+                .1,
+            17
+        );
         assert_eq!(process_line_as_chars("<<<<>").unwrap_or((0, 0)).1, 3);
         assert_eq!(process_line_as_chars("<{!>}>").unwrap_or((0, 0)).1, 2);
         assert_eq!(process_line_as_chars("<!!>").unwrap_or((0, 0)).1, 0);
         assert_eq!(process_line_as_chars("<!!!>>").unwrap_or((0, 0)).1, 0);
-        assert_eq!(process_line_as_chars("<{o\"i!a,<{i<a>").unwrap_or((0, 0)).1, 10);
+        assert_eq!(
+            process_line_as_chars("<{o\"i!a,<{i<a>").unwrap_or((0, 0)).1,
+            10
+        );
     }
 }

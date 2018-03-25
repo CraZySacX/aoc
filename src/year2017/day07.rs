@@ -63,7 +63,9 @@ fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashM
     let desc: Vec<&str> = node_desc.split(' ').collect();
     let name = desc.get(0).ok_or("Unable to deternmine node name")?;
     let weight_str = desc.get(1).ok_or("Unable to determine node weight")?;
-    let weight = weight_str.trim_matches(|c| c == '(' || c == ')').parse::<u32>()?;
+    let weight = weight_str
+        .trim_matches(|c| c == '(' || c == ')')
+        .parse::<u32>()?;
 
     if let Some(children_desc) = node_def.get(1) {
         let children_vec: Vec<String> = children_desc.split(", ").map(String::from).collect();
@@ -153,7 +155,10 @@ fn children_weight(nodes: &[Node], start_node: &Node) -> Result<Vec<(usize, u32)
 
         for node_id in children {
             let node = nodes.get(node_id).ok_or("Cannot find child node")?;
-            let total_child_weight: u32 = children_weight(nodes, node)?.iter().fold(0, |acc, x| acc + x.1);
+            let total_child_weight: u32 =
+                children_weight(nodes, node)?.iter().fold(0, |acc, x| {
+                    acc + x.1
+                });
             weights.push((node_id, total_child_weight));
         }
 

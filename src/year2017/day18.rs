@@ -40,7 +40,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             id = run_command((id, next_command), &mut register_map)?;
         }
 
-        let rcv = register_map.get(&"receive".to_string()).ok_or("invalid rcv")?;
+        let rcv = register_map
+            .get(&"receive".to_string())
+            .ok_or("invalid rcv")?;
         Ok(TryFrom::try_from(*rcv)?)
     }
 }
@@ -65,7 +67,10 @@ fn thread_me() -> Result<u32> {
         initialize(&mut commands, &mut register_map).expect("");
         *register_map.entry("p".to_string()).or_insert(1) = 1;
         if run_solution_in_thread(1, &commands, &mut register_map, &sender1, &receiver0).is_ok() {
-            let count = *register_map.get(&"prog1".to_string()).ok_or("invalid key").expect("");
+            let count = *register_map
+                .get(&"prog1".to_string())
+                .ok_or("invalid key")
+                .expect("");
             sender2.send(count).expect("");
         } else {
             sender2.send(-1).expect("");
@@ -121,7 +126,11 @@ fn parse_command(command: &str) -> Result<(String, String, Option<Value>)> {
         } else {
             Value::Register(token_strs[2].to_string())
         };
-        Ok((token_strs[0].to_string(), token_strs[1].to_string(), Some(value)))
+        Ok((
+            token_strs[0].to_string(),
+            token_strs[1].to_string(),
+            Some(value),
+        ))
     } else if token_strs.len() == 2 {
         Ok((token_strs[0].to_string(), token_strs[1].to_string(), None))
     } else {
@@ -189,7 +198,9 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
             let rcv = register_map.get(register).ok_or("invalid register")?;
 
             if *rcv != 0 {
-                let last_sound = register_map.get(&"last_sound".to_string()).ok_or("invalid snd")?;
+                let last_sound = register_map
+                    .get(&"last_sound".to_string())
+                    .ok_or("invalid snd")?;
                 receive = Some(*last_sound)
             }
         }
@@ -353,7 +364,13 @@ mod one_star {
         let command_7 = super::parse_command("snd a").expect("");
         next_id = super::run_command((next_id, &command_7), &mut register_map).expect("");
         assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 4);
-        assert_eq!(*register_map.get(&"last_sound".to_string()).ok_or(0).expect(""), 4);
+        assert_eq!(
+            *register_map
+                .get(&"last_sound".to_string())
+                .ok_or(0)
+                .expect(""),
+            4
+        );
         assert_eq!(next_id, 5);
         let command_8 = super::parse_command("set a 0").expect("");
         next_id = super::run_command((next_id, &command_8), &mut register_map).expect("");
@@ -383,7 +400,10 @@ mod one_star {
         next_id = super::run_command((next_id, &command_14), &mut register_map).expect("");
         assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
         assert_eq!(next_id, -1);
-        assert_eq!(*register_map.get(&"receive".to_string()).ok_or(0).expect(""), 4);
+        assert_eq!(
+            *register_map.get(&"receive".to_string()).ok_or(0).expect(""),
+            4
+        );
     }
 }
 
