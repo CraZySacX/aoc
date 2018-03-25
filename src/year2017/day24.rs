@@ -15,10 +15,7 @@ struct Component {
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     // use std::io::{self, Write};
-    let mut all = reader
-        .lines()
-        .filter_map(to_component)
-        .collect::<HashSet<Component>>();
+    let mut all = reader.lines().filter_map(to_component).collect::<HashSet<Component>>();
 
     let mut scores = Vec::new();
     next(0, &[], &mut all, &mut scores);
@@ -47,9 +44,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Convert a String to a Component
 fn to_component(line_res: ::std::result::Result<String, ::std::io::Error>) -> Option<Component> {
     if let Ok(line) = line_res {
-        let parts = line.split('/')
-            .map(|s| s.parse::<u32>().expect(""))
-            .collect::<Vec<u32>>();
+        let parts = line.split('/').map(|s| s.parse::<u32>().expect("")).collect::<Vec<u32>>();
 
         Some(Component {
             left: parts[0],
@@ -69,12 +64,7 @@ fn next(start: u32, path: &[Component], components: &mut HashSet<Component>, sco
             new_components.remove(c);
             let mut new_path = path.to_owned();
             new_path.push(*c);
-            next(
-                if c.left == start { c.right } else { c.left },
-                &new_path,
-                &mut new_components,
-                scores,
-            );
+            next(if c.left == start { c.right } else { c.left }, &new_path, &mut new_components, scores);
             found = true;
         }
     }

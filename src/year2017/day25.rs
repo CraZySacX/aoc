@@ -105,34 +105,24 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             let val = state_str.parse::<char>()?;
             start_state = val;
         } else if dc_re.is_match(&line) {
-            let caps = dc_re
-                .captures(&line)
-                .ok_or("invalid diagnostic checksum captures")?;
-            let steps_str = caps.get(1)
-                .ok_or("invalid diagnostic checksum value")?
-                .as_str();
+            let caps = dc_re.captures(&line).ok_or("invalid diagnostic checksum captures")?;
+            let steps_str = caps.get(1).ok_or("invalid diagnostic checksum value")?.as_str();
             let steps = steps_str.parse::<usize>()?;
             step_count = steps;
         } else if in_state_re.is_match(&line) {
-            let caps = in_state_re
-                .captures(&line)
-                .ok_or("invalid in state captures")?;
+            let caps = in_state_re.captures(&line).ok_or("invalid in state captures")?;
             let state_str = caps.get(1).ok_or("invalid in state value")?.as_str();
             let val = state_str.parse::<char>()?;
             parsing_state = true;
             curr_state = val;
             states.insert(val, Default::default());
         } else if if_curr_re.is_match(&line) && parsing_state {
-            let caps = if_curr_re
-                .captures(&line)
-                .ok_or("invalid if current value captures")?;
+            let caps = if_curr_re.captures(&line).ok_or("invalid if current value captures")?;
             let val_str = caps.get(1).ok_or("invalid if current value")?.as_str();
             let val = val_str.parse::<u8>()?;
             curr_val = val;
         } else if write_val_re.is_match(&line) && parsing_state {
-            let caps = write_val_re
-                .captures(&line)
-                .ok_or("invalid write value captures")?;
+            let caps = write_val_re.captures(&line).ok_or("invalid write value captures")?;
             let val_str = caps.get(1).ok_or("invalid write value")?.as_str();
             let val = val_str.parse::<u8>()?;
             let state_ptr = states.entry(curr_state).or_insert_with(Default::default);

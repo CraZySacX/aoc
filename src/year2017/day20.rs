@@ -90,9 +90,7 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
     let parts: Vec<&str> = line.split(", ").collect();
 
     let coords = if coords_re.is_match(parts[0]) {
-        let caps = coords_re
-            .captures(parts[0])
-            .ok_or("invalid coords captures")?;
+        let caps = coords_re.captures(parts[0]).ok_or("invalid coords captures")?;
         let x_str = caps.get(1).ok_or("invalid x value")?.as_str();
         let y_str = caps.get(2).ok_or("invalid y value")?.as_str();
         let z_str = caps.get(3).ok_or("invalid z value")?.as_str();
@@ -105,39 +103,27 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
     };
 
     let velocity = if vel_re.is_match(parts[1]) {
-        let caps = vel_re
-            .captures(parts[1])
-            .ok_or("invalid velocity captures")?;
+        let caps = vel_re.captures(parts[1]).ok_or("invalid velocity captures")?;
         let vx_str = caps.get(1).ok_or("invalid vx value")?.as_str();
         let vy_str = caps.get(2).ok_or("invalid vy value")?.as_str();
         let vz_str = caps.get(3).ok_or("invalid vz value")?.as_str();
         let vx = vx_str.parse::<i64>()?;
         let vy = vy_str.parse::<i64>()?;
         let vz = vz_str.parse::<i64>()?;
-        Velocity {
-            vx: vx,
-            vy: vy,
-            vz: vz,
-        }
+        Velocity { vx: vx, vy: vy, vz: vz }
     } else {
         return Err("invalid velocity".into());
     };
 
     let acc = if acc_re.is_match(parts[2]) {
-        let caps = acc_re
-            .captures(parts[2])
-            .ok_or("invalid acceleration captures")?;
+        let caps = acc_re.captures(parts[2]).ok_or("invalid acceleration captures")?;
         let ax_str = caps.get(1).ok_or("invalid ax value")?.as_str();
         let ay_str = caps.get(2).ok_or("invalid ay value")?.as_str();
         let az_str = caps.get(3).ok_or("invalid az value")?.as_str();
         let ax = ax_str.parse::<i64>()?;
         let ay = ay_str.parse::<i64>()?;
         let az = az_str.parse::<i64>()?;
-        Acc {
-            ax: ax,
-            ay: ay,
-            az: az,
-        }
+        Acc { ax: ax, ay: ay, az: az }
     } else {
         return Err("invalid acceleration".into());
     };
@@ -167,20 +153,14 @@ fn update_particle(particle: &mut Particle) -> Result<()> {
 
 /// Find the minimum Manhattan distance in the map.
 fn find_minimum_md(particle_map: &HashMap<usize, Particle>) -> Result<usize> {
-    let (min_idx, _) = particle_map
-        .iter()
-        .min_by_key(|&(_, particle)| particle.md)
-        .ok_or("No minimum found")?;
+    let (min_idx, _) = particle_map.iter().min_by_key(|&(_, particle)| particle.md).ok_or("No minimum found")?;
 
     Ok(*min_idx)
 }
 
 /// Remove collisions
 fn find_collisions(particle_map: &HashMap<usize, Particle>) -> Result<Vec<usize>> {
-    let all_coords: HashMap<usize, Coords> = particle_map
-        .iter()
-        .map(|(k, p)| (*k, p.coords.clone()))
-        .collect();
+    let all_coords: HashMap<usize, Coords> = particle_map.iter().map(|(k, p)| (*k, p.coords.clone())).collect();
     let mut matches = Vec::new();
 
     for (k, v) in particle_map {
@@ -209,22 +189,8 @@ mod one_star {
         let coords_re = Regex::new(r"p=< *(-?\d+),(-?\d+),(-?\d+)>").expect("");
         let vel_re = Regex::new(r"v=< *(-?\d+),(-?\d+),(-?\d+)>").expect("");
         let acc_re = Regex::new(r"a=< *(-?\d+),(-?\d+),(-?\d+)>").expect("");
-        super::add_particle_to_map(
-            0,
-            "p=< 3,0,0>, v=< 2,0,0>, a=<-1,0,0>",
-            &mut particle_map,
-            &coords_re,
-            &vel_re,
-            &acc_re,
-        ).expect("");
-        super::add_particle_to_map(
-            1,
-            "p=< 4,0,0>, v=< 0,0,0>, a=<-2,0,0>",
-            &mut particle_map,
-            &coords_re,
-            &vel_re,
-            &acc_re,
-        ).expect("");
+        super::add_particle_to_map(0, "p=< 3,0,0>, v=< 2,0,0>, a=<-1,0,0>", &mut particle_map, &coords_re, &vel_re, &acc_re).expect("");
+        super::add_particle_to_map(1, "p=< 4,0,0>, v=< 0,0,0>, a=<-2,0,0>", &mut particle_map, &coords_re, &vel_re, &acc_re).expect("");
 
         for mut particle in particle_map.values_mut() {
             super::update_particle(&mut particle).expect("");

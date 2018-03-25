@@ -17,9 +17,7 @@ enum Move {
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     use std::io::{self, Write};
     let mut moves: Vec<Move> = Vec::new();
-    let mut dancers = vec![
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'
-    ];
+    let mut dancers = vec!['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'];
     let orig = dancers.clone();
 
     for line_result in reader.lines() {
@@ -65,18 +63,14 @@ fn generate_moves(line: &str, moves: &mut Vec<Move>) -> Result<()> {
             let val = val_str.parse::<u32>()?;
             moves.push(Move::Spin(val));
         } else if exchange_re.is_match(token) {
-            let caps = exchange_re
-                .captures(token)
-                .ok_or("invalid exchange captures")?;
+            let caps = exchange_re.captures(token).ok_or("invalid exchange captures")?;
             let pos1_str = caps.get(1).ok_or("invalid exchange pos1")?.as_str();
             let pos2_str = caps.get(2).ok_or("invalid exchange pos2")?.as_str();
             let pos1 = pos1_str.parse::<u8>()?;
             let pos2 = pos2_str.parse::<u8>()?;
             moves.push(Move::Exchange(pos1, pos2));
         } else if partner_re.is_match(token) {
-            let caps = partner_re
-                .captures(token)
-                .ok_or("invalid partner captures")?;
+            let caps = partner_re.captures(token).ok_or("invalid partner captures")?;
             let name1_str = caps.get(1).ok_or("invalid partner name1")?.as_str();
             let name2_str = caps.get(2).ok_or("invalid partner name2")?.as_str();
             let name1 = name1_str.chars().nth(0).ok_or("name1 not a char")?;
