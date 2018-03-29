@@ -4,8 +4,8 @@ use error::Result;
 use itertools::Itertools;
 use pathfinding::Matrix;
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
+use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 #[cfg_attr(feature = "cargo-clippy", allow(filter_map))]
@@ -31,9 +31,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     });
 
     if second_star {
-        Ok(TryFrom::try_from(sharps.nth(4).unwrap_or(0))?)
+        Ok(u32::private_try_from(sharps.nth(4).unwrap_or(0))?)
     } else {
-        Ok(TryFrom::try_from(sharps.nth(12).unwrap_or(0))?)
+        Ok(u32::private_try_from(sharps.nth(12).unwrap_or(0))?)
     }
 }
 

@@ -1,8 +1,8 @@
 //! Advent of Code - Day 12 "Digital Plumber" Solution
 use error::Result;
 use std::collections::{HashMap, HashSet};
-use std::convert::TryFrom;
 use std::io::BufRead;
+use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -21,11 +21,11 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             add_to_groups(*k, &group_map_clone, &mut groups)?;
         }
 
-        Ok(TryFrom::try_from(groups.len())?)
+        Ok(u32::private_try_from(groups.len())?)
     } else {
         let mut group_zero = HashSet::new();
         get_and_add(0, &group_map, &mut group_zero)?;
-        Ok(TryFrom::try_from(group_zero.len())?)
+        Ok(u32::private_try_from(group_zero.len())?)
     }
 }
 

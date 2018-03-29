@@ -1,8 +1,8 @@
 //! Advent of Code - Day 13 "Packet Scanners" Solution
 use error::Result;
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
+use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -74,7 +74,7 @@ fn traverse_firewall(layers: &mut HashMap<usize, Option<u32>>, delay: u32, secon
         // Get the max depth for this layer. It may be `None`, in which case we will never be
         // caught at this level, so skip.
         if let Some(max_depth) = *curr_layer {
-            let current_picosecond: u32 = TryFrom::try_from(i)?;
+            let current_picosecond = u32::private_try_from(i)?;
             let scan_length = (max_depth - 1) * 2;
 
             // Each scanner loops back to the 0 level at `((max_depth - 1) * 2)` picoseconds.

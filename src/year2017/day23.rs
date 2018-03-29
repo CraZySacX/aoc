@@ -2,7 +2,6 @@
 use error::Result;
 use primal;
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// A value can either be a pointer to a register or a number.
@@ -20,7 +19,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut register_map: HashMap<String, i64> = HashMap::new();
     for (idx, line_result) in reader.lines().enumerate() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
-        commands.insert(TryFrom::try_from(idx)?, parse_command(line)?);
+        commands.insert(idx as i64, parse_command(line)?);
     }
 
     initialize_register_map(&commands, &mut register_map)?;
@@ -39,7 +38,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut id = 0;
         let mut count = 0;
         loop {
-            if id < 0 || id == TryFrom::try_from(commands.len())? {
+            if id < 0 || id == commands.len() as i64 {
                 break;
             }
             let next_command = commands.get(&id).ok_or("invalid command")?;

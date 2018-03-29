@@ -97,7 +97,7 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
         let x = x_str.parse::<i64>()?;
         let y = y_str.parse::<i64>()?;
         let z = z_str.parse::<i64>()?;
-        Coords { x: x, y: y, z: z }
+        Coords { x, y, z }
     } else {
         return Err("invalid coordinates".into());
     };
@@ -110,7 +110,7 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
         let vx = vx_str.parse::<i64>()?;
         let vy = vy_str.parse::<i64>()?;
         let vz = vz_str.parse::<i64>()?;
-        Velocity { vx: vx, vy: vy, vz: vz }
+        Velocity { vx, vy, vz }
     } else {
         return Err("invalid velocity".into());
     };
@@ -123,17 +123,17 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
         let ax = ax_str.parse::<i64>()?;
         let ay = ay_str.parse::<i64>()?;
         let az = az_str.parse::<i64>()?;
-        Acc { ax: ax, ay: ay, az: az }
+        Acc { ax, ay, az }
     } else {
         return Err("invalid acceleration".into());
     };
 
     let md: usize = TryFrom::try_from(coords.x.abs() + coords.y.abs() + coords.z.abs())?;
     let particle = Particle {
-        coords: coords,
+        coords,
         vel: velocity,
-        acc: acc,
-        md: md,
+        acc,
+        md,
     };
     particle_map.insert(idx, particle);
     Ok(())

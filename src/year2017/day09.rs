@@ -57,7 +57,7 @@ fn process_line_as_chars(line: &str) -> Result<(u32, u32)> {
             _ => return Err("Unknown character encountered!".into()),
         }
     }
-    Ok((scores.iter().fold(0, |acc, x| acc + x), garbage_count))
+    Ok((scores.iter().sum(), garbage_count))
 }
 
 #[cfg(test)]

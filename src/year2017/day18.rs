@@ -26,7 +26,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut register_map: HashMap<String, i64> = HashMap::new();
         for (idx, line_result) in reader.lines().enumerate() {
             let line = &line_result.unwrap_or_else(|_| "".to_string());
-            commands.insert(TryFrom::try_from(idx)?, parse_command(line)?);
+            commands.insert(idx as i64, parse_command(line)?);
         }
 
         initialize_register_map(&commands, &mut register_map)?;
@@ -86,7 +86,7 @@ fn initialize(commands: &mut HashMap<i64, (String, String, Option<Value>)>, regi
 
     for (idx, line_result) in reader.lines().enumerate() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
-        commands.insert(TryFrom::try_from(idx)?, parse_command(line)?);
+        commands.insert(idx as i64, parse_command(line)?);
     }
     initialize_register_map(commands, register_map)?;
     Ok(())
@@ -102,7 +102,7 @@ fn run_solution_in_thread(
 ) -> Result<()> {
     let mut id = 0;
     loop {
-        if id == -1 || id < 0 || id == TryFrom::try_from(commands.len())? {
+        if id == -1 || id < 0 || id == commands.len() as i64 {
             break;
         }
         let next_command = commands.get(&id).ok_or("invalid command")?;

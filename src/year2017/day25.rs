@@ -3,9 +3,9 @@ use bytecount;
 use error::{Error, Result};
 use regex::Regex;
 use std::collections::BTreeMap;
-use std::convert::TryFrom;
 use std::fmt;
 use std::io::BufRead;
+use utils::PrivateTryFromUsize;
 
 /// The direction to move on the tape
 #[derive(Debug)]
@@ -193,7 +193,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     }
 
     let count = bytecount::count(&tape, 1);
-    Ok(TryFrom::try_from(count)?)
+    Ok(u32::private_try_from(count)?)
 }
 
 #[cfg(test)]

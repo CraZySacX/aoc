@@ -71,9 +71,9 @@ fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashM
     }
 
     nodes.push(Node {
-        id: id,
+        id,
         name: String::from(*name),
-        weight: weight,
+        weight,
         parent: None,
         children: None,
     });

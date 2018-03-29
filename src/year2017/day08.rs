@@ -130,7 +130,7 @@ fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMa
     commands.push(RegisterCommand {
         register: name,
         command: TryFrom::try_from(*command_str)?,
-        value: value,
+        value,
         condition: Condition {
             register: command_register,
             op: TryFrom::try_from(*operator_str)?,

@@ -1,8 +1,8 @@
 //! Advent of Code - Day 14 "Disk Defragmentation" Solution
 use error::Result;
 use ndarray::Array2;
-use std::convert::TryFrom;
 use std::io::BufRead;
+use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -41,7 +41,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             }
         }
     }
-    Ok(TryFrom::try_from(count)?)
+    Ok(u32::private_try_from(count)?)
 }
 
 /// Parse the list of lengths and calculate the hash.
