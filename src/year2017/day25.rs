@@ -3,6 +3,7 @@ use bytecount;
 use error::{Error, Result};
 use regex::Regex;
 use std::collections::BTreeMap;
+use std::convert::TryFrom;
 use std::fmt;
 use std::io::BufRead;
 use utils::PrivateTryFromUsize;

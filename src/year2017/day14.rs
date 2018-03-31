@@ -1,6 +1,7 @@
 //! Advent of Code - Day 14 "Disk Defragmentation" Solution
 use error::Result;
 use ndarray::Array2;
+use std::convert::TryFrom;
 use std::io::BufRead;
 use utils::PrivateTryFromUsize;
 
