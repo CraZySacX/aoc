@@ -8,7 +8,7 @@
 
 //! `aoc` 0.1.0
 #![deny(missing_docs)]
-#![feature(iterator_step_by, slice_rotate, try_from)]
+#![feature(try_from)]
 extern crate clap;
 #[macro_use]
 extern crate error_chain;
