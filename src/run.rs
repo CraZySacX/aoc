@@ -31,7 +31,8 @@ fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
                 .takes_value(true)
                 .required(true)
                 .default_value("data_file"),
-        ).arg(
+        )
+        .arg(
             Arg::with_name("second")
                 .short("s")
                 .long("second")
@@ -72,14 +73,16 @@ pub fn run() -> Result<i32> {
                 .default_value("2017")
                 .required(true)
                 .help("Specify the year you wish to work with"),
-        ).arg(
+        )
+        .arg(
             Arg::with_name("time")
                 .short("t")
                 .long("time")
                 .help("Generate benchmark time, in s, ms, us, or ns")
                 .takes_value(true)
                 .possible_values(&["ns", "us", "ms", "s"]),
-        ).subcommand(subcommand(&AoCDay::AOCD01))
+        )
+        .subcommand(subcommand(&AoCDay::AOCD01))
         .subcommand(subcommand(&AoCDay::AOCD02))
         .subcommand(subcommand(&AoCDay::AOCD03))
         .subcommand(subcommand(&AoCDay::AOCD04))

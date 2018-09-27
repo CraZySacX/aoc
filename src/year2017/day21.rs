@@ -16,7 +16,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         .flat_map(|line| {
             let (k, v) = line.trim().split(" => ").map(matrix).next_tuple().ok_or("no tuple").expect("");
             iproduct!(vec![k.clone(), k.flipped_ud(), k.flipped_lr()], 0..4).map(move |(m, i)| (m.rotated_cw(i), v.clone()))
-        }).collect::<HashMap<_, _>>();
+        })
+        .collect::<HashMap<_, _>>();
     let mut sharps = (0..).scan(matrix(".#./..#/###"), |grid, _| {
         let pt = 2 + (grid.rows % 2);
         let b = grid.rows / pt;
