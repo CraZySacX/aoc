@@ -29,14 +29,14 @@ impl fmt::Display for Rectangle {
     }
 }
 
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r#"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)"#)?;
     let mut rectangles = BTreeMap::new();
 
     for line_result in reader.lines() {
         if let Ok(line) = line_result {
             for cap in line_re.captures_iter(&line) {
-                let id = (&cap[1]).parse::<u32>()?;
+                let id = (&cap[1]).parse::<usize>()?;
                 let l = (&cap[2]).parse::<usize>()?;
                 let t = (&cap[3]).parse::<usize>()?;
                 let w = (&cap[4]).parse::<usize>()?;
@@ -49,10 +49,14 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         }
     }
 
-    Ok(check_points(&rectangles, 1000, 1000)?)
+    if second_star {
+        Ok(find_non_overlaps(&rectangles)? as u32)
+    } else {
+        Ok(check_points(&rectangles, 1000, 1000)?)
+    }
 }
 
-fn check_points(all_claims: &BTreeMap<u32, Rectangle>, width: usize, height: usize) -> Result<u32> {
+fn check_points(all_claims: &BTreeMap<usize, Rectangle>, width: usize, height: usize) -> Result<u32> {
     let mut cloth: Array2<u8> = Array2::zeros((width, height));
 
     for y in 0..height {
@@ -84,8 +88,35 @@ fn contains_point(rect: Rectangle, point: Point) -> bool {
     point.x >= rect.top_left.x && point.x <= rect.bottom_right.x && point.y >= rect.top_left.y && point.y <= rect.bottom_right.y
 }
 
-fn overlap(rectangles: &BTreeMap<u32, Rectangle>) -> u32 {
-    0
+fn overlap(rect1: Rectangle, rect2: Rectangle) -> bool {
+    // If one rectangle is on left side of other
+    if rect1.top_left.x > rect2.bottom_right.x || rect2.top_left.x > rect1.bottom_right.x {
+        return false;
+    }
+
+    // If one rectangle is above other
+    if rect1.top_left.y > rect2.bottom_right.y || rect2.top_left.y > rect1.bottom_right.y {
+        return false;
+    }
+
+    return true;
+}
+
+fn find_non_overlaps(rectangles: &BTreeMap<usize, Rectangle>) -> Result<usize> {
+    for (id, rect1) in rectangles {
+        let overlaps: Vec<Rectangle> = rectangles
+            .iter()
+            .filter(|(id2, _)| !(*id == **id2))
+            .filter(|(_, rect2)| overlap(*rect1, **rect2))
+            .map(|(_, v)| *v)
+            .collect();
+
+        if overlaps.is_empty() {
+            return Ok(*id);
+        }
+    }
+
+    Err("failed to find an non-overlapping rectangle".into())
 }
 
 #[cfg(test)]
@@ -128,6 +159,37 @@ mod one_star {
         assert!(!contains_point(rect2, outside));
 
         assert_eq!(check_points(&rectangles, 8, 8)?, 4);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod two_star {
+    use super::{find_non_overlaps, Point, Rectangle};
+    use error::Result;
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn solution() -> Result<()> {
+        let mut rectangles = BTreeMap::new();
+        let rect1 = Rectangle {
+            top_left: Point { x: 1, y: 3 },
+            bottom_right: Point { x: 4, y: 6 },
+        };
+        let rect2 = Rectangle {
+            top_left: Point { x: 3, y: 1 },
+            bottom_right: Point { x: 6, y: 4 },
+        };
+        let rect3 = Rectangle {
+            top_left: Point { x: 5, y: 5 },
+            bottom_right: Point { x: 6, y: 6 },
+        };
+
+        rectangles.insert(1, rect1);
+        rectangles.insert(2, rect2);
+        rectangles.insert(3, rect3);
+
+        assert_eq!(find_non_overlaps(&rectangles)?, 3);
         Ok(())
     }
 }
