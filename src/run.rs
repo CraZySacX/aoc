@@ -72,7 +72,7 @@ pub fn run() -> Result<i32> {
             Arg::with_name("year")
                 .short("y")
                 .long("year")
-                .default_value("2017")
+                .default_value("2018")
                 .required(true)
                 .help("Specify the year you wish to work with"),
         )

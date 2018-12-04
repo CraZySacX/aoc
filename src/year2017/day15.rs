@@ -54,16 +54,16 @@ fn calculate_next(prev: u64, is_a: bool, is_second_star: bool) -> Result<u64> {
 mod one_star {
     #[test]
     fn solution() {
-        assert_eq!(super::calculate_next(65, true, false).expect(""), 1092455);
-        assert_eq!(super::calculate_next(8921, false, false).expect(""), 430625591);
-        assert_eq!(super::calculate_next(1092455, true, false).expect(""), 1181022009);
-        assert_eq!(super::calculate_next(430625591, false, false).expect(""), 1233683848);
-        assert_eq!(super::calculate_next(1181022009, true, false).expect(""), 245556042);
-        assert_eq!(super::calculate_next(1233683848, false, false).expect(""), 1431495498);
-        assert_eq!(super::calculate_next(245556042, true, false).expect(""), 1744312007);
-        assert_eq!(super::calculate_next(1431495498, false, false).expect(""), 137874439);
-        assert_eq!(super::calculate_next(1744312007, true, false).expect(""), 1352636452);
-        assert_eq!(super::calculate_next(137874439, false, false).expect(""), 285222916);
+        assert_eq!(super::calculate_next(65, true, false).expect(""), 1_092_455);
+        assert_eq!(super::calculate_next(8921, false, false).expect(""), 430_625_591);
+        assert_eq!(super::calculate_next(1_092_455, true, false).expect(""), 1_181_022_009);
+        assert_eq!(super::calculate_next(430_625_591, false, false).expect(""), 1_233_683_848);
+        assert_eq!(super::calculate_next(1_181_022_009, true, false).expect(""), 245_556_042);
+        assert_eq!(super::calculate_next(1_233_683_848, false, false).expect(""), 1_431_495_498);
+        assert_eq!(super::calculate_next(245_556_042, true, false).expect(""), 1_744_312_007);
+        assert_eq!(super::calculate_next(1_431_495_498, false, false).expect(""), 137_874_439);
+        assert_eq!(super::calculate_next(1_744_312_007, true, false).expect(""), 1_352_636_452);
+        assert_eq!(super::calculate_next(137_874_439, false, false).expect(""), 285_222_916);
         assert_eq!(super::check_x_for_matches(65, 8921, 40_000_000, false).expect(""), 588);
     }
 }
@@ -72,16 +72,16 @@ mod one_star {
 mod two_star {
     #[test]
     fn solution() {
-        assert_eq!(super::calculate_next(65, true, true).expect(""), 1352636452);
-        assert_eq!(super::calculate_next(8921, false, true).expect(""), 1233683848);
-        assert_eq!(super::calculate_next(1352636452, true, true).expect(""), 1992081072);
-        assert_eq!(super::calculate_next(1233683848, false, true).expect(""), 862516352);
-        assert_eq!(super::calculate_next(1992081072, true, true).expect(""), 530830436);
-        assert_eq!(super::calculate_next(862516352, false, true).expect(""), 1159784568);
-        assert_eq!(super::calculate_next(530830436, true, true).expect(""), 1980017072);
-        assert_eq!(super::calculate_next(1159784568, false, true).expect(""), 1616057672);
-        assert_eq!(super::calculate_next(1980017072, true, true).expect(""), 740335192);
-        assert_eq!(super::calculate_next(1616057672, false, true).expect(""), 412269392);
+        assert_eq!(super::calculate_next(65, true, true).expect(""), 1_352_636_452);
+        assert_eq!(super::calculate_next(8921, false, true).expect(""), 1_233_683_848);
+        assert_eq!(super::calculate_next(1_352_636_452, true, true).expect(""), 1_992_081_072);
+        assert_eq!(super::calculate_next(1_233_683_848, false, true).expect(""), 862_516_352);
+        assert_eq!(super::calculate_next(1_992_081_072, true, true).expect(""), 530_830_436);
+        assert_eq!(super::calculate_next(862_516_352, false, true).expect(""), 1_159_784_568);
+        assert_eq!(super::calculate_next(530_830_436, true, true).expect(""), 1_980_017_072);
+        assert_eq!(super::calculate_next(1_159_784_568, false, true).expect(""), 1_616_057_672);
+        assert_eq!(super::calculate_next(1_980_017_072, true, true).expect(""), 740_335_192);
+        assert_eq!(super::calculate_next(1_616_057_672, false, true).expect(""), 412_269_392);
         assert_eq!(super::check_x_for_matches(65, 8921, 5_000_000, true).expect(""), 309);
     }
 }

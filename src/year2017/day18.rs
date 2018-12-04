@@ -313,6 +313,7 @@ mod one_star {
     use std::collections::HashMap;
 
     #[test]
+    #[allow(clippy::cyclomatic_complexity)]
     fn solution() {
         let mut commands = HashMap::new();
         let mut register_map: HashMap<String, i64> = HashMap::new();

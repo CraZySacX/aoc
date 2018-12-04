@@ -111,7 +111,6 @@ macro_rules! try_from_upper_bounded {
     ($($target:ty),*) => {$(
         impl PrivateTryFromUsize for $target {
             #[inline]
-            #[cfg_attr(feature = "cargo-clippy", allow(cast_possible_truncation, cast_possible_wrap, cast_sign_loss))]
             fn private_try_from(u: usize) -> ::error::Result<$target> {
                 if u > (<$target>::max_value() as usize) {
                     Err("failed".into())

@@ -16,6 +16,7 @@ extern crate error_chain;
 extern crate itertools;
 
 extern crate bytecount;
+extern crate indexmap;
 extern crate ndarray;
 extern crate pathfinding;
 extern crate primal;

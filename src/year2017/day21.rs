@@ -2,13 +2,12 @@
 use bytecount;
 use error::Result;
 use itertools::Itertools;
-use pathfinding::Matrix;
+use pathfinding::matrix::Matrix;
 use std::collections::HashMap;
 use std::io::BufRead;
 use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
-#[cfg_attr(feature = "cargo-clippy", allow(filter_map))]
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let subst = reader
         .lines()

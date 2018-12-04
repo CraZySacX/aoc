@@ -22,7 +22,6 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 /// Run the spinlock.
-#[cfg_attr(feature = "cargo-clippy", allow(cast_possible_truncation))]
 fn spinlock(buf: &mut Vec<u64>, steps: u64, iterations: u64, second_star: bool) -> Result<u64> {
     let mut curr_index = 0;
     for i in 0..iterations {

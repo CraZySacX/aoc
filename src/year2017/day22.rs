@@ -204,6 +204,6 @@ mod two_star {
             }
             super::move_virus(&mut coords, &curr_dir);
         }
-        assert_eq!(count, 2511944);
+        assert_eq!(count, 2_511_944);
     }
 }

@@ -235,7 +235,7 @@ mod two_star {
         let mut nodes: Vec<super::Node> = Vec::new();
         let mut children: HashMap<usize, Vec<String>> = HashMap::new();
         super::setup_tree(&mut nodes, &mut children).expect("Unable to setup tree");
-        super::assign_children(&mut nodes, &mut children).expect("Unable to assign children");
+        super::assign_children(&mut nodes, &children).expect("Unable to assign children");
         let node = nodes.get(8).ok_or("").expect("");
         let mut curr_weights = super::children_weight(&nodes, node).expect("");
         assert_eq!(curr_weights, vec![(10, 251), (7, 243), (5, 243), (8, 41)]);
