@@ -10,6 +10,8 @@ pub enum AoCYear {
     AOC2016,
     /// Advent of Code 2017
     AOC2017,
+    /// Advent of Code 2018
+    AOC2018,
 }
 
 impl<'a> From<&'a AoCYear> for &'a str {
@@ -18,6 +20,7 @@ impl<'a> From<&'a AoCYear> for &'a str {
             AoCYear::AOC2015 => "2015",
             AoCYear::AOC2016 => "2016",
             AoCYear::AOC2017 => "2017",
+            AoCYear::AOC2018 => "2018",
         }
     }
 }
@@ -29,6 +32,7 @@ impl<'a> TryFrom<&'a str> for AoCYear {
             "2015" => Ok(AoCYear::AOC2015),
             "2016" => Ok(AoCYear::AOC2016),
             "2017" => Ok(AoCYear::AOC2017),
+            "2018" => Ok(AoCYear::AOC2018),
             _ => Err("Unable to convert to year!".into()),
         }
     }

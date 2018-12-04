@@ -28,6 +28,7 @@ mod utils;
 mod year2015;
 mod year2016;
 mod year2017;
+mod year2018;
 
 use std::io::{self, Write};
 use std::process;

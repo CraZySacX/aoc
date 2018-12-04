@@ -19,6 +19,7 @@ use utils::{self, Prefix};
 use year2015;
 use year2016;
 use year2017;
+use year2018;
 
 /// Advent of Code `SubCommand`
 fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
@@ -53,6 +54,7 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
     let is_second_star = matches.is_present("second");
 
     match *year {
+        AoCYear::AOC2018 => Ok(year2018::find_solution(reader, day, is_second_star)?),
         AoCYear::AOC2017 => Ok(year2017::find_solution(reader, day, is_second_star)?),
         AoCYear::AOC2016 => Ok(year2016::find_solution(reader, day, is_second_star)?),
         AoCYear::AOC2015 => Ok(year2015::find_solution(reader, day, is_second_star)?),
