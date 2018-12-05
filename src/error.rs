@@ -19,4 +19,8 @@ error_chain! {
         Regex(::regex::Error);
         TryFromInt(::std::num::TryFromIntError);
     }
+
+    errors {
+        InvalidIdx
+    }
 }
