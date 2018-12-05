@@ -99,14 +99,14 @@ fn overlap(rect1: Rectangle, rect2: Rectangle) -> bool {
         return false;
     }
 
-    return true;
+    true
 }
 
 fn find_non_overlaps(rectangles: &BTreeMap<usize, Rectangle>) -> Result<usize> {
     for (id, rect1) in rectangles {
         let overlaps: Vec<Rectangle> = rectangles
             .iter()
-            .filter(|(id2, _)| !(*id == **id2))
+            .filter(|(id2, _)| *id != **id2)
             .filter(|(_, rect2)| overlap(*rect1, **rect2))
             .map(|(_, v)| *v)
             .collect();
