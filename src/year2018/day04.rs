@@ -117,13 +117,11 @@ const TEST_LINES: &str = r#"[1518-11-01 00:00] Guard #10 begins shift
 mod one_star {
     use super::{find_solution, TEST_LINES};
     use error::Result;
-    use std::io::{BufReader, Cursor};
+    use std::io::Cursor;
 
     #[test]
     fn solution() -> Result<()> {
-        let cursor = Cursor::new(TEST_LINES);
-        let buf_reader = BufReader::new(cursor);
-        assert_eq!(find_solution(buf_reader, false)?, 240);
+        assert_eq!(find_solution(Cursor::new(TEST_LINES), false)?, 240);
         Ok(())
     }
 }
@@ -132,13 +130,11 @@ mod one_star {
 mod two_star {
     use super::{find_solution, TEST_LINES};
     use error::Result;
-    use std::io::{BufReader, Cursor};
+    use std::io::Cursor;
 
     #[test]
     fn solution() -> Result<()> {
-        let cursor = Cursor::new(TEST_LINES);
-        let buf_reader = BufReader::new(cursor);
-        assert_eq!(find_solution(buf_reader, true)?, 4455);
+        assert_eq!(find_solution(Cursor::new(TEST_LINES), true)?, 4455);
         Ok(())
     }
 }
