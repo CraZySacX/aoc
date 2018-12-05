@@ -6,9 +6,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         if let Ok(line) = line_result {
             let mut ch_vec: Vec<char> = line.chars().collect();
 
-            for (idx, ch) in ch_vec.iter().enumerate() {
-
-            }
+            for (idx, ch) in ch_vec.iter().enumerate() {}
         }
     }
 
