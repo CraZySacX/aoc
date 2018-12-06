@@ -1,3 +1,4 @@
+//! Advent of Code - Day 3 "No Matter How You Slice It" Solution
 use error::Result;
 use ndarray::Array2;
 use regex::Regex;

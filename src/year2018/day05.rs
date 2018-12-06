@@ -1,3 +1,4 @@
+//! Advent of Code - Day 5 "Alchemical Reduction" Solution
 use error::Result;
 use std::cmp::{max, min};
 use std::collections::HashMap;

@@ -1,3 +1,4 @@
+//! Advent of Code - Day 4 "Repose Record" Solution
 use chrono::{TimeZone, Timelike, Utc};
 use error::{ErrorKind, Result};
 use regex::Regex;

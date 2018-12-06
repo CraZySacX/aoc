@@ -1,6 +1,5 @@
 //! Advent of Code - Day 2 "Inventory Management System" Solution
 use error::Result;
-// use indexmap::IndexSet;
 use std::collections::HashMap;
 use std::io::BufRead;
 
