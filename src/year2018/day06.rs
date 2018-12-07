@@ -1,7 +1,8 @@
 //! Advent of Code - Day 6 "Chronal Coordinates" Solution
 use error::Result;
+use indexmap::IndexSet;
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
@@ -19,15 +20,36 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     }
 
     let (max_x, max_y) = max_coords(&coords);
-    // let coords_iter = coords.iter();
+    let mut md_map = BTreeMap::new();
+    let mut on_boundary = IndexSet::new();
 
-    for x in 0..=max_x {
-        for y in 0..=max_y {
+    for y in 0..=max_y {
+        for x in 0..=max_x {
             let closest = find_closest((x, y), &coords);
-            println!("Closest: {:?}", closest);
+
+            if closest.len() == 1 {
+                md_map.insert((x, y), closest[0]);
+
+                if x == 0 || y == 0 || x == max_x || y == max_y {
+                    on_boundary.insert(closest[0]);
+                }
+            }
         }
     }
-    Ok(0)
+
+    let rest: BTreeMap<(i32, i32), (i32, i32)> = md_map
+        .iter()
+        .filter(|(_, closest)| !on_boundary.contains(*closest))
+        .map(|(x, v)| (*x, *v))
+        .collect();
+
+    let mut frequency: HashMap<(i32, i32), u32> = HashMap::new();
+    for (_, bounded_closest) in rest {
+        *frequency.entry(bounded_closest).or_insert(0) += 1;
+    }
+
+    let max = frequency.iter().max_by_key(|(_, x)| *x).map(|(_, x)| *x).ok_or_else(|| "no maximum")?;
+    Ok(max)
 }
 
 fn find_closest(point: (i32, i32), coords: &[(i32, i32)]) -> Vec<(i32, i32)> {
@@ -52,8 +74,8 @@ fn manhattan_distance(from: (i32, i32), to: (i32, i32)) -> i32 {
 }
 
 fn max_coords(coords: &[(i32, i32)]) -> (i32, i32) {
-    let max_x = coords.iter().max_by_key(|(x,_)| x).unwrap_or_else(|| &(0,0)).0;
-    let max_y = coords.iter().max_by_key(|(_,y)| y).unwrap_or_else(|| &(0,0)).1;
+    let max_x = coords.iter().max_by_key(|(x, _)| x).unwrap_or_else(|| &(0, 0)).0;
+    let max_y = coords.iter().max_by_key(|(_, y)| y).unwrap_or_else(|| &(0, 0)).1;
     (max_x, max_y)
 }
 
