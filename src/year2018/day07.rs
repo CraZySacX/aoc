@@ -2,7 +2,7 @@
 use error::Result;
 use indexmap::IndexSet;
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt;
 use std::io::BufRead;
 
@@ -216,59 +216,52 @@ fn consume_work(worker: &mut Worker, work: &(String, u32)) -> bool {
     }
 }
 
+fn complete(node_map: &BTreeMap<char, Vec<char>>) -> Result<char> {
+    let ready: Vec<char> = node_map.iter().filter_map(|(x, y)| if y.is_empty() { Some(*x) } else { None }).collect();
+    ready.get(0).cloned().ok_or_else(|| "blah".into())
+}
+
+fn remove_from_parents(node_map: &mut BTreeMap<char, Vec<char>>, key: char) {
+    for node in node_map.values_mut() {
+        node.retain(|x| *x != key);
+    }
+}
+
 fn find_order<T: BufRead>(reader: T) -> Result<String> {
+    // This is a map of char to a vector of it's parents.  This is ordered so that complete
+    // will find the right character to complete next.
+    let mut node_map: BTreeMap<char, Vec<char>> = BTreeMap::new();
+
+    // Parse the input file and load the map.
     let line_re = Regex::new(r#"Step ([A-Z]) must be finished before step ([A-Z])"#)?;
-    let mut child_map = HashMap::new();
-    let mut parents_map = HashMap::new();
-    let mut node_set = IndexSet::new();
+    for line in reader.lines().filter_map(|x| x.ok()) {
+        for cap in line_re.captures_iter(&line) {
+            let first = (&cap[1]).chars().next().ok_or_else(|| "invalid char")?;
+            let second = (&cap[2]).chars().next().ok_or_else(|| "invalid char")?;
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            for cap in line_re.captures_iter(&line) {
-                let first = (&cap[1]).to_string();
-                let second = (&cap[2]).to_string();
-                node_set.insert(first.clone());
-                node_set.insert(second.clone());
-                let mut children = child_map.entry(first.clone()).or_insert_with(|| vec![]);
-                children.push(second.clone());
-                let mut parents = parents_map.entry(second).or_insert_with(|| vec![]);
-                parents.push(first);
+            {
+                node_map.entry(first).or_insert_with(|| Vec::with_capacity(25));
             }
-        } else {
-            return Err("unable to parse input".into());
+            {
+                let mut snode = node_map.entry(second).or_insert_with(|| Vec::with_capacity(25));
+                snode.push(first);
+            }
         }
     }
 
-    let all_children: IndexSet<String> = child_map.iter().flat_map(|(_, c)| c).cloned().collect();
-    let mut ready: IndexSet<String> = node_set.difference(&all_children).cloned().collect();
-    let mut instruction_order = String::new();
-    ready.sort_by(|x, y| x.cmp(y).reverse());
+    // The final order
+    let mut result = String::new();
 
-    'outer: while let Some(nx) = ready.pop() {
-        // Check that all the parent steps have completed.  If not, move to next
-        // ready step.
-        if let Some(parents) = parents_map.get(&nx) {
-            for parent in parents {
-                if !instruction_order.contains(parent) {
-                    continue 'outer;
-                }
-            }
-        }
-
-        // All the parents have completed, so complete this step and push
-        // the children into the ready state.  Sort the readies.
-        instruction_order.push_str(&nx);
-
-        if let Some(children) = child_map.get(&nx) {
-            for child in children {
-                ready.insert(child.clone());
-            }
-        }
-
-        ready.sort_by(|x, y| x.cmp(y).reverse());
+    // Loop through the map, completing one character, removing that character from the remaining
+    // parent vectors, removing the completed character from the map and pushing onto the result.
+    while !node_map.is_empty() {
+        let completed = complete(&node_map)?;
+        remove_from_parents(&mut node_map, completed);
+        node_map.remove(&completed).ok_or_else(|| "blah")?;
+        result.push(completed);
     }
 
-    Ok(instruction_order)
+    Ok(result)
 }
 
 #[cfg(test)]
