@@ -20,6 +20,7 @@ extern crate itertools;
 extern crate bytecount;
 extern crate chrono;
 extern crate indexmap;
+extern crate md5;
 extern crate ndarray;
 extern crate pathfinding;
 extern crate primal;

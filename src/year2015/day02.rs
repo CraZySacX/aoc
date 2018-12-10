@@ -23,7 +23,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             let mut tmp = vec![length, width, height];
             tmp.sort();
 
-            answer += 2*tmp[0] + 2*tmp[1] + length*width*height;
+            answer += 2 * tmp[0] + 2 * tmp[1] + length * width * height;
         } else {
             let lw = length * width;
             let wh = width * height;
