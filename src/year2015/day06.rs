@@ -6,11 +6,7 @@ use std::io::BufRead;
 
 /// Find the solution
 pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    let result = if _second_star {
-        brighten(reader)?
-    } else {
-        decorate(reader)?
-    };
+    let result = if _second_star { brighten(reader)? } else { decorate(reader)? };
     Ok(result as u32)
 }
 
@@ -31,15 +27,15 @@ fn decorate<T: BufRead>(reader: T) -> Result<usize> {
                 "turn on" => {
                     // println!( "Turning on  {},{} through {},{}", x1, y1, x2, y2);
                     turn_on(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 "turn off" => {
                     // println!("Turning off {},{} through {},{}", x1, y1, x2, y2);
                     turn_off(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 "toggle" => {
                     // println!("Toggling    {},{} through {},{}", x1, y1, x2, y2);
                     toggle(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 _ => return Err("invalid command".into()),
             }
         }
@@ -89,15 +85,15 @@ fn brighten<T: BufRead>(reader: T) -> Result<usize> {
                 "turn on" => {
                     // println!( "Turning on  {},{} through {},{}", x1, y1, x2, y2);
                     increase_brightness(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 "turn off" => {
                     // println!("Turning off {},{} through {},{}", x1, y1, x2, y2);
                     decrease_brightness(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 "toggle" => {
                     // println!("Toggling    {},{} through {},{}", x1, y1, x2, y2);
                     really_brighten(&mut lights, x1, y1, x2, y2);
-                },
+                }
                 _ => return Err("invalid command".into()),
             }
         }

@@ -1,7 +1,7 @@
 //! Advent of Code - Day 5 Solution
 use error::Result;
-use std::io::BufRead;
 use std::collections::HashMap;
+use std::io::BufRead;
 
 /// Find the solution
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
