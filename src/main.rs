@@ -25,6 +25,7 @@ extern crate ndarray;
 extern crate pathfinding;
 extern crate primal;
 extern crate regex;
+extern crate sliding_windows;
 
 mod constants;
 mod error;
