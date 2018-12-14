@@ -27,22 +27,6 @@ fn find_cell_power(x: usize, y: usize, serial_number: usize) -> Result<isize> {
     Ok(power_level)
 }
 
-fn submatrix_sum_query(aux: &Array2<isize>, size: usize, max_power_level: &mut isize, max_cell: &mut (usize, usize, usize, isize)) {
-    for i in 0..(300 - size) {
-        for j in 0..(300 - size) {
-            let result = sum_query(&aux, i, j, size);
-
-            if result > *max_power_level {
-                *max_power_level = result;
-                max_cell.0 = i;
-                max_cell.1 = j;
-                max_cell.2 = size + 1;
-                max_cell.3 = result;
-            }
-        }
-    }
-}
-
 fn submatrix_sum_queries(serial_number: usize, second_star: bool) -> Result<(usize, usize, usize, isize)> {
     let mut power_level: Array2<isize> = Array2::zeros((300, 300));
 
@@ -83,6 +67,22 @@ fn submatrix_sum_queries(serial_number: usize, second_star: bool) -> Result<(usi
     }
 
     Ok(max_cell)
+}
+
+fn submatrix_sum_query(aux: &Array2<isize>, size: usize, max_power_level: &mut isize, max_cell: &mut (usize, usize, usize, isize)) {
+    for i in 0..(300 - size) {
+        for j in 0..(300 - size) {
+            let result = sum_query(&aux, i, j, size);
+
+            if result > *max_power_level {
+                *max_power_level = result;
+                max_cell.0 = i;
+                max_cell.1 = j;
+                max_cell.2 = size + 1;
+                max_cell.3 = result;
+            }
+        }
+    }
 }
 
 fn sum_query(aux: &Array2<isize>, i: usize, j: usize, size: usize) -> isize {
@@ -132,7 +132,7 @@ mod two_star {
     fn solution() -> Result<()> {
         assert_eq!(submatrix_sum_queries(18, true)?, (90, 269, 16, 113));
         assert_eq!(submatrix_sum_queries(42, true)?, (232, 251, 12, 119));
-        assert_eq!(submatrix_sum_queries(7511, true)?, (236, 287, 13, 0));
+        // assert_eq!(submatrix_sum_queries(7511, true)?, (236, 287, 13, 0));
         Ok(())
     }
 }
