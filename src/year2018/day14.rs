@@ -22,7 +22,7 @@ fn check_patt(recipes: &VecDeque<u8>, pattern: &str, len: usize) -> bool {
         }
 
         if rev_patt == check_str {
-            return true
+            return true;
         }
     }
     false
