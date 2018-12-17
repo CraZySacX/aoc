@@ -1,3 +1,4 @@
+//! Advent of Code - Day 14 "Chocolate Charts" Solution
 use error::Result;
 use std::collections::VecDeque;
 use std::io::BufRead;
@@ -39,8 +40,6 @@ fn score_recipes(count: &str, second_star: bool) -> Result<String> {
     let mut idx_e2 = 1;
 
     loop {
-        // println!("Elf 1: {}, Elf 2: {}", idx_e1, idx_e2);
-        // println!("Recipes: {:?}", recipe_deque);
         if !second_star && recipe_deque.len() > count_u + 10 {
             break;
         }
