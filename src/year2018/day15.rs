@@ -26,6 +26,8 @@ struct Unit {
     kind: UnitKind,
     attack_power: usize,
     hit_points: usize,
+    has_moved: bool,
+    has_attacked: bool,
 }
 
 impl Unit {
@@ -34,6 +36,8 @@ impl Unit {
             kind: UnitKind::Elf,
             attack_power: 3,
             hit_points: 200,
+            has_moved: false,
+            has_attacked: false,
         }
     }
 
@@ -42,6 +46,8 @@ impl Unit {
             kind: UnitKind::Goblin,
             attack_power: 3,
             hit_points: 200,
+            has_moved: false,
+            has_attacked: false,
         }
     }
 }
@@ -94,7 +100,7 @@ impl fmt::Display for Element {
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 enum Action {
-    Attack,
+    Attack([usize; 2]),
     Move([usize; 2]),
     No,
 }
@@ -172,7 +178,7 @@ fn calculate_attack(board: &Array2<Element>, curr_unit: &Unit, coord: [usize; 2]
 }
 
 fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize, max_i: usize, max_j: usize) -> Option<[usize; 2]> {
-    // println!("Checking unit at {},{}", i, j);
+    println!("Checking unit at {},{} for attacks", i, j);
 
     let mut target = None;
     let mut min_hit_points = usize::max_value();
@@ -184,35 +190,35 @@ fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize
 
     // Check up first (reading order and all)
     if j > 0 {
-        // println!("Can I attack above [{},{}]?", above[0], above[1]);
+        println!("Can I attack above [{},{}]?", above[0], above[1]);
         calculate_attack(&board, curr_unit, above, &mut target, &mut min_hit_points);
-        // if let Some(atk_tgt) = target {
-        // println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        // }
+        if let Some(atk_tgt) = target {
+            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
+        }
     }
 
     if i > 0 {
-        // println!("Can I attack left [{},{}]?", left[0], left[1]);
+        println!("Can I attack left [{},{}]?", left[0], left[1]);
         calculate_attack(&board, curr_unit, left, &mut target, &mut min_hit_points);
-        // if let Some(atk_tgt) = target {
-        // println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        // }
+        if let Some(atk_tgt) = target {
+            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
+        }
     }
 
     if i < max_i - 1 {
-        // println!("Can I attack right [{},{}]?", right[0], right[1]);
+        println!("Can I attack right [{},{}]?", right[0], right[1]);
         calculate_attack(&board, curr_unit, right, &mut target, &mut min_hit_points);
-        // if let Some(atk_tgt) = target {
-        // println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        // }
+        if let Some(atk_tgt) = target {
+            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
+        }
     }
 
     if j < max_j - 1 {
-        // println!("Can I attack down [{},{}]?", down[0], down[1]);
+        println!("Can I attack down [{},{}]?", down[0], down[1]);
         calculate_attack(&board, curr_unit, down, &mut target, &mut min_hit_points);
-        // if let Some(atk_tgt) = target {
-        // println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        // }
+        if let Some(atk_tgt) = target {
+            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
+        }
     }
 
     target
@@ -231,6 +237,13 @@ fn move_if_not_adjacent(
     // the unit is moving down or right.
 
     println!("Checking {}, {} for move", i, j);
+
+    // If the unit has already moved, don't move again.
+    if curr_unit.has_moved {
+        println!("Unit has already moved, don't move again");
+        return Ok(None);
+    }
+
     // Check for adjacent units, and return if there are any.
     if j > 0 {
         let above = &board[[i, j - 1]];
@@ -401,19 +414,15 @@ fn move_if_not_adjacent(
                 queue.push_back((down_coord, new_path, dist + 1));
                 visited[down_coord] = true;
             }
-
-            if queue.is_empty() && !path.is_empty() {
-                println!("Found a partial path: {:?}", path);
-                return Ok(None);
-            } else if queue.is_empty() && path.is_empty() {
-                println!("No path found!");
-                return Ok(None);
-            }
         }
     }
 
-    println!("Distance: {}, Move Target: {},{}", min_dist, move_target[0], move_target[1]);
-    Ok(Some(move_target))
+    if min_dist == usize::max_value() && move_target == [0, 0] {
+        Ok(None)
+    } else {
+        println!("Distance: {}, Move Target: {},{}", min_dist, move_target[0], move_target[1]);
+        Ok(Some(move_target))
+    }
 }
 
 fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_j: usize) -> Result<usize> {
@@ -445,14 +454,23 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
         }
     }
 
+    let mut next_coord = [0, 0];
+    let mut moved = false;
+
     for (action, coord) in move_vec {
         match action {
-            Action::Attack => {
+            Action::Attack([_, _]) => {
                 println!("This shouldn't happen after move sweep!");
             }
             Action::Move([i, j]) => {
                 println!("Moving from {},{} to {},{}", i, j, coord[0], coord[1]);
                 board[coord] = board[[i, j]].clone();
+                moved = true;
+                next_coord = coord;
+
+                if let Some(ref mut unit) = board[coord].unit {
+                    unit.has_moved = true;
+                }
                 board[[i, j]] = Element {
                     kind: ElementKind::Cavern,
                     unit: None,
@@ -465,16 +483,20 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
     let mut attack_vec = Vec::new();
 
     {
-        let curr_cell = &board[[i, j]];
+        let curr_cell = if moved { &board[next_coord] } else { &board[[i, j]] };
+        let i = if moved { next_coord[0] } else { i };
+        let j = if moved { next_coord[1] } else { j };
 
         match curr_cell.kind {
             ElementKind::Wall | ElementKind::Cavern {} => {}
             ElementKind::Unit => {
                 if let Some(ref unit) = curr_cell.unit {
-                    if let Some(target) = attack_adjacent(board, unit, i, j, max_i, max_j) {
-                        attack_vec.push((Action::Attack, target, Some(unit.attack_power)));
-                    } else {
-                        attack_vec.push((Action::No, [0, 0], None));
+                    if !unit.has_attacked {
+                        if let Some(target) = attack_adjacent(board, unit, i, j, max_i, max_j) {
+                            attack_vec.push((Action::Attack([i, j]), target, Some(unit.attack_power)));
+                        } else {
+                            attack_vec.push((Action::No, [0, 0], None));
+                        }
                     }
                 }
             }
@@ -483,8 +505,11 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
     for (action, coord, atk_pwr_opt) in attack_vec {
         match action {
-            Action::Attack => {
+            Action::Attack([i, j]) => {
                 let mut dead = false;
+                if let Some(ref mut unit) = board[[i, j]].unit {
+                    unit.has_attacked = true;
+                }
                 if let Some(ref mut unit) = board[coord].unit {
                     if let Some(atk_pwr) = atk_pwr_opt {
                         unit.hit_points = unit.hit_points.checked_sub(atk_pwr).unwrap_or(0);
@@ -512,8 +537,18 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
     Ok(1)
 }
 
+fn reset_has_moved(board: &mut Array2<Element>, i: usize, j: usize) {
+    let element = &mut board[[i, j]];
+
+    if element.kind == ElementKind::Unit {
+        if let Some(ref mut unit) = element.unit {
+            unit.has_moved = false;
+            unit.has_attacked = false;
+        }
+    }
+}
+
 fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<()> {
-    // TODO: Run moves, then run attacks.  Two loops.
     'outer: for row in 0..j {
         println!("Row {}", row);
         for col in 0..i {
@@ -523,6 +558,11 @@ fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<()> {
         }
     }
 
+    for row in 0..j {
+        for col in 0..i {
+            reset_has_moved(board, col, row);
+        }
+    }
     Ok(())
 }
 
@@ -575,7 +615,7 @@ mod one_star {
     #[test]
     fn solution() -> Result<()> {
         let mut board = generate_map(Cursor::new(TEST_BOARD), 7, 7)?;
-        let rounds = 25;
+        let rounds = 47;
         for i in 0..rounds {
             print_board(&board, i);
             round(&mut board, 7, 7)?;
