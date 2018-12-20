@@ -597,10 +597,12 @@ where
                 Outcome::NoMoreEnemies => {
                     dead_elf = false;
                     done = true;
-                },
+                }
                 Outcome::DeadElf => {
-                    if second_star { done = true; }
-                },
+                    if second_star {
+                        done = true;
+                    }
+                }
                 _ => {}
             }
 
