@@ -110,10 +110,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     Ok(outcome as u32)
 }
 
-fn generate_map(lines: &[String], i: usize, j: usize, elf_attack_power: usize) -> Result<Array2<Element>> {
-    let mut board: Array2<Element> = Array2::default((i, j));
-    let mut j = 0;
-    for line in lines {
+fn generate_map(lines: &[String], max_i: usize, max_j: usize, elf_attack_power: usize) -> Result<Array2<Element>> {
+    let mut board: Array2<Element> = Array2::default((max_i, max_j));
+    for (j, line) in lines.iter().enumerate() {
         for (i, ch) in line.chars().enumerate() {
             match ch {
                 '#' => {
@@ -143,7 +142,6 @@ fn generate_map(lines: &[String], i: usize, j: usize, elf_attack_power: usize) -
                 _ => return Err("invalid game element type!".into()),
             }
         }
-        j += 1;
     }
 
     Ok(board)
