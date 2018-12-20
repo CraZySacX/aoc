@@ -31,10 +31,10 @@ struct Unit {
 }
 
 impl Unit {
-    fn new_elf() -> Self {
+    fn new_elf(attack_power: usize) -> Self {
         Self {
             kind: UnitKind::Elf,
-            attack_power: 3,
+            attack_power,
             hit_points: 200,
             has_moved: false,
             has_attacked: false,
@@ -110,10 +110,10 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     Ok(outcome as u32)
 }
 
-fn generate_map<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Element>> {
+fn generate_map(lines: &[String], i: usize, j: usize, elf_attack_power: usize) -> Result<Array2<Element>> {
     let mut board: Array2<Element> = Array2::default((i, j));
     let mut j = 0;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in lines {
         for (i, ch) in line.chars().enumerate() {
             match ch {
                 '#' => {
@@ -131,7 +131,7 @@ fn generate_map<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Elem
                 'E' => {
                     board[[i, j]] = Element {
                         kind: ElementKind::Unit,
-                        unit: Some(Unit::new_elf()),
+                        unit: Some(Unit::new_elf(elf_attack_power)),
                     }
                 }
                 'G' => {
@@ -394,24 +394,18 @@ fn move_if_not_adjacent(
     first_step_vec.dedup();
 
     if !first_step_vec.is_empty() {
-        // println!("Checking {:?} for first step from {},{}", &first_step_vec, i, j);
-
         let above = [i, j - 1];
         let left = [i - 1, j];
         let right = [i + 1, j];
         let down = [i, j + 1];
 
         if first_step_vec.contains(&above) {
-            // println!("Choosing above for first step");
             Ok(Some(above))
         } else if first_step_vec.contains(&left) {
-            // println!("Choosing left for first step");
             Ok(Some(left))
         } else if first_step_vec.contains(&right) {
-            // println!("Choosing right for first step");
             Ok(Some(right))
         } else {
-            // println!("Choosing down for first step");
             Ok(Some(down))
         }
     } else {
@@ -419,7 +413,7 @@ fn move_if_not_adjacent(
     }
 }
 
-fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_j: usize) -> Result<usize> {
+fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_j: usize, second_star: bool) -> Result<usize> {
     let mut move_vec = Vec::new();
 
     // Scope for mutable board change below.
@@ -505,6 +499,10 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
                         if unit.hit_points == 0 {
                             dead = true;
+
+                            if second_star && unit.kind == UnitKind::Elf {
+                                return Ok(2);
+                            }
                         }
                     }
                 }
@@ -535,13 +533,26 @@ fn reset_units(board: &mut Array2<Element>, i: usize, j: usize) {
     }
 }
 
-fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<bool> {
+enum Outcome {
+    NoMoreEnemies,
+    DeadElf,
+    BattleOn,
+}
+
+fn round(board: &mut Array2<Element>, i: usize, j: usize, second_star: bool) -> Result<Outcome> {
     let mut done = false;
+    let mut dead_elf = false;
 
     'outer: for row in 0..j {
         for col in 0..i {
-            if take_turn(board, col, row, i, j)? == 0 {
+            let result = take_turn(board, col, row, i, j, second_star)?;
+
+            if result == 0 {
                 done = true;
+                break 'outer;
+            } else if result == 2 {
+                done = true;
+                dead_elf = true;
                 break 'outer;
             }
         }
@@ -555,24 +566,51 @@ fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<bool> {
         }
     }
 
-    Ok(done)
+    if !done {
+        Ok(Outcome::BattleOn)
+    } else if !second_star && done {
+        Ok(Outcome::NoMoreEnemies)
+    } else if second_star && dead_elf {
+        Ok(Outcome::DeadElf)
+    } else {
+        Ok(Outcome::NoMoreEnemies)
+    }
 }
 
-fn run_battle<T>(reader: T, max_i: usize, max_j: usize, _second_star: bool, test: bool) -> Result<usize>
+fn run_battle<T>(reader: T, max_i: usize, max_j: usize, second_star: bool, test: bool) -> Result<usize>
 where
     T: BufRead,
 {
-    let mut board = generate_map(reader, max_i, max_j)?;
-    let mut done = false;
+    let lines: Vec<String> = reader.lines().filter_map(|x| x.ok()).collect();
+    let mut board = Array2::default((0, 0));
+    let mut dead_elf = true;
     let mut round_count = 0;
-    while !done {
-        done = round(&mut board, max_i, max_j)?;
+    let mut elf_attack_power = 3;
 
-        if !done {
-            round_count += 1;
-        } else if done && test {
-            print_board(&board, round_count);
+    while dead_elf {
+        round_count = 0;
+        board = generate_map(&lines, max_i, max_j, elf_attack_power)?;
+
+        let mut done = false;
+        while !done {
+            match round(&mut board, max_i, max_j, second_star)? {
+                Outcome::NoMoreEnemies => {
+                    dead_elf = false;
+                    done = true;
+                },
+                Outcome::DeadElf => {
+                    if second_star { done = true; }
+                },
+                _ => {}
+            }
+
+            if !done {
+                round_count += 1;
+            } else if done && test {
+                print_board(&board, round_count);
+            }
         }
+        elf_attack_power += 1;
     }
 
     let hps: usize = board
@@ -679,6 +717,74 @@ mod one_star {
         assert_eq!(run_battle(Cursor::new(TEST_BOARD_4), 7, 7, false, true)?, 27755);
         assert_eq!(run_battle(Cursor::new(TEST_BOARD_5), 7, 7, false, true)?, 28944);
         assert_eq!(run_battle(Cursor::new(TEST_BOARD_6), 9, 9, false, true)?, 18740);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod two_star {
+    use super::run_battle;
+    use error::Result;
+    use std::io::Cursor;
+
+    const TEST_BOARD: &str = r"#######
+#.G...#
+#...EG#
+#.#.#G#
+#..G#E#
+#.....#
+#######";
+
+    const TEST_BOARD_2: &str = r"#######
+#G..#E#
+#E#E.E#
+#G.##.#
+#...#E#
+#...E.#
+#######";
+
+    const TEST_BOARD_3: &str = r"#######
+#E..EG#
+#.#G.E#
+#E.##E#
+#G..#.#
+#..E#.#
+#######";
+
+    const TEST_BOARD_4: &str = r"#######
+#E.G#.#
+#.#G..#
+#G.#.G#
+#G..#.#
+#...E.#
+#######";
+
+    const TEST_BOARD_5: &str = r"#######
+#.E...#
+#.#..G#
+#.###.#
+#E#G#G#
+#...#G#
+#######";
+
+    const TEST_BOARD_6: &str = r"#########
+#G......#
+#.E.#...#
+#..##..G#
+#...##..#
+#...#...#
+#.G...G.#
+#.....G.#
+#########";
+
+    #[test]
+    fn solution() -> Result<()> {
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD), 7, 7, true, false)?, 4988);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_2), 7, 7, true, false)?, 29064);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_3), 7, 7, true, false)?, 31284);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_4), 7, 7, true, false)?, 3478);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_5), 7, 7, true, false)?, 6474);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_6), 9, 9, true, true)?, 1140);
         Ok(())
     }
 }
