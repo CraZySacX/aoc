@@ -105,11 +105,9 @@ enum Action {
     No,
 }
 
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    let mut board = generate_map(reader, 32, 32)?;
-    print_board(&board, 0);
-    round(&mut board, 32, 32)?;
-    Ok(0)
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+    let outcome = run_battle(reader, 32, 32, second_star, false)?;
+    Ok(outcome as u32)
 }
 
 fn generate_map<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Element>> {
@@ -178,8 +176,6 @@ fn calculate_attack(board: &Array2<Element>, curr_unit: &Unit, coord: [usize; 2]
 }
 
 fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize, max_i: usize, max_j: usize) -> Option<[usize; 2]> {
-    println!("Checking unit at {},{} for attacks", i, j);
-
     let mut target = None;
     let mut min_hit_points = usize::max_value();
 
@@ -190,40 +186,24 @@ fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize
 
     // Check up first (reading order and all)
     if j > 0 {
-        println!("Can I attack above [{},{}]?", above[0], above[1]);
         calculate_attack(&board, curr_unit, above, &mut target, &mut min_hit_points);
-        if let Some(atk_tgt) = target {
-            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        }
     }
 
     if i > 0 {
-        println!("Can I attack left [{},{}]?", left[0], left[1]);
         calculate_attack(&board, curr_unit, left, &mut target, &mut min_hit_points);
-        if let Some(atk_tgt) = target {
-            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        }
     }
 
     if i < max_i - 1 {
-        println!("Can I attack right [{},{}]?", right[0], right[1]);
         calculate_attack(&board, curr_unit, right, &mut target, &mut min_hit_points);
-        if let Some(atk_tgt) = target {
-            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        }
     }
 
     if j < max_j - 1 {
-        println!("Can I attack down [{},{}]?", down[0], down[1]);
         calculate_attack(&board, curr_unit, down, &mut target, &mut min_hit_points);
-        if let Some(atk_tgt) = target {
-            println!("Target: {},{}, Hit Points: {}", atk_tgt[0], atk_tgt[1], min_hit_points);
-        }
     }
-
     target
 }
 
+#[allow(clippy::cyclomatic_complexity)]
 fn move_if_not_adjacent(
     board: &Array2<Element>,
     targets: &[[usize; 2]],
@@ -233,14 +213,8 @@ fn move_if_not_adjacent(
     max_i: usize,
     max_j: usize,
 ) -> Result<Option<[usize; 2]>> {
-    // TODO: Add a has_moved boolean to unit, to prevent multiple moves in the case
-    // the unit is moving down or right.
-
-    println!("Checking {}, {} for move", i, j);
-
     // If the unit has already moved, don't move again.
     if curr_unit.has_moved {
-        println!("Unit has already moved, don't move again");
         return Ok(None);
     }
 
@@ -336,16 +310,15 @@ fn move_if_not_adjacent(
         })
         .collect();
 
-    println!("Actual Targets: {:?}", &actual_locs);
-    let mut move_target = [0, 0];
     let mut min_dist = usize::max_value();
 
     if actual_locs.is_empty() {
         return Ok(None);
     }
 
+    let mut first_step_vec = Vec::new();
+
     for target in actual_locs {
-        println!("Finding smallest distance to {},{}", target[0], target[1]);
         let mut visited: Array2<bool> = Array2::default((max_i, max_j));
 
         Zip::from(&mut visited).and(board).apply(|visited, element| {
@@ -365,13 +338,14 @@ fn move_if_not_adjacent(
             let (coord, mut path, dist) = queue.pop_front().ok_or_else(|| "")?;
 
             if coord == target {
-                println!("Distance: {}, Shortest path: {:?}", dist, path);
-
                 if dist < min_dist {
                     min_dist = dist;
-                    move_target = path.pop_front().ok_or_else(|| "")?;
+                    let first_step = path.pop_front().ok_or_else(|| "")?;
+                    first_step_vec.clear();
+                    first_step_vec.push(first_step);
                 } else if dist == min_dist {
-                    // TODO: Find the reading order move.
+                    let first_step = path.pop_front().ok_or_else(|| "")?;
+                    first_step_vec.push(first_step);
                 }
 
                 break;
@@ -417,11 +391,31 @@ fn move_if_not_adjacent(
         }
     }
 
-    if min_dist == usize::max_value() && move_target == [0, 0] {
-        Ok(None)
+    first_step_vec.dedup();
+
+    if !first_step_vec.is_empty() {
+        // println!("Checking {:?} for first step from {},{}", &first_step_vec, i, j);
+
+        let above = [i, j - 1];
+        let left = [i - 1, j];
+        let right = [i + 1, j];
+        let down = [i, j + 1];
+
+        if first_step_vec.contains(&above) {
+            // println!("Choosing above for first step");
+            Ok(Some(above))
+        } else if first_step_vec.contains(&left) {
+            // println!("Choosing left for first step");
+            Ok(Some(left))
+        } else if first_step_vec.contains(&right) {
+            // println!("Choosing right for first step");
+            Ok(Some(right))
+        } else {
+            // println!("Choosing down for first step");
+            Ok(Some(down))
+        }
     } else {
-        println!("Distance: {}, Move Target: {},{}", min_dist, move_target[0], move_target[1]);
-        Ok(Some(move_target))
+        Ok(None)
     }
 }
 
@@ -437,8 +431,6 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
             ElementKind::Unit => {
                 if let Some(ref unit) = curr_cell.unit {
                     let targets = find_enemy_targets(board, unit.kind);
-
-                    println!("Targets: {:?}", targets);
 
                     if targets.is_empty() {
                         return Ok(0);
@@ -459,11 +451,8 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
     for (action, coord) in move_vec {
         match action {
-            Action::Attack([_, _]) => {
-                println!("This shouldn't happen after move sweep!");
-            }
+            Action::Attack([_, _]) => return Err("Attack in Move Phase".into()),
             Action::Move([i, j]) => {
-                println!("Moving from {},{} to {},{}", i, j, coord[0], coord[1]);
                 board[coord] = board[[i, j]].clone();
                 moved = true;
                 next_coord = coord;
@@ -527,9 +516,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                     };
                 }
             }
-            Action::Move([_, _]) => {
-                println!("This shouldn't happen after move sweep!");
-            }
+            Action::Move([_, _]) => return Err("Move in Attach Phase!".into()),
             Action::No => {}
         }
     }
@@ -537,7 +524,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
     Ok(1)
 }
 
-fn reset_has_moved(board: &mut Array2<Element>, i: usize, j: usize) {
+fn reset_units(board: &mut Array2<Element>, i: usize, j: usize) {
     let element = &mut board[[i, j]];
 
     if element.kind == ElementKind::Unit {
@@ -548,22 +535,52 @@ fn reset_has_moved(board: &mut Array2<Element>, i: usize, j: usize) {
     }
 }
 
-fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<()> {
+fn round(board: &mut Array2<Element>, i: usize, j: usize) -> Result<bool> {
+    let mut done = false;
+
     'outer: for row in 0..j {
-        println!("Row {}", row);
         for col in 0..i {
             if take_turn(board, col, row, i, j)? == 0 {
+                done = true;
                 break 'outer;
             }
         }
     }
 
-    for row in 0..j {
-        for col in 0..i {
-            reset_has_moved(board, col, row);
+    if !done {
+        for row in 0..j {
+            for col in 0..i {
+                reset_units(board, col, row);
+            }
         }
     }
-    Ok(())
+
+    Ok(done)
+}
+
+fn run_battle<T>(reader: T, max_i: usize, max_j: usize, _second_star: bool, test: bool) -> Result<usize>
+where
+    T: BufRead,
+{
+    let mut board = generate_map(reader, max_i, max_j)?;
+    let mut done = false;
+    let mut round_count = 0;
+    while !done {
+        done = round(&mut board, max_i, max_j)?;
+
+        if !done {
+            round_count += 1;
+        } else if done && test {
+            print_board(&board, round_count);
+        }
+    }
+
+    let hps: usize = board
+        .iter()
+        .filter_map(|x| if x.kind == ElementKind::Unit { x.unit.clone() } else { None })
+        .map(|u| u.hit_points)
+        .sum();
+    Ok(round_count * hps)
 }
 
 fn print_board(board: &Array2<Element>, round: usize) {
@@ -600,7 +617,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
 
 #[cfg(test)]
 mod one_star {
-    use super::{generate_map, print_board, round};
+    use super::run_battle;
     use error::Result;
     use std::io::Cursor;
 
@@ -612,15 +629,56 @@ mod one_star {
 #.....#
 #######";
 
+    const TEST_BOARD_2: &str = r"#######
+#G..#E#
+#E#E.E#
+#G.##.#
+#...#E#
+#...E.#
+#######";
+
+    const TEST_BOARD_3: &str = r"#######
+#E..EG#
+#.#G.E#
+#E.##E#
+#G..#.#
+#..E#.#
+#######";
+
+    const TEST_BOARD_4: &str = r"#######
+#E.G#.#
+#.#G..#
+#G.#.G#
+#G..#.#
+#...E.#
+#######";
+
+    const TEST_BOARD_5: &str = r"#######
+#.E...#
+#.#..G#
+#.###.#
+#E#G#G#
+#...#G#
+#######";
+
+    const TEST_BOARD_6: &str = r"#########
+#G......#
+#.E.#...#
+#..##..G#
+#...##..#
+#...#...#
+#.G...G.#
+#.....G.#
+#########";
+
     #[test]
     fn solution() -> Result<()> {
-        let mut board = generate_map(Cursor::new(TEST_BOARD), 7, 7)?;
-        let rounds = 47;
-        for i in 0..rounds {
-            print_board(&board, i);
-            round(&mut board, 7, 7)?;
-        }
-        print_board(&board, rounds);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD), 7, 7, false, true)?, 27730);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_2), 7, 7, false, true)?, 36334);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_3), 7, 7, false, true)?, 39514);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_4), 7, 7, false, true)?, 27755);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_5), 7, 7, false, true)?, 28944);
+        assert_eq!(run_battle(Cursor::new(TEST_BOARD_6), 9, 9, false, true)?, 18740);
         Ok(())
     }
 }
