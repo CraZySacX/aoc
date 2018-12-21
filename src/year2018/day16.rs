@@ -53,11 +53,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         return Err("Bad input file".into());
     }
 
-    let instructions = instructions_vec.split_off(before_vec.len());
+    let _ = instructions_vec.split_off(before_vec.len());
 
     let tuples_vec: Vec<(Registers, Instruction, Registers)> = before_vec
         .into_iter()
-        .zip(instructions.into_iter())
+        .zip(instructions_vec.into_iter())
         .zip(after_vec.into_iter())
         .map(|((rb, i), ra)| (rb, i, ra))
         .collect();
@@ -78,7 +78,13 @@ mod one_star {
 
     const TEST_CODE: &str = r"Before: [3, 2, 1, 1]
 9 2 1 2
-After:  [3, 2, 2, 1]";
+After:  [3, 2, 2, 1]
+
+
+5 2 3 2
+5 0 1 3
+5 3 3 0
+2 3 2 3";
 
     #[test]
     fn solution() -> Result<()> {
@@ -95,7 +101,13 @@ mod two_star {
 
     const TEST_CODE: &str = r"Before: [3, 2, 1, 1]
 9 2 1 2
-After:  [3, 2, 2, 1]";
+After:  [3, 2, 2, 1]
+
+
+5 2 3 2
+5 0 1 3
+5 3 3 0
+2 3 2 3";
 
     #[test]
     fn solution() -> Result<()> {
