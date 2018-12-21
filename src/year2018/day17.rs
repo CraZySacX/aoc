@@ -20,11 +20,15 @@ impl Default for SoilKind {
 
 impl fmt::Display for SoilKind {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            SoilKind::Water => "+",
-            SoilKind::Clay => "#",
-            SoilKind::Sand => ".",
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                SoilKind::Water => "+",
+                SoilKind::Clay => "#",
+                SoilKind::Sand => ".",
+            }
+        )
     }
 }
 
@@ -47,14 +51,14 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
                     for i in r1..=r2 {
                         range_vec.push(i);
                     }
-                },
+                }
                 "y" => {
                     let range_vec = y_coord_map.entry(v1).or_insert_with(|| vec![]);
 
                     for i in r1..=r2 {
                         range_vec.push(i);
                     }
-                },
+                }
                 _ => return Err("invalid coordinate".into()),
             }
         }
