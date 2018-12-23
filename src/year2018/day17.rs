@@ -6,10 +6,13 @@ use std::collections::HashMap;
 use std::fmt;
 use std::io::BufRead;
 
+#[derive(Clone, Debug, Eq, PartialEq)]
 enum SoilKind {
-    Sand,
     Clay,
-    Water,
+    FlowingWater,
+    Sand,
+    SettledWater,
+    Spring,
 }
 
 impl Default for SoilKind {
@@ -24,15 +27,22 @@ impl fmt::Display for SoilKind {
             f,
             "{}",
             match self {
-                SoilKind::Water => "+",
                 SoilKind::Clay => "#",
+                SoilKind::FlowingWater => "|",
                 SoilKind::Sand => ".",
+                SoilKind::SettledWater => "~",
+                SoilKind::Spring => "+",
             }
         )
     }
 }
 
-pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
+pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
+    let result = run_scan(reader, second_star, false)?;
+    Ok(result as u32)
+}
+
+fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usize> {
     let vein_re = Regex::new(r"(x|y)=(\d+), (x|y)=(\d+)\.\.(\d+)")?;
     let mut x_coord_map = HashMap::new();
     let mut y_coord_map = HashMap::new();
@@ -64,15 +74,76 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         }
     }
 
+    let mins_maxes = calculate_mins_maxes(&x_coord_map, &y_coord_map)?;
+    let mut scan_arr = setup_scan(mins_maxes, &x_coord_map, &y_coord_map, test);
+
+    for _ in 0..10 {
+        drip(mins_maxes, &mut scan_arr, test)?;
+    }
+
+    Ok(1)
+}
+
+fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<SoilKind>, test: bool) -> Result<()> {
+    move_flowing_water(mins_maxes, scan_arr)?;
+
+    if scan_arr[[500, 1]] == SoilKind::Sand {
+        scan_arr[[500, 1]] = SoilKind::FlowingWater;
+    }
+
+    if test {
+        print_scan_arr(mins_maxes, &scan_arr);
+    }
+
+    Ok(())
+}
+
+fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<SoilKind>) -> Result<()> {
+    let (_, max_i, _, max_j) = mins_maxes;
+    let mut flowing_water: Vec<[usize; 2]> = scan_arr
+        .indexed_iter()
+        .filter_map(|(x, y)| if *y == SoilKind::FlowingWater { Some(x) } else { None })
+        .map(|x| [x.0, x.1])
+        .collect();
+
+    // This isn't right.  Start at bottom and go left to right, so max_y to 0, min_x to max_x
+    flowing_water.reverse();
+
+    for idx in flowing_water {
+        let i = idx[0];
+        let j = idx[1];
+
+        // Check if down is sand and move if it is.
+        if j < max_j && scan_arr[[i, j + 1]] == SoilKind::Sand {
+            scan_arr[[i, j]] = SoilKind::Sand;
+            scan_arr[[i, j + 1]] = SoilKind::FlowingWater;
+        } else if i > 0 && scan_arr[[i - 1, j]] == SoilKind::Sand {
+            scan_arr[[i, j]] = SoilKind::Sand;
+            scan_arr[[i - 1, j]] = SoilKind::FlowingWater;
+        } else if i < max_i && scan_arr[[i + 1, j]] == SoilKind::Sand {
+            scan_arr[[i, j]] = SoilKind::Sand;
+            scan_arr[[i + 1, j]] = SoilKind::FlowingWater;
+        } else {
+            scan_arr[[i, j]] = SoilKind::SettledWater;
+        }
+    }
+    Ok(())
+}
+
+fn calculate_mins_maxes(x_coord_map: &HashMap<usize, Vec<usize>>, y_coord_map: &HashMap<usize, Vec<usize>>) -> Result<(usize, usize, usize, usize)> {
     let mut min_x = *x_coord_map.keys().min().ok_or_else(|| "no min x")?;
     let mut max_x = *x_coord_map.keys().max().ok_or_else(|| "no max x")?;
-    let min_y = 0;
+    let mut min_y = *y_coord_map.keys().min().ok_or_else(|| "no min y")?;
     let mut max_y = *y_coord_map.keys().max().ok_or_else(|| "no max y")?;
 
     for yv in x_coord_map.values() {
         for y in yv {
             if *y > max_y {
                 max_y = *y;
+            }
+
+            if *y < min_y {
+                min_y = *y;
             }
         }
     }
@@ -93,34 +164,52 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     max_x = max_x.checked_add(2).ok_or_else(|| "overflow x")?;
     max_y = max_y.checked_add(1).ok_or_else(|| "overflow y")?;
 
-    let mut clay_arr = Array2::<SoilKind>::default((max_x, max_y));
-    clay_arr[[500, 0]] = SoilKind::Water;
+    Ok((min_x, max_x, min_y, max_y))
+}
 
-    for (i, jv) in &x_coord_map {
+fn setup_scan(
+    mins_maxes: (usize, usize, usize, usize),
+    x_coord_map: &HashMap<usize, Vec<usize>>,
+    y_coord_map: &HashMap<usize, Vec<usize>>,
+    test: bool,
+) -> Array2<SoilKind> {
+    let (_, max_x, _, max_y) = mins_maxes;
+    let mut clay_arr = Array2::<SoilKind>::default((max_x, max_y));
+    clay_arr[[500, 0]] = SoilKind::Spring;
+
+    for (i, jv) in x_coord_map {
         for j in jv {
             clay_arr[[*i, *j]] = SoilKind::Clay;
         }
     }
 
-    for (j, iv) in &y_coord_map {
+    for (j, iv) in y_coord_map {
         for i in iv {
             clay_arr[[*i, *j]] = SoilKind::Clay;
         }
     }
 
+    if test {
+        print_scan_arr(mins_maxes, &clay_arr);
+    }
+
+    clay_arr
+}
+
+fn print_scan_arr(mins_maxes: (usize, usize, usize, usize), scan_arr: &Array2<SoilKind>) {
+    let (min_x, max_x, _, max_y) = mins_maxes;
     println!();
-    for j in min_y..max_y {
+    for j in 0..max_y {
         for i in min_x..max_x {
-            print!("{}", clay_arr[[i, j]]);
+            print!("{}", scan_arr[[i, j]]);
         }
         println!();
     }
-    Ok(1)
 }
 
 #[cfg(test)]
 mod one_star {
-    use super::find_solution;
+    use super::run_scan;
     use error::Result;
     use std::io::Cursor;
 
@@ -135,29 +224,29 @@ y=13, x=498..504";
 
     #[test]
     fn solution() -> Result<()> {
-        assert_eq!(find_solution(Cursor::new(TEST_CODE), false)?, 1);
+        assert_eq!(run_scan(Cursor::new(TEST_CODE), false, true)?, 1);
         Ok(())
     }
 }
 
-#[cfg(test)]
-mod two_star {
-    use super::find_solution;
-    use error::Result;
-    use std::io::Cursor;
+// #[cfg(test)]
+// mod two_star {
+//     use super::find_solution;
+//     use error::Result;
+//     use std::io::Cursor;
 
-    const TEST_CODE: &str = r"x=495, y=2..7
-y=7, x=495..501
-x=501, y=3..7
-x=498, y=2..4
-x=506, y=1..2
-x=498, y=10..13
-x=504, y=10..13
-y=13, x=498..504";
+//     const TEST_CODE: &str = r"x=495, y=2..7
+// y=7, x=495..501
+// x=501, y=3..7
+// x=498, y=2..4
+// x=506, y=1..2
+// x=498, y=10..13
+// x=504, y=10..13
+// y=13, x=498..504";
 
-    #[test]
-    fn solution() -> Result<()> {
-        assert_eq!(find_solution(Cursor::new(TEST_CODE), true)?, 1);
-        Ok(())
-    }
-}
+//     #[test]
+//     fn solution() -> Result<()> {
+//         assert_eq!(find_solution(Cursor::new(TEST_CODE), true)?, 1);
+//         Ok(())
+//     }
+// }
