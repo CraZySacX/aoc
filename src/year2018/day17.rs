@@ -2,7 +2,7 @@
 use error::Result;
 use ndarray::Array2;
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::fmt;
 use std::io::BufRead;
 
@@ -35,6 +35,12 @@ impl fmt::Display for SoilKind {
             }
         )
     }
+}
+
+#[derive(Clone, Default)]
+struct Soil {
+    kind: SoilKind,
+    moved: bool,
 }
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -77,18 +83,18 @@ fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usi
     let mins_maxes = calculate_mins_maxes(&x_coord_map, &y_coord_map)?;
     let mut scan_arr = setup_scan(mins_maxes, &x_coord_map, &y_coord_map, test);
 
-    for _ in 0..10 {
+    for _ in 0..17 {
         drip(mins_maxes, &mut scan_arr, test)?;
     }
 
     Ok(1)
 }
 
-fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<SoilKind>, test: bool) -> Result<()> {
+fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<Soil>, test: bool) -> Result<()> {
     move_flowing_water(mins_maxes, scan_arr)?;
 
-    if scan_arr[[500, 1]] == SoilKind::Sand {
-        scan_arr[[500, 1]] = SoilKind::FlowingWater;
+    if scan_arr[[500, 1]].kind == SoilKind::Sand {
+        scan_arr[[500, 1]].kind = SoilKind::FlowingWater;
     }
 
     if test {
@@ -98,35 +104,41 @@ fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<SoilKind
     Ok(())
 }
 
-fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<SoilKind>) -> Result<()> {
+fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<Soil>) -> Result<()> {
     let (_, max_i, _, max_j) = mins_maxes;
     let mut flowing_water: Vec<[usize; 2]> = scan_arr
         .indexed_iter()
-        .filter_map(|(x, y)| if *y == SoilKind::FlowingWater { Some(x) } else { None })
+        .filter_map(|(x, y)| if y.kind == SoilKind::FlowingWater { Some(x) } else { None })
         .map(|x| [x.0, x.1])
         .collect();
 
-    // This isn't right.  Start at bottom and go left to right, so max_y to 0, min_x to max_x
-    flowing_water.reverse();
+    flowing_water.sort_by(|a, b| if a[1] == b[1] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) });
+    println!("Flowing Water: {:?}", &flowing_water);
 
-    for idx in flowing_water {
+    for idx in &flowing_water {
         let i = idx[0];
         let j = idx[1];
 
-        // Check if down is sand and move if it is.
-        if j < max_j && scan_arr[[i, j + 1]] == SoilKind::Sand {
-            scan_arr[[i, j]] = SoilKind::Sand;
-            scan_arr[[i, j + 1]] = SoilKind::FlowingWater;
-        } else if i > 0 && scan_arr[[i - 1, j]] == SoilKind::Sand {
-            scan_arr[[i, j]] = SoilKind::Sand;
-            scan_arr[[i - 1, j]] = SoilKind::FlowingWater;
-        } else if i < max_i && scan_arr[[i + 1, j]] == SoilKind::Sand {
-            scan_arr[[i, j]] = SoilKind::Sand;
-            scan_arr[[i + 1, j]] = SoilKind::FlowingWater;
+        // Check if down is sand and move if it is, else check
+        // if left is sand and move if it is, else check if right
+        // is sand and move if it is.
+        if j < max_j && scan_arr[[i, j + 1]].kind == SoilKind::Sand {
+            scan_arr[[i, j]].kind = SoilKind::Sand;
+            scan_arr[[i, j + 1]].kind = SoilKind::FlowingWater;
+            scan_arr[[i, j + 1]].moved = true;
+        } else if i > 0 && scan_arr[[i - 1, j]].kind == SoilKind::Sand {
+            scan_arr[[i, j]].kind = SoilKind::Sand;
+            scan_arr[[i - 1, j]].kind = SoilKind::FlowingWater;
+            scan_arr[[i - 1, j]].moved = true;
+        } else if i < max_i && scan_arr[[i + 1, j]].kind == SoilKind::Sand {
+            scan_arr[[i, j]].kind = SoilKind::Sand;
+            scan_arr[[i + 1, j]].kind = SoilKind::FlowingWater;
+            scan_arr[[i + 1, j]].moved = true;
         } else {
-            scan_arr[[i, j]] = SoilKind::SettledWater;
+            scan_arr[[i, j]].kind = SoilKind::SettledWater;
         }
     }
+
     Ok(())
 }
 
@@ -172,20 +184,29 @@ fn setup_scan(
     x_coord_map: &HashMap<usize, Vec<usize>>,
     y_coord_map: &HashMap<usize, Vec<usize>>,
     test: bool,
-) -> Array2<SoilKind> {
+) -> Array2<Soil> {
     let (_, max_x, _, max_y) = mins_maxes;
-    let mut clay_arr = Array2::<SoilKind>::default((max_x, max_y));
-    clay_arr[[500, 0]] = SoilKind::Spring;
+    let mut clay_arr = Array2::<Soil>::default((max_x, max_y));
+    clay_arr[[500, 0]] = Soil {
+        kind: SoilKind::Spring,
+        moved: false,
+    };
 
     for (i, jv) in x_coord_map {
         for j in jv {
-            clay_arr[[*i, *j]] = SoilKind::Clay;
+            clay_arr[[*i, *j]] = Soil {
+                kind: SoilKind::Clay,
+                moved: false,
+            };
         }
     }
 
     for (j, iv) in y_coord_map {
         for i in iv {
-            clay_arr[[*i, *j]] = SoilKind::Clay;
+            clay_arr[[*i, *j]] = Soil {
+                kind: SoilKind::Clay,
+                moved: false,
+            };
         }
     }
 
@@ -196,12 +217,12 @@ fn setup_scan(
     clay_arr
 }
 
-fn print_scan_arr(mins_maxes: (usize, usize, usize, usize), scan_arr: &Array2<SoilKind>) {
+fn print_scan_arr(mins_maxes: (usize, usize, usize, usize), scan_arr: &Array2<Soil>) {
     let (min_x, max_x, _, max_y) = mins_maxes;
     println!();
     for j in 0..max_y {
         for i in min_x..max_x {
-            print!("{}", scan_arr[[i, j]]);
+            print!("{}", scan_arr[[i, j]].kind);
         }
         println!();
     }
