@@ -2,7 +2,7 @@
 use error::Result;
 use ndarray::Array2;
 use regex::Regex;
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 use std::fmt;
 use std::io::BufRead;
 
@@ -106,6 +106,7 @@ fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<Soil>, t
 
 fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<Soil>) -> Result<()> {
     let (_, max_i, _, max_j) = mins_maxes;
+
     let mut flowing_water: Vec<[usize; 2]> = scan_arr
         .indexed_iter()
         .filter_map(|(x, y)| if y.kind == SoilKind::FlowingWater { Some(x) } else { None })
@@ -135,6 +136,7 @@ fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut A
             scan_arr[[i + 1, j]].kind = SoilKind::FlowingWater;
             scan_arr[[i + 1, j]].moved = true;
         } else {
+            // Am i bounded left and right?  If so, I'm standing
             scan_arr[[i, j]].kind = SoilKind::SettledWater;
         }
     }
