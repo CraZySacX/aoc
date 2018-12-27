@@ -178,7 +178,7 @@ fn run_program<T: BufRead>(reader: T, second_star: bool, test: bool) -> Result<u
         execute(&mut registers, &ip, &instructions_vec, test);
         if test {
             print_registers(&registers);
-        } else if second_star && registers[2] % 100000 == 0 {
+        } else if second_star && registers[2] % 100_000 == 0 {
             println!();
             print_registers(&registers);
         }
