@@ -443,7 +443,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
     for (action, coord) in move_vec {
         match action {
-            Action::Attack([_, _]) => return Err("Attack in Move Phase".into()),
+            Action::Attack([, ]) => return Err("Attack in Move Phase".into()),
             Action::Move([i, j]) => {
                 board[coord] = board[[i, j]].clone();
                 moved = true;
@@ -512,7 +512,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                     };
                 }
             }
-            Action::Move([_, _]) => return Err("Move in Attach Phase!".into()),
+            Action::Move([, ]) => return Err("Move in Attach Phase!".into()),
             Action::No => {}
         }
     }
