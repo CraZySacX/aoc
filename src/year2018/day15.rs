@@ -512,8 +512,6 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                     };
                 }
             }
-            Action::Move([, ]) => return Err("Move in Attach Phase!".into()),
-            Action::No => {}
         }
     }
 
