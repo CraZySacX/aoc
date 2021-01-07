@@ -96,9 +96,9 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
                 let second_tuple = (second, second_duration);
                 pending.insert(first_tuple.clone());
                 pending.insert(second_tuple.clone());
-                let mut children = child_map.entry(first_tuple.clone()).or_insert_with(|| vec![]);
+                let children = child_map.entry(first_tuple.clone()).or_insert_with(|| vec![]);
                 children.push(second_tuple.clone());
-                let mut parents = parents_map.entry(second_tuple).or_insert_with(|| vec![]);
+                let parents = parents_map.entry(second_tuple).or_insert_with(|| vec![]);
                 parents.push(first_tuple);
             }
         } else {
@@ -131,7 +131,7 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
         }
 
         // Assign work to idle workers if conditions are favorable.
-        'outer: for mut worker in &mut workers {
+        'outer: for worker in &mut workers {
             if let Some(nx) = ready.pop() {
                 // Check that all the parent steps have completed.  If not, move on.
                 if let Some(parents) = parents_map.get(&nx) {
@@ -243,7 +243,7 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
                 node_map.entry(first).or_insert_with(|| Vec::with_capacity(25));
             }
             {
-                let mut snode = node_map.entry(second).or_insert_with(|| Vec::with_capacity(25));
+                let snode = node_map.entry(second).or_insert_with(|| Vec::with_capacity(25));
                 snode.push(first);
             }
         }

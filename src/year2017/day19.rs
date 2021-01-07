@@ -56,8 +56,8 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<(String, u32)> {
     let mut bytes = Vec::new();
     let mut curr_row = 0;
     let mut curr_col = 0;
-    let max_col = network_map.cols();
-    let max_row = network_map.rows();
+    let max_col = network_map.ncols();
+    let max_row = network_map.nrows();
     let mut curr_direction = Direction::Down;
     let mut steps = 0;
 

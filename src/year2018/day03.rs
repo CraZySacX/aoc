@@ -66,7 +66,7 @@ fn check_points(all_claims: &BTreeMap<usize, Rectangle>, width: usize, height: u
 
             for rectangle in all_claims.values() {
                 if contains_point(*rectangle, point) {
-                    if let Some(mut ps) = cloth.get_mut((x, y)) {
+                    if let Some(ps) = cloth.get_mut((x, y)) {
                         *ps += 1;
                     }
                 }

@@ -329,7 +329,7 @@ fn move_if_not_adjacent(
         visited[target] = false;
 
         let mut queue = VecDeque::new();
-        let mut move_queue = VecDeque::new();
+        let move_queue = VecDeque::new();
         queue.push_back(([i, j], move_queue, 0));
 
         while !queue.is_empty() {
@@ -443,7 +443,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
     for (action, coord) in move_vec {
         match action {
-            Action::Attack([, ]) => return Err("Attack in Move Phase".into()),
+            Action::Attack([_, _]) => return Err("Attack in Move Phase".into()),
             Action::Move([i, j]) => {
                 board[coord] = board[[i, j]].clone();
                 moved = true;
@@ -512,6 +512,8 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                     };
                 }
             }
+            Action::Move(_) => {}
+            Action::No => {}
         }
     }
 

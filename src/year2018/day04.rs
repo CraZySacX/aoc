@@ -58,7 +58,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if evt.contains("falls asleep") {
                 minute_asleep = dt.minute();
             } else if evt.contains("wakes up") {
-                let mut minutes_map = guards_napping.get_mut(&current_guard).ok_or_else(|| ErrorKind::InvalidIdx)?;
+                let minutes_map = guards_napping.get_mut(&current_guard).ok_or_else(|| ErrorKind::InvalidIdx)?;
                 for i in minute_asleep..dt.minute() {
                     *minutes_map.entry(i).or_insert(0) += 1;
                 }
