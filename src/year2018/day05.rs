@@ -5,26 +5,24 @@ use std::collections::HashMap;
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            if second_star {
-                let mut results = HashMap::new();
-                for lower in 97..=122 {
-                    let upper = lower - 32;
-                    let bytes_vec = line.as_bytes().to_vec();
-                    let mut filtered: Vec<u8> = bytes_vec.iter().filter(|x| **x != lower && **x != upper).cloned().collect();
+    if let Some(line) = reader.lines().flatten().next() {
+        if second_star {
+            let mut results = HashMap::new();
+            for lower in 97..=122 {
+                let upper = lower - 32;
+                let bytes_vec = line.as_bytes().to_vec();
+                let mut filtered: Vec<u8> = bytes_vec.iter().filter(|x| **x != lower && **x != upper).cloned().collect();
 
-                    results.insert(lower, collapse_polymer(&mut filtered));
-                }
-
-                if let Some(min) = results.values().min() {
-                    return Ok(*min);
-                } else {
-                    return Err("unable to find minimum".into());
-                }
-            } else {
-                return Ok(collapse_polymer(&mut line.as_bytes().to_vec()));
+                results.insert(lower, collapse_polymer(&mut filtered));
             }
+
+            if let Some(min) = results.values().min() {
+                return Ok(*min);
+            } else {
+                return Err("unable to find minimum".into());
+            }
+        } else {
+            return Ok(collapse_polymer(&mut line.as_bytes().to_vec()));
         }
     }
     Err("unable to parse input".into())

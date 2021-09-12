@@ -12,7 +12,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         jump_vec.push(line.parse::<i32>()?);
     }
 
-    Ok(jump_away(&mut jump_vec, second_star)?)
+    jump_away(&mut jump_vec, second_star)
 }
 
 /// Find an exit

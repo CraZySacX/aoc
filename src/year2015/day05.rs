@@ -5,7 +5,7 @@ use std::io::BufRead;
 
 /// Find the solution
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    Ok(find_nice(reader, second_star)?)
+    find_nice(reader, second_star)
 }
 
 fn is_nice(line: &[char]) -> bool {

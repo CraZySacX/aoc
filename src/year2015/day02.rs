@@ -21,7 +21,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
         if second_star {
             let mut tmp = vec![length, width, height];
-            tmp.sort();
+            tmp.sort_unstable();
 
             answer += 2 * tmp[0] + 2 * tmp[1] + length * width * height;
         } else {

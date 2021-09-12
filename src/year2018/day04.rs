@@ -23,19 +23,17 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let guard_re = Regex::new(r#"Guard #(\d+) begins shift"#)?;
     let mut sorted_events = BTreeMap::new();
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            for cap in line_re.captures_iter(&line) {
-                let y = (&cap[1]).parse::<i32>()?;
-                let mon = (&cap[2]).parse::<u32>()?;
-                let d = (&cap[3]).parse::<u32>()?;
-                let h = (&cap[4]).parse::<u32>()?;
-                let m = (&cap[5]).parse::<u32>()?;
-                let rest = &cap[6];
+    for line in reader.lines().flatten() {
+        for cap in line_re.captures_iter(&line) {
+            let y = (&cap[1]).parse::<i32>()?;
+            let mon = (&cap[2]).parse::<u32>()?;
+            let d = (&cap[3]).parse::<u32>()?;
+            let h = (&cap[4]).parse::<u32>()?;
+            let m = (&cap[5]).parse::<u32>()?;
+            let rest = &cap[6];
 
-                let dt = Utc.ymd(y, mon, d).and_hms(h, m, 0);
-                sorted_events.insert(dt, rest.to_string());
-            }
+            let dt = Utc.ymd(y, mon, d).and_hms(h, m, 0);
+            sorted_events.insert(dt, rest.to_string());
         }
     }
 
@@ -58,7 +56,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if evt.contains("falls asleep") {
                 minute_asleep = dt.minute();
             } else if evt.contains("wakes up") {
-                let minutes_map = guards_napping.get_mut(&current_guard).ok_or_else(|| ErrorKind::InvalidIdx)?;
+                let minutes_map = guards_napping.get_mut(&current_guard).ok_or(ErrorKind::InvalidIdx)?;
                 for i in minute_asleep..dt.minute() {
                     *minutes_map.entry(i).or_insert(0) += 1;
                 }

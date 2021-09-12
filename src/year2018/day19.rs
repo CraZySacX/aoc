@@ -166,7 +166,7 @@ fn run_program<T: BufRead>(reader: T, second_star: bool, test: bool) -> Result<u
     }
     let mut registers: Registers = if second_star { [1, 0, 0, 0, 0, 0] } else { [0, 0, 0, 0, 0, 0] };
 
-    while let Some(_) = is_ins(&ip, &instructions_vec) {
+    while is_ins(&ip, &instructions_vec).is_some() {
         if test {
             println!();
             print!("ip={} ", ip.value);

@@ -193,22 +193,12 @@ impl Direction {
         match self {
             Direction::Up => {
                 let next_j = pos.1.checked_sub(1);
-
-                if let Some(j) = next_j {
-                    Some((pos.0, j))
-                } else {
-                    None
-                }
+                next_j.map(|j| (pos.0, j))
             }
             Direction::Down => Some((pos.0, pos.1 + 1)),
             Direction::Left => {
                 let next_i = pos.0.checked_sub(1);
-
-                if let Some(i) = next_i {
-                    Some((i, pos.1))
-                } else {
-                    None
-                }
+                next_i.map(|i| (i, pos.1))
             }
             Direction::Right => Some((pos.0 + 1, pos.1)),
         }
@@ -227,7 +217,7 @@ fn navigate(target: (usize, usize), depth: usize, type_memo: &mut HashMap<(usize
     });
 
     while !queue.is_empty() {
-        let state = queue.pop().ok_or_else(|| "queue pop failed")?;
+        let state = queue.pop().ok_or("queue pop failed")?;
         let region = get_type((state.pos.0, state.pos.1), depth, target, type_memo);
 
         if (region == RegionKind::Rocky && state.equipped == Equipment::Neither)
@@ -251,7 +241,7 @@ fn navigate(target: (usize, usize), depth: usize, type_memo: &mut HashMap<(usize
         for direction in Direction::iterator() {
             if let Some(pos) = direction.checked_nav(state.pos) {
                 queue.push(State {
-                    pos: pos,
+                    pos,
                     min_dist: min_dist(pos, target)?,
                     time: state.time + 1,
                     equipped: state.equipped,

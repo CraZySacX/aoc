@@ -76,8 +76,7 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
     let mut workers = Vec::new();
 
     for i in 0..workers_count {
-        let mut worker = Worker::default();
-        worker.id = i;
+        let worker = Worker { id: i, ..Default::default() };
         workers.push(worker);
     }
 
@@ -96,9 +95,9 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
                 let second_tuple = (second, second_duration);
                 pending.insert(first_tuple.clone());
                 pending.insert(second_tuple.clone());
-                let children = child_map.entry(first_tuple.clone()).or_insert_with(|| vec![]);
+                let children = child_map.entry(first_tuple.clone()).or_insert_with(Vec::new);
                 children.push(second_tuple.clone());
-                let parents = parents_map.entry(second_tuple).or_insert_with(|| vec![]);
+                let parents = parents_map.entry(second_tuple).or_insert_with(Vec::new);
                 parents.push(first_tuple);
             }
         } else {
@@ -236,8 +235,8 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
     let line_re = Regex::new(r#"Step ([A-Z]) must be finished before step ([A-Z])"#)?;
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
-            let first = (&cap[1]).chars().next().ok_or_else(|| "invalid char")?;
-            let second = (&cap[2]).chars().next().ok_or_else(|| "invalid char")?;
+            let first = (&cap[1]).chars().next().ok_or("invalid char")?;
+            let second = (&cap[2]).chars().next().ok_or("invalid char")?;
 
             {
                 node_map.entry(first).or_insert_with(|| Vec::with_capacity(25));
@@ -257,7 +256,7 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
     while !node_map.is_empty() {
         let completed = complete(&node_map)?;
         remove_from_parents(&mut node_map, completed);
-        node_map.remove(&completed).ok_or_else(|| "blah")?;
+        node_map.remove(&completed).ok_or("blah")?;
         result.push(completed);
     }
 

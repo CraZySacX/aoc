@@ -72,7 +72,7 @@ fn submatrix_sum_queries(serial_number: usize, second_star: bool) -> Result<(usi
 fn submatrix_sum_query(aux: &Array2<isize>, size: usize, max_power_level: &mut isize, max_cell: &mut (usize, usize, usize, isize)) {
     for i in 0..(300 - size) {
         for j in 0..(300 - size) {
-            let result = sum_query(&aux, i, j, size);
+            let result = sum_query(aux, i, j, size);
 
             if result > *max_power_level {
                 *max_power_level = result;

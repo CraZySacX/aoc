@@ -62,7 +62,7 @@ struct CartPoint {
 
 impl PartialOrd for CartPoint {
     fn partial_cmp(&self, other: &CartPoint) -> Option<Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
 }
 
@@ -137,8 +137,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
 fn gen_mine<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Track>> {
     let mut mine_arr: Array2<Track> = Array2::default((i, j));
-    let mut j = 0;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for (j, line) in reader.lines().filter_map(|x| x.ok()).enumerate() {
         for (i, ch) in line.chars().enumerate() {
             let (kind, cart) = match ch {
                 '/' => (TrackKind::CurveRight, None),
@@ -179,7 +178,6 @@ fn gen_mine<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Track>> 
 
             mine_arr[[i, j]] = Track { kind, cart };
         }
-        j += 1;
     }
 
     Ok(mine_arr)
@@ -278,9 +276,9 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                 }
             }
 
-            let carts = find_carts(&mine_arr);
+            let carts = find_carts(mine_arr);
             if carts.len() == 1 {
-                let (cart_point, direction) = carts.iter().next().ok_or_else(|| "")?;
+                let (cart_point, direction) = carts.iter().next().ok_or("")?;
                 let i = cart_point.i;
                 let j = cart_point.j;
 
@@ -322,7 +320,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                 TrackKind::UpDown | TrackKind::LeftRight => {
                     track.cart = Some(Cart {
                         direction: *direction,
-                        turn_state: turn_state,
+                        turn_state,
                     });
                 }
                 TrackKind::CurveLeft => {
@@ -334,7 +332,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                     };
                     track.cart = Some(Cart {
                         direction: new_direction,
-                        turn_state: turn_state,
+                        turn_state,
                     });
                 }
                 TrackKind::CurveRight => {
@@ -346,7 +344,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                     };
                     track.cart = Some(Cart {
                         direction: new_direction,
-                        turn_state: turn_state,
+                        turn_state,
                     });
                 }
                 TrackKind::Collision => return Err("Can't move into a collision area!".into()),

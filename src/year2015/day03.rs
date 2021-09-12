@@ -31,8 +31,7 @@ fn count_houses<T: BufRead>(reader: T) -> Result<usize> {
         }
     }
 
-    let count: Vec<usize> = house_map.iter().filter_map(|(_, y)| if *y > 0 { Some(*y) } else { None }).collect();
-    Ok(count.len())
+    Ok(house_map.iter().filter_map(|(_, y)| if *y > 0 { Some(*y) } else { None }).count())
 }
 
 fn count_houses_2<T: BufRead>(reader: T) -> Result<usize> {
@@ -90,8 +89,7 @@ fn count_houses_2<T: BufRead>(reader: T) -> Result<usize> {
         }
     }
 
-    let count: Vec<usize> = house_map.iter().filter_map(|(_, y)| if *y > 0 { Some(*y) } else { None }).collect();
-    Ok(count.len())
+    Ok(house_map.iter().filter_map(|(_, y)| if *y > 0 { Some(*y) } else { None }).count())
 }
 
 #[cfg(test)]

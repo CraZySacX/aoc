@@ -75,7 +75,7 @@ fn thread_me() -> Result<u32> {
     if receiver2.recv_timeout(Duration::from_millis(5_000)).is_ok() {
         Ok(0)
     } else {
-        writeln!(io::stdout(), "")?;
+        writeln!(io::stdout())?;
         Ok(1)
     }
 }
@@ -313,7 +313,7 @@ mod one_star {
     use std::collections::HashMap;
 
     #[test]
-    #[allow(clippy::cyclomatic_complexity)]
+    #[allow(clippy::cognitive_complexity)]
     fn solution() {
         let mut commands = HashMap::new();
         let mut register_map: HashMap<String, i64> = HashMap::new();

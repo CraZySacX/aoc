@@ -40,7 +40,7 @@ fn parse_list_and_hash(hash: &mut Vec<u32>, line: &str, num_elements: u32, secon
             for j in curr_pos..u32::from(*length) + curr_pos {
                 let actual_idx = j % num_elements;
                 indices.push(actual_idx);
-                slice.push(hash.get(actual_idx as usize).ok_or("invalid")?.clone());
+                slice.push(*hash.get(actual_idx as usize).ok_or("invalid")?);
             }
 
             slice.reverse();

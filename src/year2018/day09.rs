@@ -26,7 +26,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
 fn rotate_left(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
     for _ in 0..amt {
-        let tmp = circle.pop_back().ok_or_else(|| "rotate left err")?;
+        let tmp = circle.pop_back().ok_or("rotate left err")?;
         circle.push_front(tmp);
     }
     Ok(())
@@ -34,7 +34,7 @@ fn rotate_left(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
 
 fn rotate_right(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
     for _ in 0..amt {
-        let tmp = circle.pop_front().ok_or_else(|| "rotate right err")?;
+        let tmp = circle.pop_front().ok_or("rotate right err")?;
         circle.push_back(tmp);
     }
     Ok(())
@@ -48,14 +48,14 @@ fn play_game(players: usize, final_marble: usize) -> Result<usize> {
     for marble in 1..=final_marble {
         if marble % 23 == 0 {
             rotate_left(&mut circle, 7)?;
-            scores[marble % players] += marble + circle.pop_front().ok_or_else(|| "no front")?;
+            scores[marble % players] += marble + circle.pop_front().ok_or("no front")?;
         } else {
             rotate_right(&mut circle, 2)?;
             circle.push_front(marble);
         }
     }
 
-    Ok(*scores.iter().max().ok_or_else(|| "no max")?)
+    Ok(*scores.iter().max().ok_or("no max")?)
 }
 
 #[cfg(test)]

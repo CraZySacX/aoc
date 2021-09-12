@@ -6,14 +6,12 @@ use std::io::BufRead;
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut acc_vec = Vec::new();
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            let chars: Vec<char> = line.chars().collect();
-            let num_str: String = chars[1..].iter().collect();
-            let num_to_add = num_str.parse::<i32>()?;
-            let tuple = (chars[0] == '+', num_to_add);
-            acc_vec.push(tuple);
-        }
+    for line in reader.lines().flatten() {
+        let chars: Vec<char> = line.chars().collect();
+        let num_str: String = chars[1..].iter().collect();
+        let num_to_add = num_str.parse::<i32>()?;
+        let tuple = (chars[0] == '+', num_to_add);
+        acc_vec.push(tuple);
     }
     let acc = val(&acc_vec, second_star)?;
     println!("Result: {}", acc);

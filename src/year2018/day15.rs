@@ -184,24 +184,24 @@ fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize
 
     // Check up first (reading order and all)
     if j > 0 {
-        calculate_attack(&board, curr_unit, above, &mut target, &mut min_hit_points);
+        calculate_attack(board, curr_unit, above, &mut target, &mut min_hit_points);
     }
 
     if i > 0 {
-        calculate_attack(&board, curr_unit, left, &mut target, &mut min_hit_points);
+        calculate_attack(board, curr_unit, left, &mut target, &mut min_hit_points);
     }
 
     if i < max_i - 1 {
-        calculate_attack(&board, curr_unit, right, &mut target, &mut min_hit_points);
+        calculate_attack(board, curr_unit, right, &mut target, &mut min_hit_points);
     }
 
     if j < max_j - 1 {
-        calculate_attack(&board, curr_unit, down, &mut target, &mut min_hit_points);
+        calculate_attack(board, curr_unit, down, &mut target, &mut min_hit_points);
     }
     target
 }
 
-#[allow(clippy::cyclomatic_complexity)]
+#[allow(clippy::cognitive_complexity)]
 fn move_if_not_adjacent(
     board: &Array2<Element>,
     targets: &[[usize; 2]],
@@ -319,12 +319,9 @@ fn move_if_not_adjacent(
     for target in actual_locs {
         let mut visited: Array2<bool> = Array2::default((max_i, max_j));
 
-        Zip::from(&mut visited).and(board).apply(|visited, element| {
-            *visited = match element.kind {
-                ElementKind::Wall | ElementKind::Unit => true,
-                _ => false,
-            }
-        });
+        Zip::from(&mut visited)
+            .and(board)
+            .for_each(|visited, element| *visited = matches!(element.kind, ElementKind::Wall | ElementKind::Unit));
 
         visited[target] = false;
 
@@ -333,16 +330,17 @@ fn move_if_not_adjacent(
         queue.push_back(([i, j], move_queue, 0));
 
         while !queue.is_empty() {
-            let (coord, mut path, dist) = queue.pop_front().ok_or_else(|| "")?;
+            let (coord, mut path, dist) = queue.pop_front().ok_or("")?;
 
             if coord == target {
+                #[allow(clippy::comparison_chain)]
                 if dist < min_dist {
                     min_dist = dist;
-                    let first_step = path.pop_front().ok_or_else(|| "")?;
+                    let first_step = path.pop_front().ok_or("")?;
                     first_step_vec.clear();
                     first_step_vec.push(first_step);
                 } else if dist == min_dist {
-                    let first_step = path.pop_front().ok_or_else(|| "")?;
+                    let first_step = path.pop_front().ok_or("")?;
                     first_step_vec.push(first_step);
                 }
 
@@ -493,7 +491,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                 }
                 if let Some(ref mut unit) = board[coord].unit {
                     if let Some(atk_pwr) = atk_pwr_opt {
-                        unit.hit_points = unit.hit_points.checked_sub(atk_pwr).unwrap_or(0);
+                        unit.hit_points = unit.hit_points.saturating_sub(atk_pwr);
 
                         if unit.hit_points == 0 {
                             dead = true;

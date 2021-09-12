@@ -24,6 +24,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut max_length = 0;
         let mut ml_scores = Vec::new();
         for (s, l) in scores {
+            #[allow(clippy::comparison_chain)]
             if l > max_length {
                 ml_scores.clear();
                 ml_scores.push((s, l));

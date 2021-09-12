@@ -49,6 +49,7 @@ fn next_index(curr_index: u64, max_index: u64, steps: u64) -> Result<u64> {
     let mut idx = curr_index;
 
     for _ in 0..steps {
+        #[allow(clippy::comparison_chain)]
         if idx < max_index {
             idx += 1
         } else if idx == max_index {

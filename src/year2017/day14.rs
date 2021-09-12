@@ -42,7 +42,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             }
         }
     }
-    Ok(u32::private_try_from(count)?)
+    u32::private_try_from(count)
 }
 
 /// Parse the list of lengths and calculate the hash.
@@ -65,7 +65,7 @@ fn parse_list_and_hash(hash: &mut Vec<u32>, line: &str, num_elements: u32, secon
             for j in curr_pos..u32::from(*length) + curr_pos {
                 let actual_idx = j % num_elements;
                 indices.push(actual_idx);
-                slice.push(hash.get(actual_idx as usize).ok_or("invalid")?.clone());
+                slice.push(*hash.get(actual_idx as usize).ok_or("invalid")?);
             }
 
             slice.reverse();

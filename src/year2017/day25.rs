@@ -78,12 +78,8 @@ impl fmt::Display for State {
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
-    let mut tape: Vec<u8> = Vec::with_capacity(10_000_000);
+    let mut tape: Vec<u8> = vec![0; 10_000_000];
     let mut states: BTreeMap<char, State> = BTreeMap::new();
-
-    for _ in 0..10_000_000 {
-        tape.push(0);
-    }
 
     let begin_re = Regex::new(r"^Begin in state ([A-Z])\.$")?;
     let dc_re = Regex::new(r"^Perform a diagnostic checksum after (\d+) steps\.$")?;
@@ -194,7 +190,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     }
 
     let count = bytecount::count(&tape, 1);
-    Ok(u32::private_try_from(count)?)
+    u32::private_try_from(count)
 }
 
 #[cfg(test)]

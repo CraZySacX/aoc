@@ -80,12 +80,12 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         }
     }
 
-    writeln!(io::stdout(), "")?;
+    writeln!(io::stdout())?;
     Ok(0)
 }
 
 /// Add a particle to the particle map
-#[cfg_attr(feature = "cargo-clippy", allow(similar_names))]
+#[allow(clippy::similar_names)]
 fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize, Particle>, coords_re: &Regex, vel_re: &Regex, acc_re: &Regex) -> Result<()> {
     let parts: Vec<&str> = line.split(", ").collect();
 
@@ -171,7 +171,7 @@ fn find_collisions(particle_map: &HashMap<usize, Particle>) -> Result<Vec<usize>
         }
     }
 
-    matches.sort();
+    matches.sort_unstable();
     matches.dedup();
 
     Ok(matches)

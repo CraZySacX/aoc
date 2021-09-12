@@ -62,14 +62,14 @@ fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usi
 
             match &c1[..] {
                 "x" => {
-                    let range_vec = x_coord_map.entry(v1).or_insert_with(|| vec![]);
+                    let range_vec = x_coord_map.entry(v1).or_insert_with(Vec::new);
 
                     for i in r1..=r2 {
                         range_vec.push(i);
                     }
                 }
                 "y" => {
-                    let range_vec = y_coord_map.entry(v1).or_insert_with(|| vec![]);
+                    let range_vec = y_coord_map.entry(v1).or_insert_with(Vec::new);
 
                     for i in r1..=r2 {
                         range_vec.push(i);
@@ -98,7 +98,7 @@ fn drip(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut Array2<Soil>, t
     }
 
     if test {
-        print_scan_arr(mins_maxes, &scan_arr);
+        print_scan_arr(mins_maxes, scan_arr);
     }
 
     Ok(())
@@ -145,10 +145,10 @@ fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut A
 }
 
 fn calculate_mins_maxes(x_coord_map: &HashMap<usize, Vec<usize>>, y_coord_map: &HashMap<usize, Vec<usize>>) -> Result<(usize, usize, usize, usize)> {
-    let mut min_x = *x_coord_map.keys().min().ok_or_else(|| "no min x")?;
-    let mut max_x = *x_coord_map.keys().max().ok_or_else(|| "no max x")?;
-    let mut min_y = *y_coord_map.keys().min().ok_or_else(|| "no min y")?;
-    let mut max_y = *y_coord_map.keys().max().ok_or_else(|| "no max y")?;
+    let mut min_x = *x_coord_map.keys().min().ok_or("no min x")?;
+    let mut max_x = *x_coord_map.keys().max().ok_or("no max x")?;
+    let mut min_y = *y_coord_map.keys().min().ok_or("no min y")?;
+    let mut max_y = *y_coord_map.keys().max().ok_or("no max y")?;
 
     for yv in x_coord_map.values() {
         for y in yv {
@@ -174,9 +174,9 @@ fn calculate_mins_maxes(x_coord_map: &HashMap<usize, Vec<usize>>, y_coord_map: &
         }
     }
 
-    min_x = min_x.checked_sub(1).ok_or_else(|| "underflow x")?;
-    max_x = max_x.checked_add(2).ok_or_else(|| "overflow x")?;
-    max_y = max_y.checked_add(1).ok_or_else(|| "overflow y")?;
+    min_x = min_x.checked_sub(1).ok_or("underflow x")?;
+    max_x = max_x.checked_add(2).ok_or("overflow x")?;
+    max_y = max_y.checked_add(1).ok_or("overflow y")?;
 
     Ok((min_x, max_x, min_y, max_y))
 }

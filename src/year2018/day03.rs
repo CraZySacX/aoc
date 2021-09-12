@@ -34,19 +34,17 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r#"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)"#)?;
     let mut rectangles = BTreeMap::new();
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            for cap in line_re.captures_iter(&line) {
-                let id = (&cap[1]).parse::<usize>()?;
-                let l = (&cap[2]).parse::<usize>()?;
-                let t = (&cap[3]).parse::<usize>()?;
-                let w = (&cap[4]).parse::<usize>()?;
-                let h = (&cap[5]).parse::<usize>()?;
-                let top_left = Point { x: l, y: t };
-                let bottom_right = Point { x: l + w - 1, y: t + h - 1 };
-                let rectangle = Rectangle { top_left, bottom_right };
-                rectangles.insert(id, rectangle);
-            }
+    for line in reader.lines().flatten() {
+        for cap in line_re.captures_iter(&line) {
+            let id = (&cap[1]).parse::<usize>()?;
+            let l = (&cap[2]).parse::<usize>()?;
+            let t = (&cap[3]).parse::<usize>()?;
+            let w = (&cap[4]).parse::<usize>()?;
+            let h = (&cap[5]).parse::<usize>()?;
+            let top_left = Point { x: l, y: t };
+            let bottom_right = Point { x: l + w - 1, y: t + h - 1 };
+            let rectangle = Rectangle { top_left, bottom_right };
+            rectangles.insert(id, rectangle);
         }
     }
 
@@ -103,6 +101,7 @@ fn overlap(rect1: Rectangle, rect2: Rectangle) -> bool {
     true
 }
 
+#[allow(clippy::needless_collect)]
 fn find_non_overlaps(rectangles: &BTreeMap<usize, Rectangle>) -> Result<usize> {
     for (id, rect1) in rectangles {
         let overlaps: Vec<Rectangle> = rectangles

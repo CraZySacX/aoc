@@ -23,7 +23,7 @@ fn run(lca: &mut Array2<char>, max_i: usize, max_j: usize, minutes: usize) -> Re
         let wooded = lca.iter().filter(|x| **x == '|').count();
         let lumber_yards = lca.iter().filter(|x| **x == '#').count();
 
-        let results_vec = results_map.entry(wooded * lumber_yards).or_insert_with(|| vec![]);
+        let results_vec = results_map.entry(wooded * lumber_yards).or_insert_with(Vec::new);
         if i > 583 {
             results_vec.push(i + 1);
         }
@@ -168,7 +168,7 @@ fn check_trees(lca: &Array2<char>, i: usize, j: usize, max_i: usize, max_j: usiz
     result
 }
 
-#[allow(clippy::cyclomatic_complexity)]
+#[allow(clippy::cognitive_complexity)]
 fn check_lumberyard(lca: &Array2<char>, i: usize, j: usize, max_i: usize, max_j: usize) -> char {
     let mut lumber_yard_count = 0;
     let mut tree_count = 0;
@@ -255,8 +255,7 @@ fn check_lumberyard(lca: &Array2<char>, i: usize, j: usize, max_i: usize, max_j:
 fn lca<T: BufRead>(reader: T, max_i: usize, max_j: usize, _second_star: bool, test: bool) -> Result<Array2<char>> {
     let mut lca = Array2::<char>::default((max_i, max_j));
 
-    let mut j = 0;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for (j, line) in reader.lines().filter_map(|x| x.ok()).enumerate() {
         for (i, ch) in line.chars().enumerate() {
             match ch {
                 '.' => lca[[i, j]] = ch,
@@ -265,7 +264,6 @@ fn lca<T: BufRead>(reader: T, max_i: usize, max_j: usize, _second_star: bool, te
                 _ => return Err("invalid lumber area".into()),
             }
         }
-        j += 1;
     }
 
     if test {

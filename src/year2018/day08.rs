@@ -12,12 +12,12 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     license_vec.reverse();
 
-    Ok(recurse(&mut license_vec, second_star)?)
+    recurse(&mut license_vec, second_star)
 }
 
 fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
-    let children_count = license_vec.pop().ok_or_else(|| "")?;
-    let metadata_count = license_vec.pop().ok_or_else(|| "")?;
+    let children_count = license_vec.pop().ok_or("")?;
+    let metadata_count = license_vec.pop().ok_or("")?;
     let mut result = 0;
 
     if second_star {
@@ -28,7 +28,7 @@ fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
         }
 
         for _ in 0..metadata_count {
-            let metadata = license_vec.pop().ok_or_else(|| "")?;
+            let metadata = license_vec.pop().ok_or("")?;
             if children_count == 0 {
                 result += metadata;
             } else {
@@ -41,7 +41,7 @@ fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
         }
 
         for _ in 0..metadata_count {
-            result += license_vec.pop().ok_or_else(|| "")?;
+            result += license_vec.pop().ok_or("")?;
         }
     }
 

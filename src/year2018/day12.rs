@@ -102,7 +102,7 @@ fn find_min_plant(state_map: &BTreeMap<isize, bool>) -> Result<isize> {
         .filter(|(_, v)| **v)
         .min_by_key(|(k, _)| *k)
         .map(|(k, _)| *k)
-        .ok_or_else(|| "no minimum key")?)
+        .ok_or("no minimum key")?)
 }
 
 fn find_max_plant(state_map: &BTreeMap<isize, bool>) -> Result<isize> {
@@ -111,7 +111,7 @@ fn find_max_plant(state_map: &BTreeMap<isize, bool>) -> Result<isize> {
         .filter(|(_, v)| **v)
         .max_by_key(|(k, _)| *k)
         .map(|(k, _)| *k)
-        .ok_or_else(|| "no maximum key")?)
+        .ok_or("no maximum key")?)
 }
 
 fn add_left(state_map: &mut BTreeMap<isize, bool>) -> Result<()> {

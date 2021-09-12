@@ -125,20 +125,19 @@ fn calculate_tuple_val(tuple: (i32, i32), tuple_map: &HashMap<(i32, i32), u32>) 
 
     // Add 8 nearest neighbors.  Only previously populated neighbors will have values (`Some(x)`).
     // The rest will return `None` on get.
-    let mut results = Vec::new();
-    // Add current column (not including self)
-    results.push(tuple_map.get(&(x, y + 1)));
-    results.push(tuple_map.get(&(x, y - 1)));
-
-    // Add one column to right
-    results.push(tuple_map.get(&(x + 1, y)));
-    results.push(tuple_map.get(&(x + 1, y + 1)));
-    results.push(tuple_map.get(&(x + 1, y - 1)));
-
-    // Add one column to left
-    results.push(tuple_map.get(&(x - 1, y)));
-    results.push(tuple_map.get(&(x - 1, y + 1)));
-    results.push(tuple_map.get(&(x - 1, y - 1)));
+    let results = vec![
+        // Add current column (not including self)
+        tuple_map.get(&(x, y + 1)),
+        tuple_map.get(&(x, y - 1)),
+        // Add one column to right
+        tuple_map.get(&(x + 1, y)),
+        tuple_map.get(&(x + 1, y + 1)),
+        tuple_map.get(&(x + 1, y - 1)),
+        // Add one column to left
+        tuple_map.get(&(x - 1, y)),
+        tuple_map.get(&(x - 1, y + 1)),
+        tuple_map.get(&(x - 1, y - 1)),
+    ];
 
     Ok(results
         .iter()

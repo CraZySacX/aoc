@@ -81,7 +81,7 @@ fn execute_opcode(
         *count += 1;
     }
     if second_star && regs == after {
-        let opcode_vec = opcode_map.entry(ins[0]).or_insert_with(|| vec![]);
+        let opcode_vec = opcode_map.entry(ins[0]).or_insert_with(Vec::new);
 
         if !opcode_vec.contains(&opcode) {
             opcode_vec.push(opcode);
@@ -175,10 +175,10 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut op_map = BTreeMap::new();
 
         while op_map.len() != 16 {
-            for (opcode, ref poss) in &opcode_map {
+            for (opcode, poss) in &opcode_map {
                 if poss.len() == 1 {
                     known = poss[0].clone();
-                    op_map.insert(opcode.clone(), known.clone());
+                    op_map.insert(*opcode, known.clone());
                     break;
                 }
             }
@@ -190,7 +190,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
         let mut registers = [0, 0, 0, 0];
         for ins in instructions {
-            let opcode = op_map.get(&ins[0]).ok_or_else(|| "invalid opcode")?;
+            let opcode = op_map.get(&ins[0]).ok_or("invalid opcode")?;
             opcode.execute(&mut registers, ins);
         }
         Ok(registers[0] as u32)

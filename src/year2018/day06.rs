@@ -9,13 +9,11 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r#"(\d+), (\d+)"#)?;
     let mut coords: Vec<(i32, i32)> = Vec::new();
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            for cap in line_re.captures_iter(&line) {
-                let x = &cap[1].parse::<i32>()?;
-                let y = &cap[2].parse::<i32>()?;
-                coords.push((*x, *y));
-            }
+    for line in reader.lines().flatten() {
+        for cap in line_re.captures_iter(&line) {
+            let x = &cap[1].parse::<i32>()?;
+            let y = &cap[2].parse::<i32>()?;
+            coords.push((*x, *y));
         }
     }
 
@@ -63,7 +61,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             *frequency.entry(bounded_closest).or_insert(0) += 1;
         }
 
-        let max = frequency.iter().max_by_key(|(_, x)| *x).map(|(_, x)| *x).ok_or_else(|| "no maximum")?;
+        let max = frequency.iter().max_by_key(|(_, x)| *x).map(|(_, x)| *x).ok_or("no maximum")?;
         Ok(max)
     }
 }
@@ -73,6 +71,7 @@ fn find_closest(point: (i32, i32), coords: &[(i32, i32)]) -> Vec<(i32, i32)> {
     let mut min = i32::max_value();
     let mut result = Vec::new();
     for (idx, distance) in distances {
+        #[allow(clippy::comparison_chain)]
         if distance < min {
             result.clear();
             result.push(coords[idx]);
@@ -95,8 +94,8 @@ fn manhattan_distance(from: (i32, i32), to: (i32, i32)) -> i32 {
 }
 
 fn max_coords(coords: &[(i32, i32)]) -> (i32, i32) {
-    let max_x = coords.iter().max_by_key(|(x, _)| x).unwrap_or_else(|| &(0, 0)).0;
-    let max_y = coords.iter().max_by_key(|(_, y)| y).unwrap_or_else(|| &(0, 0)).1;
+    let max_x = coords.iter().max_by_key(|(x, _)| x).unwrap_or(&(0, 0)).0;
+    let max_y = coords.iter().max_by_key(|(_, y)| y).unwrap_or(&(0, 0)).1;
     (max_x, max_y)
 }
 

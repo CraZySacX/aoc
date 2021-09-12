@@ -45,7 +45,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     for i in dancers {
         write!(io::stdout(), "{}", i)?;
     }
-    writeln!(io::stdout(), "")?;
+    writeln!(io::stdout())?;
     Ok(0)
 }
 
@@ -73,8 +73,8 @@ fn generate_moves(line: &str, moves: &mut Vec<Move>) -> Result<()> {
             let caps = partner_re.captures(token).ok_or("invalid partner captures")?;
             let name1_str = caps.get(1).ok_or("invalid partner name1")?.as_str();
             let name2_str = caps.get(2).ok_or("invalid partner name2")?.as_str();
-            let name1 = name1_str.chars().nth(0).ok_or("name1 not a char")?;
-            let name2 = name2_str.chars().nth(0).ok_or("name2 not a char")?;
+            let name1 = name1_str.chars().next().ok_or("name1 not a char")?;
+            let name2 = name2_str.chars().next().ok_or("name2 not a char")?;
             moves.push(Move::Partner(name1, name2));
         } else {
             let no_match_found = format!("Invalid token: {}", token);

@@ -8,19 +8,17 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut threes = 0;
     let mut all_ids = Vec::new();
 
-    for line_result in reader.lines() {
-        if let Ok(line) = line_result {
-            if second_star {
-                all_ids.push(line);
-            } else {
-                let (has_two, has_three) = has_two_or_three(&line);
-                if has_two {
-                    twos += 1
-                };
-                if has_three {
-                    threes += 1
-                };
-            }
+    for line in reader.lines().flatten() {
+        if second_star {
+            all_ids.push(line);
+        } else {
+            let (has_two, has_three) = has_two_or_three(&line);
+            if has_two {
+                twos += 1
+            };
+            if has_three {
+                threes += 1
+            };
         }
     }
 
