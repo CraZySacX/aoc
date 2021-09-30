@@ -63,8 +63,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     }
 
     for _ in 0..1000 {
-        for mut particle in particle_map.values_mut() {
-            update_particle(&mut particle)?;
+        for particle in particle_map.values_mut() {
+            update_particle(particle)?;
         }
 
         if second_star {
