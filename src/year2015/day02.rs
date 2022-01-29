@@ -14,9 +14,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut width = 0;
         let mut height = 0;
         for cap in line_re.captures_iter(&line) {
-            length = (&cap[1]).parse::<usize>()?;
-            width = (&cap[2]).parse::<usize>()?;
-            height = (&cap[3]).parse::<usize>()?;
+            length = (cap[1]).parse::<usize>()?;
+            width = (cap[2]).parse::<usize>()?;
+            height = (cap[3]).parse::<usize>()?;
         }
 
         if second_star {

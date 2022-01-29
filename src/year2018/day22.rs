@@ -83,12 +83,12 @@ fn determine_risk<T: BufRead>(reader: T, second_star: bool, test: bool, max_i: u
     for line in reader.lines().filter_map(|x| x.ok()) {
         if depth_re.is_match(&line) {
             for caps in depth_re.captures_iter(&line) {
-                depth = (&caps[1]).parse::<usize>()?;
+                depth = (caps[1]).parse::<usize>()?;
             }
         } else if target_re.is_match(&line) {
             for caps in target_re.captures_iter(&line) {
-                let i = (&caps[1]).parse::<usize>()?;
-                let j = (&caps[2]).parse::<usize>()?;
+                let i = (caps[1]).parse::<usize>()?;
+                let j = (caps[2]).parse::<usize>()?;
                 target_coord = (i, j);
             }
         }

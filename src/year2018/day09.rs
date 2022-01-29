@@ -11,8 +11,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
-            players = (&cap[1]).parse::<usize>()?;
-            final_marble = (&cap[2]).parse::<usize>()?;
+            players = (cap[1]).parse::<usize>()?;
+            final_marble = (cap[2]).parse::<usize>()?;
         }
     }
 

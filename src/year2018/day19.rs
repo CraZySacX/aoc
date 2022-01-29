@@ -144,15 +144,15 @@ fn run_program<T: BufRead>(reader: T, second_star: bool, test: bool) -> Result<u
     for line in reader.lines().filter_map(|x| x.ok()) {
         if ip_re.is_match(&line) {
             for caps in ip_re.captures_iter(&line) {
-                register = (&caps[1]).parse::<usize>()?;
+                register = (caps[1]).parse::<usize>()?;
             }
         } else if instruction_re.is_match(&line) {
             for caps in instruction_re.captures_iter(&line) {
                 let mut instruction_map = HashMap::new();
                 let opcode = OpCode::try_from(&caps[1])?;
-                let reg_a = (&caps[2]).parse::<usize>()?;
-                let reg_b = (&caps[3]).parse::<usize>()?;
-                let reg_c = (&caps[4]).parse::<usize>()?;
+                let reg_a = (caps[2]).parse::<usize>()?;
+                let reg_b = (caps[3]).parse::<usize>()?;
+                let reg_c = (caps[4]).parse::<usize>()?;
 
                 instruction_map.insert(opcode, [reg_a, reg_b, reg_c]);
                 instructions_vec.push(instruction_map);

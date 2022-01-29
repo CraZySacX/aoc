@@ -41,7 +41,7 @@ fn gen_maps<T: BufRead>(reader: T, state_map: &mut BTreeMap<isize, bool>, patter
         }
 
         for cap in patt_re.captures_iter(&line) {
-            let pattern: Vec<bool> = (&cap[1]).chars().map(|ch| ch == '#').collect();
+            let pattern: Vec<bool> = (cap[1]).chars().map(|ch| ch == '#').collect();
 
             match &cap[2] {
                 "#" => pattern_map.insert(pattern, true),

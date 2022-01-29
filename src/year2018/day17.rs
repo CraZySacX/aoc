@@ -55,10 +55,10 @@ fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usi
 
     for line in reader.lines().filter_map(|x| x.ok()) {
         for caps in vein_re.captures_iter(&line) {
-            let c1 = (&caps[1]).to_string();
-            let v1 = (&caps[2]).parse::<usize>()?;
-            let r1 = (&caps[4]).parse::<usize>()?;
-            let r2 = (&caps[5]).parse::<usize>()?;
+            let c1 = (caps[1]).to_string();
+            let v1 = (caps[2]).parse::<usize>()?;
+            let r1 = (caps[4]).parse::<usize>()?;
+            let r2 = (caps[5]).parse::<usize>()?;
 
             match &c1[..] {
                 "x" => {

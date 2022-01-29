@@ -16,10 +16,10 @@ fn align<T: BufRead>(reader: T, test: bool) -> Result<String> {
 
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
-            let x = (&cap[1]).trim().parse::<isize>()?;
-            let y = (&cap[2]).trim().parse::<isize>()?;
-            let vx = (&cap[3]).trim().parse::<isize>()?;
-            let vy = (&cap[4]).trim().parse::<isize>()?;
+            let x = (cap[1]).trim().parse::<isize>()?;
+            let y = (cap[2]).trim().parse::<isize>()?;
+            let vx = (cap[3]).trim().parse::<isize>()?;
+            let vy = (cap[4]).trim().parse::<isize>()?;
 
             star_map.push((x, y, vx, vy));
         }

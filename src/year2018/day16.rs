@@ -101,28 +101,28 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     for line in reader.lines().filter_map(|x| x.ok()) {
         if before_re.is_match(&line) {
             for caps in before_re.captures_iter(&line) {
-                let opcode = (&caps[1]).parse::<usize>()?;
-                let reg_a = (&caps[2]).parse::<usize>()?;
-                let reg_b = (&caps[3]).parse::<usize>()?;
-                let reg_c = (&caps[4]).parse::<usize>()?;
+                let opcode = (caps[1]).parse::<usize>()?;
+                let reg_a = (caps[2]).parse::<usize>()?;
+                let reg_b = (caps[3]).parse::<usize>()?;
+                let reg_c = (caps[4]).parse::<usize>()?;
 
                 before_vec.push([opcode, reg_a, reg_b, reg_c]);
             }
         } else if after_re.is_match(&line) {
             for caps in after_re.captures_iter(&line) {
-                let opcode = (&caps[1]).parse::<usize>()?;
-                let reg_a = (&caps[2]).parse::<usize>()?;
-                let reg_b = (&caps[3]).parse::<usize>()?;
-                let reg_c = (&caps[4]).parse::<usize>()?;
+                let opcode = (caps[1]).parse::<usize>()?;
+                let reg_a = (caps[2]).parse::<usize>()?;
+                let reg_b = (caps[3]).parse::<usize>()?;
+                let reg_c = (caps[4]).parse::<usize>()?;
 
                 after_vec.push([opcode, reg_a, reg_b, reg_c]);
             }
         } else if instruction_re.is_match(&line) {
             for caps in instruction_re.captures_iter(&line) {
-                let opcode = (&caps[1]).parse::<usize>()?;
-                let reg_a = (&caps[2]).parse::<usize>()?;
-                let reg_b = (&caps[3]).parse::<usize>()?;
-                let reg_c = (&caps[4]).parse::<usize>()?;
+                let opcode = (caps[1]).parse::<usize>()?;
+                let reg_a = (caps[2]).parse::<usize>()?;
+                let reg_b = (caps[3]).parse::<usize>()?;
+                let reg_c = (caps[4]).parse::<usize>()?;
 
                 instructions_vec.push([opcode, reg_a, reg_b, reg_c]);
             }

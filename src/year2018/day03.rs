@@ -36,11 +36,11 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     for line in reader.lines().flatten() {
         for cap in line_re.captures_iter(&line) {
-            let id = (&cap[1]).parse::<usize>()?;
-            let l = (&cap[2]).parse::<usize>()?;
-            let t = (&cap[3]).parse::<usize>()?;
-            let w = (&cap[4]).parse::<usize>()?;
-            let h = (&cap[5]).parse::<usize>()?;
+            let id = (cap[1]).parse::<usize>()?;
+            let l = (cap[2]).parse::<usize>()?;
+            let t = (cap[3]).parse::<usize>()?;
+            let w = (cap[4]).parse::<usize>()?;
+            let h = (cap[5]).parse::<usize>()?;
             let top_left = Point { x: l, y: t };
             let bottom_right = Point { x: l + w - 1, y: t + h - 1 };
             let rectangle = Rectangle { top_left, bottom_right };

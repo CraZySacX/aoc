@@ -16,7 +16,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 /// Find an exit
-fn jump_away(jump_vec: &mut Vec<i32>, crazy_jumps: bool) -> Result<u32> {
+fn jump_away(jump_vec: &mut [i32], crazy_jumps: bool) -> Result<u32> {
     let list_len = jump_vec.len();
     let mut step = 0;
     let mut current_idx: i32 = 0;

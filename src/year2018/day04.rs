@@ -25,11 +25,11 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     for line in reader.lines().flatten() {
         for cap in line_re.captures_iter(&line) {
-            let y = (&cap[1]).parse::<i32>()?;
-            let mon = (&cap[2]).parse::<u32>()?;
-            let d = (&cap[3]).parse::<u32>()?;
-            let h = (&cap[4]).parse::<u32>()?;
-            let m = (&cap[5]).parse::<u32>()?;
+            let y = (cap[1]).parse::<i32>()?;
+            let mon = (cap[2]).parse::<u32>()?;
+            let d = (cap[3]).parse::<u32>()?;
+            let h = (cap[4]).parse::<u32>()?;
+            let m = (cap[5]).parse::<u32>()?;
             let rest = &cap[6];
 
             let dt = Utc.ymd(y, mon, d).and_hms(h, m, 0);
@@ -43,7 +43,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     for (dt, evt) in sorted_events.iter() {
         if guard_re.is_match(evt) {
             for cap in guard_re.captures_iter(evt) {
-                current_guard = (&cap[1]).parse::<u32>()?;
+                current_guard = (cap[1]).parse::<u32>()?;
                 guards_napping.entry(current_guard).or_insert_with(|| {
                     let mut minute_map = BTreeMap::new();
                     for i in 0..60 {

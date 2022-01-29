@@ -82,7 +82,7 @@ fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashM
 }
 
 /// Assign parent nodes for children
-fn assign_parents(nodes: &mut Vec<Node>, children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
+fn assign_parents(nodes: &mut [Node], children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
     for (k, v) in children {
         for child_name in v {
             for node in nodes.iter_mut() {
@@ -117,7 +117,7 @@ fn find_root(nodes: &[Node]) -> Result<usize> {
 }
 
 /// Traverse the vectors, assigning proper children vectors.
-fn assign_children(nodes: &mut Vec<Node>, children: &HashMap<usize, Vec<String>>) -> Result<()> {
+fn assign_children(nodes: &mut [Node], children: &HashMap<usize, Vec<String>>) -> Result<()> {
     let mut child_ids: HashMap<usize, Vec<usize>> = HashMap::new();
 
     for (k, v) in children {

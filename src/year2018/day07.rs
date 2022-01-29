@@ -87,10 +87,10 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
     for line_result in reader.lines() {
         if let Ok(line) = line_result {
             for cap in line_re.captures_iter(&line) {
-                let first = (&cap[1]).to_string();
+                let first = (cap[1]).to_string();
                 let first_duration = duration_of(&first, base)?;
                 let first_tuple = (first, first_duration);
-                let second = (&cap[2]).to_string();
+                let second = (cap[2]).to_string();
                 let second_duration = duration_of(&second, base)?;
                 let second_tuple = (second, second_duration);
                 pending.insert(first_tuple.clone());
@@ -235,8 +235,8 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
     let line_re = Regex::new(r#"Step ([A-Z]) must be finished before step ([A-Z])"#)?;
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
-            let first = (&cap[1]).chars().next().ok_or("invalid char")?;
-            let second = (&cap[2]).chars().next().ok_or("invalid char")?;
+            let first = (cap[1]).chars().next().ok_or("invalid char")?;
+            let second = (cap[2]).chars().next().ok_or("invalid char")?;
 
             {
                 node_map.entry(first).or_insert_with(|| Vec::with_capacity(25));

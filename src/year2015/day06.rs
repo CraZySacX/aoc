@@ -17,10 +17,10 @@ fn decorate<T: BufRead>(reader: T) -> Result<usize> {
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
             let action = &cap[1];
-            let x1 = (&cap[2]).parse::<usize>()?;
-            let y1 = (&cap[3]).parse::<usize>()?;
-            let x2 = (&cap[4]).parse::<usize>()?;
-            let y2 = (&cap[5]).parse::<usize>()?;
+            let x1 = (cap[2]).parse::<usize>()?;
+            let y1 = (cap[3]).parse::<usize>()?;
+            let x2 = (cap[4]).parse::<usize>()?;
+            let y2 = (cap[5]).parse::<usize>()?;
 
             // println!("Action: {}", action);
             match action {
@@ -75,10 +75,10 @@ fn brighten<T: BufRead>(reader: T) -> Result<usize> {
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
             let action = &cap[1];
-            let x1 = (&cap[2]).parse::<usize>()?;
-            let y1 = (&cap[3]).parse::<usize>()?;
-            let x2 = (&cap[4]).parse::<usize>()?;
-            let y2 = (&cap[5]).parse::<usize>()?;
+            let x1 = (cap[2]).parse::<usize>()?;
+            let y1 = (cap[3]).parse::<usize>()?;
+            let x2 = (cap[4]).parse::<usize>()?;
+            let y2 = (cap[5]).parse::<usize>()?;
 
             // println!("Action: {}", action);
             match action {
