@@ -4,7 +4,7 @@ use ndarray::Array2;
 use std::io::BufRead;
 
 /// The direction the virus is facing.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 enum Direction {
     /// Up
     Up,
@@ -88,12 +88,7 @@ fn change_direction(coords: (usize, usize), curr_direction: &Direction, arr: &Ar
             Direction::Down => Direction::Up,
             Direction::Right => Direction::Left,
         },
-        State::Weakened => match *curr_direction {
-            Direction::Up => Direction::Up,
-            Direction::Left => Direction::Left,
-            Direction::Down => Direction::Down,
-            Direction::Right => Direction::Right,
-        },
+        State::Weakened => *curr_direction,
     })
 }
 
