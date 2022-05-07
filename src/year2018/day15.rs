@@ -620,6 +620,8 @@ where
 }
 
 fn print_board(board: &Array2<Element>, round: usize) {
+    use std::fmt::Write;
+
     if round == 0 {
         println!("Initially:");
     } else if round == 1 {
@@ -641,7 +643,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
             buffer.push_str("  ");
 
             for (kind, hitpoints) in unit_vec {
-                buffer.push_str(&format!("{}({}), ", kind, hitpoints));
+                write!(buffer, "{}({}), ", kind, hitpoints).expect("");
             }
         }
         let x: &[_] = &[',', ' '];

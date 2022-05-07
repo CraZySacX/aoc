@@ -102,6 +102,8 @@ fn generate_lengths(line: &str, second_star: bool) -> Result<Vec<u8>> {
 
 /// Create dense hash and hexify
 fn squash_and_hex(hash: &[u32]) -> Result<String> {
+    use std::fmt::Write;
+
     let chunks = hash.chunks(16);
     let mut byte_vec = Vec::new();
 
@@ -112,7 +114,7 @@ fn squash_and_hex(hash: &[u32]) -> Result<String> {
 
     let mut result = String::new();
     for byte in byte_vec {
-        result.push_str(&format!("{:02x}", byte));
+        write!(result, "{:02x}", byte).expect("Unable to write string");
     }
     Ok(result)
 }
