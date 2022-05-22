@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::io::BufRead;
 
 /// A value can either be a pointer to a register or a number.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 enum Value {
     /// A number value.
     Number(i64),

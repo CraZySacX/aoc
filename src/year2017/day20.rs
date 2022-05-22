@@ -19,7 +19,7 @@ struct Particle {
 }
 
 /// 3-d coordinates
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 struct Coords {
     /// x coordinate
     x: i64,

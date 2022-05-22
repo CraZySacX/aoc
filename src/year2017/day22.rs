@@ -4,7 +4,7 @@ use ndarray::Array2;
 use std::io::BufRead;
 
 /// The direction the virus is facing.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Direction {
     /// Up
     Up,
@@ -17,7 +17,7 @@ enum Direction {
 }
 
 /// The current state of the coord.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 enum State {
     /// Clean
     Clean,

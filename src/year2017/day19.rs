@@ -6,7 +6,7 @@ use std::fmt;
 use std::io::{self, BufRead, Write};
 
 /// Direction of Movement
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 enum Direction {
     /// We are moving up.
     Up,
