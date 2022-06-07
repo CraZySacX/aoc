@@ -116,7 +116,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Generate a register map entry and the associated command
 fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
     let line_desc: Vec<&str> = line.split_whitespace().collect();
-    let name_str = line_desc.get(0).ok_or("Invalid register name!")?;
+    let name_str = line_desc.first().ok_or("Invalid register name!")?;
     let name = String::from(*name_str);
     let command_str = line_desc.get(1).ok_or("Invalid command!")?;
     let value = line_desc.get(2).ok_or("Invalid command value")?.parse::<i32>()?;

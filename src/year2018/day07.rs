@@ -217,7 +217,7 @@ fn consume_work(worker: &mut Worker, work: &(String, u32)) -> bool {
 
 fn complete(node_map: &BTreeMap<char, Vec<char>>) -> Result<char> {
     let ready: Vec<char> = node_map.iter().filter_map(|(x, y)| if y.is_empty() { Some(*x) } else { None }).collect();
-    ready.get(0).cloned().ok_or_else(|| "blah".into())
+    ready.first().cloned().ok_or_else(|| "blah".into())
 }
 
 fn remove_from_parents(node_map: &mut BTreeMap<char, Vec<char>>, key: char) {

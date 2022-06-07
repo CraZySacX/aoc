@@ -59,9 +59,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
     let node_def: Vec<&str> = line.split(" -> ").collect();
 
-    let node_desc = node_def.get(0).ok_or("Unable to get node description")?;
+    let node_desc = node_def.first().ok_or("Unable to get node description")?;
     let desc: Vec<&str> = node_desc.split(' ').collect();
-    let name = desc.get(0).ok_or("Unable to deternmine node name")?;
+    let name = desc.first().ok_or("Unable to deternmine node name")?;
     let weight_str = desc.get(1).ok_or("Unable to determine node weight")?;
     let weight = weight_str.trim_matches(|c| c == '(' || c == ')').parse::<u32>()?;
 

@@ -32,7 +32,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Parse the line and add to group map.
 fn parse_and_add(line: &str, group_map: &mut HashMap<u32, Vec<u32>>) -> Result<()> {
     let piped: Vec<&str> = line.split(" <-> ").collect();
-    let group_str = piped.get(0).ok_or("Invalid group")?;
+    let group_str = piped.first().ok_or("Invalid group")?;
     let group = group_str.parse::<u32>()?;
     let piped_to_strs: Vec<&str> = piped.get(1).ok_or("Invalid pipes")?.split(", ").collect();
     let mut piped_to_vec = Vec::new();

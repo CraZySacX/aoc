@@ -37,7 +37,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Add a layer to the layer map.
 fn add_layer_to_map(line: &str, layer_map: &mut HashMap<usize, u32>) -> Result<()> {
     let layer_desc_vec: Vec<&str> = line.split(": ").collect();
-    let layer = layer_desc_vec.get(0).ok_or("Invalid layer number")?.parse::<usize>()?;
+    let layer = layer_desc_vec.first().ok_or("Invalid layer number")?.parse::<usize>()?;
     let depth = layer_desc_vec.get(1).ok_or("Invalid depty number")?.parse::<u32>()?;
 
     layer_map.insert(layer, depth);
