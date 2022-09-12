@@ -11,9 +11,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     for line_result in reader.lines() {
         let line = &line_result.unwrap_or_else(|_| "".to_string());
         if second_star {
-            count += if check_for_anagrams(line)? { 1 } else { 0 };
+            count += u32::from(check_for_anagrams(line)?);
         } else {
-            count += if check_for_duplicates(line)? { 1 } else { 0 };
+            count += u32::from(check_for_duplicates(line)?);
         }
     }
 

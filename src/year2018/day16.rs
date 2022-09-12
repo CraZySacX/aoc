@@ -56,12 +56,12 @@ impl OpCode {
             OpCode::Bori => reg[ins[3]] = reg[ins[1]] | ins[2],
             OpCode::Setr => reg[ins[3]] = reg[ins[1]],
             OpCode::Seti => reg[ins[3]] = ins[1],
-            OpCode::Gtir => reg[ins[3]] = if ins[1] > reg[ins[2]] { 1 } else { 0 },
-            OpCode::Gtri => reg[ins[3]] = if reg[ins[1]] > ins[2] { 1 } else { 0 },
-            OpCode::Gtrr => reg[ins[3]] = if reg[ins[1]] > reg[ins[2]] { 1 } else { 0 },
-            OpCode::Eqir => reg[ins[3]] = if ins[1] == reg[ins[2]] { 1 } else { 0 },
-            OpCode::Eqri => reg[ins[3]] = if reg[ins[1]] == ins[2] { 1 } else { 0 },
-            OpCode::Eqrr => reg[ins[3]] = if reg[ins[1]] == reg[ins[2]] { 1 } else { 0 },
+            OpCode::Gtir => reg[ins[3]] = usize::from(ins[1] > reg[ins[2]]),
+            OpCode::Gtri => reg[ins[3]] = usize::from(reg[ins[1]] > ins[2]),
+            OpCode::Gtrr => reg[ins[3]] = usize::from(reg[ins[1]] > reg[ins[2]]),
+            OpCode::Eqir => reg[ins[3]] = usize::from(ins[1] == reg[ins[2]]),
+            OpCode::Eqri => reg[ins[3]] = usize::from(reg[ins[1]] == ins[2]),
+            OpCode::Eqrr => reg[ins[3]] = usize::from(reg[ins[1]] == reg[ins[2]]),
         }
     }
 }
