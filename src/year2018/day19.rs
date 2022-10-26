@@ -162,7 +162,7 @@ fn run_program<T: BufRead>(reader: T, second_star: bool, test: bool) -> Result<u
 
     let mut ip = Ip { register, value: 0 };
     if test {
-        println!("IP: {}", ip);
+        println!("IP: {ip}");
     }
     let mut registers: Registers = if second_star { [1, 0, 0, 0, 0, 0] } else { [0, 0, 0, 0, 0, 0] };
 
@@ -201,7 +201,7 @@ fn execute(registers: &mut Registers, ip: &Ip, ins_vec: &[HashMap<OpCode, Instru
         if ins_map.len() == 1 {
             for (opcode, ins) in ins_map.iter() {
                 if test {
-                    print!("{} {} {} {} ", opcode, ins[0], ins[1], ins[2]);
+                    print!("{opcode} {} {} {} ", ins[0], ins[1], ins[2]);
                 }
                 opcode.execute(registers, *ins);
             }
@@ -217,7 +217,7 @@ fn update_ip_with_register(registers: &Registers, ip: &mut Ip) {
 fn print_registers(registers: &Registers) {
     print!("[");
     for (idx, reg) in registers.iter().enumerate() {
-        print!("{}", reg);
+        print!("{reg}");
 
         if idx < registers.len() - 1 {
             print!(", ");

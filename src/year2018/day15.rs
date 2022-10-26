@@ -17,7 +17,7 @@ impl fmt::Display for UnitKind {
             UnitKind::Elf => 'E',
             UnitKind::Goblin => 'G',
         };
-        write!(f, "{}", ch)
+        write!(f, "{ch}")
     }
 }
 
@@ -78,7 +78,7 @@ impl fmt::Display for ElementKind {
             ElementKind::Wall => '#',
             ElementKind::Unit => 'U',
         };
-        write!(f, "{}", ch)
+        write!(f, "{ch}")
     }
 }
 
@@ -91,7 +91,7 @@ struct Element {
 impl fmt::Display for Element {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(ref u) = self.unit {
-            write!(f, "{}", u)
+            write!(f, "{u}")
         } else {
             write!(f, "{}", self.kind)
         }
@@ -627,7 +627,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
     } else if round == 1 {
         println!("After 1 round:");
     } else {
-        println!("After {} rounds:", round);
+        println!("After {round} rounds:");
     }
     for row in board.axis_iter(Axis(1)) {
         let mut unit_vec = Vec::new();
@@ -635,7 +635,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
             if let Some(ref unit) = cell.unit {
                 unit_vec.push((unit.kind, unit.hit_points));
             }
-            print!("{}", cell);
+            print!("{cell}");
         }
 
         let mut buffer = String::new();
@@ -643,7 +643,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
             buffer.push_str("  ");
 
             for (kind, hitpoints) in unit_vec {
-                write!(buffer, "{}({}), ", kind, hitpoints).expect("");
+                write!(buffer, "{kind}({hitpoints}), ").expect("");
             }
         }
         let x: &[_] = &[',', ' '];

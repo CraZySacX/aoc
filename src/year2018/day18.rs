@@ -38,7 +38,7 @@ fn run(lca: &mut Array2<char>, max_i: usize, max_j: usize, minutes: usize) -> Re
     let mut to_sort: Vec<(&usize, &Vec<usize>)> = blah.into_iter().collect();
     to_sort.sort_by(|a, b| (a.1)[0].cmp(&(b.1)[0]));
     for (x, y) in to_sort {
-        println!("{}: {:?}", x, y);
+        println!("{x}: {y:?}");
     }
 
     Ok(wooded * lumber_yards)
@@ -277,11 +277,11 @@ fn print_lca(lca: &Array2<char>, max: usize) {
     if max == 0 {
         println!("Initially:");
     } else {
-        println!("After {} minutes:", max);
+        println!("After {max} minutes:");
     }
     for row in lca.axis_iter(Axis(1)) {
         for v in row {
-            print!("{}", v);
+            print!("{v}");
         }
         println!();
     }

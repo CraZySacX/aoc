@@ -10,7 +10,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     }
 
     let result = score_recipes(&recipe_count, second_star)?;
-    println!("{}", result);
+    println!("{result}");
     Ok(0)
 }
 

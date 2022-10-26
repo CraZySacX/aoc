@@ -156,7 +156,7 @@ pub fn run() -> Result<i32> {
             Prefix::Seconds => utils::as_s(&duration)?,
         };
 
-        writeln!(io::stdout(), "Elapsed: {}{}", elapsed, output_type)?;
+        writeln!(io::stdout(), "Elapsed: {elapsed}{output_type}")?;
     }
     Ok(0)
 }

@@ -33,7 +33,7 @@ impl fmt::Display for TrackKind {
             TrackKind::Empty => ' ',
             TrackKind::Collision => 'X',
         };
-        write!(f, "{}", ch)
+        write!(f, "{ch}")
     }
 }
 
@@ -47,7 +47,7 @@ struct Track {
 impl fmt::Display for Track {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(ref c) = self.cart {
-            write!(f, "{}", c)
+            write!(f, "{c}")
         } else {
             write!(f, "{}", self.kind)
         }
@@ -111,7 +111,7 @@ impl fmt::Display for CartDirection {
             CartDirection::Left => '<',
             CartDirection::Right => '>',
         };
-        write!(f, "{}", ch)
+        write!(f, "{ch}")
     }
 }
 
@@ -129,7 +129,7 @@ impl fmt::Display for Cart {
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     if let Some((i, j)) = run_carts(reader, 150, 150, second_star, false)? {
-        println!("Result: {},{}", i, j);
+        println!("Result: {i},{j}");
     }
 
     Ok(0)
@@ -367,7 +367,7 @@ fn next_turn_state(turn_state: CartTurnState) -> CartTurnState {
 fn print_mine_arr(mine_arr: &Array2<Track>) {
     for row in mine_arr.axis_iter(Axis(1)) {
         for cell in row {
-            print!("{}", cell);
+            print!("{cell}");
         }
         println!();
     }

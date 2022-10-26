@@ -114,7 +114,7 @@ fn squash_and_hex(hash: &[u32]) -> Result<String> {
 
     let mut result = String::new();
     for byte in byte_vec {
-        write!(result, "{:02x}", byte).expect("Unable to write string");
+        write!(result, "{byte:02x}").expect("Unable to write string");
     }
     Ok(result)
 }

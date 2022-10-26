@@ -19,7 +19,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     } else {
         run_generations(20, &mut state_map, &pattern_map)?
     };
-    println!("Sum: {}", res);
+    println!("Sum: {res}");
     Ok(0)
 }
 

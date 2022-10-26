@@ -14,7 +14,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         acc_vec.push(tuple);
     }
     let acc = val(&acc_vec, second_star)?;
-    println!("Result: {}", acc);
+    println!("Result: {acc}");
     Ok(0)
 }
 

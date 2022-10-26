@@ -29,7 +29,7 @@ impl<'a> TryFrom<&'a str> for Move {
         Ok(match val {
             "left" => Move::Left,
             "right" => Move::Right,
-            _ => return Err(format!("Invalid move value: {}", val).into()),
+            _ => return Err(format!("Invalid move value: {val}").into()),
         })
     }
 }
@@ -161,7 +161,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         } else if line.is_empty() {
             // Do nothing.
         } else {
-            return Err(format!("Unable to parse line: {}", line).into());
+            return Err(format!("Unable to parse line: {line}").into());
         }
     }
 

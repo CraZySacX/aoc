@@ -12,7 +12,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         Ok(duration)
     } else {
         let order = find_order(reader)?;
-        println!("{}", order);
+        println!("{order}");
         Ok(0)
     }
 }

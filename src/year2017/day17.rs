@@ -17,7 +17,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     } else {
         spinlock(&mut buf, steps, 2017, second_star)?
     };
-    writeln!(io::stdout(), "{}", result)?;
+    writeln!(io::stdout(), "{result}")?;
     Ok(0)
 }
 

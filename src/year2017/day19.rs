@@ -26,7 +26,7 @@ impl fmt::Display for Direction {
             Direction::Left => "Left",
             Direction::Right => "Right",
         };
-        write!(f, "{}", dir_str)
+        write!(f, "{dir_str}")
     }
 }
 
@@ -39,7 +39,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     }
 
     let (letters, steps) = traverse_map(&network_map)?;
-    writeln!(io::stdout(), "{}", letters)?;
+    writeln!(io::stdout(), "{letters}")?;
 
     Ok(steps)
 }
@@ -63,10 +63,10 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<(String, u32)> {
 
     loop {
         if curr_row == max_row {
-            return Err(format!("Invalid row value: {}", curr_row).into());
+            return Err(format!("Invalid row value: {curr_row}").into());
         }
         if curr_col == max_col {
-            return Err(format!("Invalid col value: {}", curr_col).into());
+            return Err(format!("Invalid col value: {curr_col}").into());
         }
 
         let curr_byte = network_map[[curr_row, curr_col]];

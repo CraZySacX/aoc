@@ -100,7 +100,7 @@ fn get_state(coords: (usize, usize), arr: &Array2<char>) -> Result<State> {
         'W' => State::Weakened,
         'F' => State::Flagged,
         '.' => State::Clean,
-        _ => return Err(format!("invalid state: {}", val).into()),
+        _ => return Err(format!("invalid state: {val}").into()),
     };
     Ok(res)
 }

@@ -43,7 +43,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         apply_moves(&moves, &mut dancers)?;
     }
     for i in dancers {
-        write!(io::stdout(), "{}", i)?;
+        write!(io::stdout(), "{i}")?;
     }
     writeln!(io::stdout())?;
     Ok(0)
@@ -77,7 +77,7 @@ fn generate_moves(line: &str, moves: &mut Vec<Move>) -> Result<()> {
             let name2 = name2_str.chars().next().ok_or("name2 not a char")?;
             moves.push(Move::Partner(name1, name2));
         } else {
-            let no_match_found = format!("Invalid token: {}", token);
+            let no_match_found = format!("Invalid token: {token}");
             return Err(no_match_found.into());
         }
     }

@@ -6,10 +6,10 @@ use std::io::BufRead;
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     if second_star {
         let found_at = find_basement(reader)?;
-        println!("{}", found_at);
+        println!("{found_at}");
     } else {
         let floor = find_floor(reader)?;
-        println!("{}", floor);
+        println!("{floor}");
     }
     Ok(0)
 }

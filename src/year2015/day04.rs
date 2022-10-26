@@ -17,9 +17,9 @@ fn find_lowest<T: BufRead>(reader: T, start_str: &str) -> Result<u32> {
     let mut count = 1;
     for line in reader.lines().filter_map(|x| x.ok()) {
         loop {
-            let check = format!("{}{}", line, count);
+            let check = format!("{line}{count}");
             let digest = md5::compute(check.as_bytes());
-            let digest_str = format!("{:x}", digest);
+            let digest_str = format!("{digest:x}");
 
             if digest_str.starts_with(start_str) {
                 break;

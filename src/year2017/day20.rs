@@ -76,7 +76,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             writeln!(io::stdout(), "{}", particle_map.len())?;
         } else {
             let idx = find_minimum_md(&particle_map)?;
-            writeln!(io::stdout(), "{}", idx)?;
+            writeln!(io::stdout(), "{idx}")?;
         }
     }
 

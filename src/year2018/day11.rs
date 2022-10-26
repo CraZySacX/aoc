@@ -59,7 +59,7 @@ fn submatrix_sum_queries(serial_number: usize, second_star: bool) -> Result<(usi
 
     if second_star {
         for size in 0..300 {
-            println!("Checking size {}", size);
+            println!("Checking size {size}");
             submatrix_sum_query(&aux, size, &mut max_power_level, &mut max_cell);
         }
     } else {
