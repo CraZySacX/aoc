@@ -31,8 +31,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             let h = (cap[4]).parse::<u32>()?;
             let m = (cap[5]).parse::<u32>()?;
             let rest = &cap[6];
+            let dt = Utc.with_ymd_and_hms(y, mon, d, h, m, 0).single().unwrap_or_default();
 
-            let dt = Utc.ymd(y, mon, d).and_hms(h, m, 0);
             sorted_events.insert(dt, rest.to_string());
         }
     }
