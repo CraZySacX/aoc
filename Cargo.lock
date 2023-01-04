@@ -467,9 +467,9 @@ dependencies = [
 
 [[package]]
 name = "primal"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "389bfb36ac527b5fe21a57f87bc7956af45cbeb2de7750b90b7ebac6770e715e"
+checksum = "4b53cc99c892c461727618e8a63806c94b09ae13c494dc5fc70a7557b3a2f071"
 dependencies = [
  "primal-check",
  "primal-estimate",
@@ -502,9 +502,9 @@ checksum = "7374f14c76f23e1271e6be806981ac5dd9e52b59132b0a2f10bcc412495f9159"
 
 [[package]]
 name = "primal-sieve"
-version = "0.3.5"
+version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95fee6031f66b44e8e004ac9bf81fd1c5abcbbb25bd392bc27429daa1759654a"
+checksum = "9f2a14766f8c543620824b5b2cec356abf2681b76966a7ac4b4ed2c0011e696a"
 dependencies = [
  "primal-bit",
  "primal-estimate",
