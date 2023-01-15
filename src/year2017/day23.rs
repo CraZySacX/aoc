@@ -138,15 +138,11 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
 #[cfg(test)]
 mod one_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
 
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

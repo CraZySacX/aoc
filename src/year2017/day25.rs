@@ -9,18 +9,13 @@ use std::io::BufRead;
 use utils::PrivateTryFromUsize;
 
 /// The direction to move on the tape
-#[derive(Debug)]
+#[derive(Debug, Default)]
 enum Move {
+    #[default]
     /// Left
     Left,
     /// Right
     Right,
-}
-
-impl Default for Move {
-    fn default() -> Self {
-        Move::Left
-    }
 }
 
 impl<'a> TryFrom<&'a str> for Move {
@@ -196,15 +191,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
 
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

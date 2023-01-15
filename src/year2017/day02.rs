@@ -69,9 +69,9 @@ fn row_evenly_divisible_value(line: &str) -> Result<u32> {
 mod one_star {
     #[test]
     fn solution() {
-        assert_eq!(super::row_min_max_diff("5 1 9 5").unwrap_or_else(|_| 0), 8);
-        assert_eq!(super::row_min_max_diff("7 5 3").unwrap_or_else(|_| 0), 4);
-        assert_eq!(super::row_min_max_diff("2 4 6 8").unwrap_or_else(|_| 0), 6);
+        assert_eq!(super::row_min_max_diff("5 1 9 5").unwrap_or(0), 8);
+        assert_eq!(super::row_min_max_diff("7 5 3").unwrap_or(0), 4);
+        assert_eq!(super::row_min_max_diff("2 4 6 8").unwrap_or(0), 6);
     }
 }
 
@@ -79,8 +79,8 @@ mod one_star {
 mod two_star {
     #[test]
     fn solution() {
-        assert_eq!(super::row_evenly_divisible_value("5 9 2 8").unwrap_or_else(|_| 0), 4);
-        assert_eq!(super::row_evenly_divisible_value("9 4 7 3").unwrap_or_else(|_| 0), 3);
-        assert_eq!(super::row_evenly_divisible_value("3 8 6 5").unwrap_or_else(|_| 0), 2);
+        assert_eq!(super::row_evenly_divisible_value("5 9 2 8").unwrap_or(0), 4);
+        assert_eq!(super::row_evenly_divisible_value("9 4 7 3").unwrap_or(0), 3);
+        assert_eq!(super::row_evenly_divisible_value("3 8 6 5").unwrap_or(0), 2);
     }
 }

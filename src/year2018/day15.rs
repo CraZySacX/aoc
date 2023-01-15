@@ -58,17 +58,12 @@ impl fmt::Display for Unit {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 enum ElementKind {
+    #[default]
     Cavern,
     Wall,
     Unit,
-}
-
-impl Default for ElementKind {
-    fn default() -> ElementKind {
-        ElementKind::Cavern
-    }
 }
 
 impl fmt::Display for ElementKind {

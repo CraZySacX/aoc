@@ -79,15 +79,11 @@ fn next(start: u32, path: &[Component], components: &mut HashSet<Component>, sco
 #[cfg(test)]
 mod one_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
 
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

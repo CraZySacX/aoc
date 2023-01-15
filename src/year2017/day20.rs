@@ -192,20 +192,20 @@ mod one_star {
         super::add_particle_to_map(0, "p=< 3,0,0>, v=< 2,0,0>, a=<-1,0,0>", &mut particle_map, &coords_re, &vel_re, &acc_re).expect("");
         super::add_particle_to_map(1, "p=< 4,0,0>, v=< 0,0,0>, a=<-2,0,0>", &mut particle_map, &coords_re, &vel_re, &acc_re).expect("");
 
-        for mut particle in particle_map.values_mut() {
-            super::update_particle(&mut particle).expect("");
+        for particle in particle_map.values_mut() {
+            super::update_particle(particle).expect("");
         }
 
         assert_eq!(super::find_minimum_md(&particle_map).expect(""), 1);
 
-        for mut particle in particle_map.values_mut() {
-            super::update_particle(&mut particle).expect("");
+        for particle in particle_map.values_mut() {
+            super::update_particle(particle).expect("");
         }
 
         assert_eq!(super::find_minimum_md(&particle_map).expect(""), 1);
 
-        for mut particle in particle_map.values_mut() {
-            super::update_particle(&mut particle).expect("");
+        for particle in particle_map.values_mut() {
+            super::update_particle(particle).expect("");
         }
 
         assert_eq!(super::find_minimum_md(&particle_map).expect(""), 0);
@@ -215,7 +215,5 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

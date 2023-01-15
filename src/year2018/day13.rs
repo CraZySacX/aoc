@@ -6,20 +6,16 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::io::BufRead;
 
+#[derive(Default)]
 enum TrackKind {
     UpDown,
     LeftRight,
     CurveRight,
     CurveLeft,
     Junction,
+    #[default]
     Empty,
     Collision,
-}
-
-impl Default for TrackKind {
-    fn default() -> TrackKind {
-        TrackKind::Empty
-    }
 }
 
 impl fmt::Display for TrackKind {

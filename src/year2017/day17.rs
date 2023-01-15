@@ -72,7 +72,5 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

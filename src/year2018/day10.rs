@@ -145,7 +145,5 @@ position=<-3,  6> velocity=< 2, -1>";
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

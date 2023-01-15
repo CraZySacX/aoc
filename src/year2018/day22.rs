@@ -9,17 +9,12 @@ use std::fmt;
 use std::io::BufRead;
 use std::slice::Iter;
 
-#[derive(Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, Default, Eq, Hash, PartialEq)]
 enum RegionKind {
+    #[default]
     Rocky,
     Narrow,
     Wet,
-}
-
-impl Default for RegionKind {
-    fn default() -> Self {
-        RegionKind::Rocky
-    }
 }
 
 impl fmt::Display for RegionKind {

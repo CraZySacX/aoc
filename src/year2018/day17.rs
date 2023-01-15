@@ -6,19 +6,14 @@ use std::collections::HashMap;
 use std::fmt;
 use std::io::BufRead;
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 enum SoilKind {
     Clay,
     FlowingWater,
+    #[default]
     Sand,
     SettledWater,
     Spring,
-}
-
-impl Default for SoilKind {
-    fn default() -> Self {
-        SoilKind::Sand
-    }
 }
 
 impl fmt::Display for SoilKind {

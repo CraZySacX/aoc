@@ -44,15 +44,11 @@ fn matrix(i: &str) -> Matrix<u8> {
 #[cfg(test)]
 mod one_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
 
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }

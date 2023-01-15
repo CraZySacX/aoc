@@ -13,15 +13,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
 
 #[cfg(test)]
 mod two_star {
     #[test]
-    fn solution() {
-        assert!(true);
-    }
+    fn solution() {}
 }
