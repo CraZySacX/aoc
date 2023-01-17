@@ -1,10 +1,10 @@
 //! Advent of Code - Day 4 "Repose Record" Solution
 use anyhow::{anyhow, Result};
-use chrono::{TimeZone, Timelike, Utc};
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::BufRead;
+use time::{Month, OffsetDateTime};
 
 #[derive(Clone, Debug, Default, Eq, Ord, PartialEq, PartialOrd)]
 struct Guard {
@@ -26,18 +26,24 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     for line in reader.lines().flatten() {
         for cap in line_re.captures_iter(&line) {
             let y = (cap[1]).parse::<i32>()?;
-            let mon = (cap[2]).parse::<u32>()?;
-            let d = (cap[3]).parse::<u32>()?;
-            let h = (cap[4]).parse::<u32>()?;
-            let m = (cap[5]).parse::<u32>()?;
+            let mon = (cap[2]).parse::<u8>()?;
+            let d = (cap[3]).parse::<u8>()?;
+            let h = (cap[4]).parse::<u8>()?;
+            let m = (cap[5]).parse::<u8>()?;
             let rest = &cap[6];
-            let dt = Utc.with_ymd_and_hms(y, mon, d, h, m, 0).single().unwrap_or_default();
+            let dt = OffsetDateTime::now_utc()
+                .replace_year(y)?
+                .replace_month(Month::try_from(mon)?)?
+                .replace_day(d)?
+                .replace_hour(h)?
+                .replace_minute(m)?
+                .replace_second(0)?;
 
             sorted_events.insert(dt, rest.to_string());
         }
     }
 
-    let mut guards_napping: BTreeMap<u32, BTreeMap<u32, u32>> = BTreeMap::new();
+    let mut guards_napping: BTreeMap<u32, BTreeMap<u8, u32>> = BTreeMap::new();
     let mut current_guard = 0;
     let mut minute_asleep = 0;
     for (dt, evt) in sorted_events.iter() {
@@ -69,7 +75,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     if second_star {
         let mut max_times_asleep = 0;
         for (id, time_napping) in guards_napping {
-            let (mma, mta): (u32, u32) = time_napping.iter().max_by_key(|(_, v)| *v).map_or((0, 0), |(x, y)| (*x, *y));
+            let (mma, mta): (u8, u32) = time_napping.iter().max_by_key(|(_, v)| *v).map_or((0, 0), |(x, y)| (*x, *y));
 
             if mta > max_times_asleep {
                 max_times_asleep = mta;
@@ -81,7 +87,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         let mut max_time_asleep = 0;
         for (id, time_napping) in guards_napping {
             let total_time_asleep: u32 = time_napping.values().sum();
-            let (mma, _): (u32, u32) = time_napping.iter().max_by_key(|(_, v)| *v).map_or((0, 0), |(x, y)| (*x, *y));
+            let (mma, _): (u8, u32) = time_napping.iter().max_by_key(|(_, v)| *v).map_or((0, 0), |(x, y)| (*x, *y));
             if total_time_asleep > max_time_asleep {
                 max_id = id;
                 max_time_asleep = total_time_asleep;
@@ -90,7 +96,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         }
     }
 
-    Ok(max_id * max_minute_asleep)
+    Ok(max_id * u32::from(max_minute_asleep))
 }
 
 #[cfg(test)]
