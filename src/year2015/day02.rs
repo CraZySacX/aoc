@@ -1,5 +1,5 @@
 //! Advent of Code - Day 2 Solution
-use error::Result;
+use anyhow::Result;
 use regex::Regex;
 use std::cmp::min;
 use std::io::BufRead;
@@ -39,7 +39,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"2x3x4";
@@ -56,7 +56,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"2x3x4";

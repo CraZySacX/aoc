@@ -1,5 +1,5 @@
 //! Advent of Code - Day 18 "Settlers of The North Pole" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::{Array2, Axis};
 use std::collections::HashMap;
 use std::io::BufRead;
@@ -55,7 +55,7 @@ fn tick(lca: &mut Array2<char>, max_i: usize, max_j: usize) -> Result<()> {
             '.' => check_open(lca, i, j, max_i, max_j),
             '|' => check_trees(lca, i, j, max_i, max_j),
             '#' => check_lumberyard(lca, i, j, max_i, max_j),
-            _ => return Err("invalid lumber area".into()),
+            _ => return Err(anyhow!("invalid lumber area")),
         };
 
         change_map.insert([i, j], next);
@@ -261,7 +261,7 @@ fn lca<T: BufRead>(reader: T, max_i: usize, max_j: usize, _second_star: bool, te
                 '.' => lca[[i, j]] = ch,
                 '|' => lca[[i, j]] = ch,
                 '#' => lca[[i, j]] = ch,
-                _ => return Err("invalid lumber area".into()),
+                _ => return Err(anyhow!("invalid lumber area")),
             }
         }
     }
@@ -290,7 +290,7 @@ fn print_lca(lca: &Array2<char>, max: usize) {
 #[cfg(test)]
 mod one_star {
     use super::{lca, print_lca, run};
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r".#.#...|#.
@@ -316,7 +316,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::{lca, print_lca, run};
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r".#.#...|#.

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 9 "Marble Mania" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::VecDeque;
 use std::io::BufRead;
@@ -26,7 +26,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
 fn rotate_left(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
     for _ in 0..amt {
-        let tmp = circle.pop_back().ok_or("rotate left err")?;
+        let tmp = circle.pop_back().ok_or(anyhow!("rotate left err"))?;
         circle.push_front(tmp);
     }
     Ok(())
@@ -34,7 +34,7 @@ fn rotate_left(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
 
 fn rotate_right(circle: &mut VecDeque<usize>, amt: usize) -> Result<()> {
     for _ in 0..amt {
-        let tmp = circle.pop_front().ok_or("rotate right err")?;
+        let tmp = circle.pop_front().ok_or(anyhow!("rotate right err"))?;
         circle.push_back(tmp);
     }
     Ok(())
@@ -48,20 +48,20 @@ fn play_game(players: usize, final_marble: usize) -> Result<usize> {
     for marble in 1..=final_marble {
         if marble % 23 == 0 {
             rotate_left(&mut circle, 7)?;
-            scores[marble % players] += marble + circle.pop_front().ok_or("no front")?;
+            scores[marble % players] += marble + circle.pop_front().ok_or(anyhow!("no front"))?;
         } else {
             rotate_right(&mut circle, 2)?;
             circle.push_front(marble);
         }
     }
 
-    Ok(*scores.iter().max().ok_or("no max")?)
+    Ok(*scores.iter().max().ok_or(anyhow!("no max"))?)
 }
 
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"9 players; last marble is worth 25 points";
@@ -86,7 +86,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"9 players; last marble is worth 25 points";

@@ -1,6 +1,7 @@
 //! Advent of Code 2015 Days
-use constants::AoCDay;
-use error::Result;
+
+use crate::constants::AoCDay;
+use anyhow::Result;
 use std::io::BufRead;
 
 mod day01;

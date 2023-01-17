@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 "Spiral Memory" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::io::BufRead;
@@ -115,7 +115,7 @@ pub fn next_biggest(max_value: u32) -> Result<u32> {
         }
     }
 
-    Err("Unable to find next biggest value".into())
+    Err(anyhow!("Unable to find next biggest value"))
 }
 
 /// Calculate the value for the given tuple given the tuple map

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 6 "Chronal Coordinates" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use indexmap::IndexSet;
 use regex::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -61,7 +61,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             *frequency.entry(bounded_closest).or_insert(0) += 1;
         }
 
-        let max = frequency.iter().max_by_key(|(_, x)| *x).map(|(_, x)| *x).ok_or("no maximum")?;
+        let max = frequency.iter().max_by_key(|(_, x)| *x).map(|(_, x)| *x).ok_or(anyhow!("no maximum"))?;
         Ok(max)
     }
 }
@@ -102,7 +102,7 @@ fn max_coords(coords: &[(i32, i32)]) -> (i32, i32) {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"1, 1
@@ -122,7 +122,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"1, 1

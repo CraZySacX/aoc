@@ -1,5 +1,5 @@
 //! Advent of Code - Day 1 "Not Quite Lisp" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::io::BufRead;
 
 /// Find the solution
@@ -22,7 +22,7 @@ fn find_floor<T: BufRead>(reader: T) -> Result<isize> {
             match ch {
                 '(' => floor += 1,
                 ')' => floor -= 1,
-                _ => return Err("invalid floor".into()),
+                _ => return Err(anyhow!("invalid floor")),
             }
         }
     }
@@ -39,7 +39,7 @@ fn find_basement<T: BufRead>(reader: T) -> Result<u32> {
             match ch {
                 '(' => floor += 1,
                 ')' => floor -= 1,
-                _ => return Err("invalid floor".into()),
+                _ => return Err(anyhow!("invalid floor")),
             }
             if floor == -1 {
                 break 'outer;
@@ -54,7 +54,7 @@ fn find_basement<T: BufRead>(reader: T) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_floor;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"(())";
@@ -85,7 +85,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_basement;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r")";

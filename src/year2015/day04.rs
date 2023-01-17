@@ -1,6 +1,5 @@
 //! Advent of Code - Day 4 Solution
-use error::Result;
-use md5;
+use anyhow::Result;
 use std::io::BufRead;
 
 /// Find the solution
@@ -34,7 +33,7 @@ fn find_lowest<T: BufRead>(reader: T, start_str: &str) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"abcdef";

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 11 "Chronal Charge" Solution
-use error::Result;
+use anyhow::Result;
 use ndarray::Array2;
 use std::convert::TryFrom;
 use std::io::BufRead;
@@ -108,7 +108,7 @@ fn sum_query(aux: &Array2<isize>, i: usize, j: usize, size: usize) -> isize {
 #[cfg(test)]
 mod one_star {
     use super::{find_cell_power, submatrix_sum_queries};
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {
@@ -126,7 +126,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::submatrix_sum_queries;
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {

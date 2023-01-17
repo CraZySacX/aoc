@@ -1,5 +1,5 @@
 //! Advent of Code - Day 1 "Inverse Captcha" Solution
-use error::Result;
+use anyhow::Result;
 use std::io::BufRead;
 
 /// Parse the input file and calculate the captcha.

@@ -1,5 +1,5 @@
 //! Useful utilities
-use error::{Error, Result};
+use anyhow::{anyhow, Error, Result};
 use std::convert::TryFrom;
 use std::time::Duration;
 
@@ -38,7 +38,7 @@ impl<'a> TryFrom<&'a str> for Prefix {
             "us" => Ok(Prefix::Micros),
             "ms" => Ok(Prefix::Millis),
             "s" => Ok(Prefix::Seconds),
-            _ => Err("Invalid prefix!".into()),
+            _ => Err(anyhow!("Invalid prefix!")),
         }
     }
 }
@@ -99,7 +99,7 @@ macro_rules! try_from_unbounded {
     ($($target:ty),*) => {$(
         impl PrivateTryFromUsize for $target {
             #[inline]
-            fn private_try_from(value: usize) -> ::error::Result<Self> {
+            fn private_try_from(value: usize) -> ::anyhow::Result<Self> {
                 Ok(value as $target)
             }
         }
@@ -111,9 +111,9 @@ macro_rules! try_from_upper_bounded {
     ($($target:ty),*) => {$(
         impl PrivateTryFromUsize for $target {
             #[inline]
-            fn private_try_from(u: usize) -> ::error::Result<$target> {
+            fn private_try_from(u: usize) -> ::anyhow::Result<$target> {
                 if u > (<$target>::max_value() as usize) {
-                    Err("failed".into())
+                    Err(::anyhow::anyhow!("failed"))
                 } else {
                     Ok(u as $target)
                 }

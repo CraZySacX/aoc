@@ -1,5 +1,5 @@
 //! Advent of Code - Day 22 "Mode Maze" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::{Array2, Axis};
 use regex::Regex;
 use std::cmp::Ordering;
@@ -97,7 +97,7 @@ fn determine_risk<T: BufRead>(reader: T, second_star: bool, test: bool, max_i: u
                 0 => RegionKind::Rocky,
                 1 => RegionKind::Wet,
                 2 => RegionKind::Narrow,
-                _ => return Err("unknown region kind".into()),
+                _ => return Err(anyhow!("unknown region kind")),
             };
             region_map[[i, j]].kind = kind;
             region_map[[i, j]].erosion_level = el;
@@ -212,7 +212,7 @@ fn navigate(target: (usize, usize), depth: usize, type_memo: &mut HashMap<(usize
     });
 
     while !queue.is_empty() {
-        let state = queue.pop().ok_or("queue pop failed")?;
+        let state = queue.pop().ok_or(anyhow!("queue pop failed"))?;
         let region = get_type((state.pos.0, state.pos.1), depth, target, type_memo);
 
         if (region == RegionKind::Rocky && state.equipped == Equipment::Neither)
@@ -286,7 +286,7 @@ fn print_map(region_map: &Array2<Region>) {
 #[cfg(test)]
 mod one_star {
     use super::determine_risk;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r"depth: 510
@@ -302,7 +302,7 @@ target: 10,10";
 #[cfg(test)]
 mod two_star {
     use super::determine_risk;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r"depth: 510

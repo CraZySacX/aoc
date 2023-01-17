@@ -1,5 +1,5 @@
 //! Advent of Code - Day 22 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use std::io::BufRead;
 
@@ -100,7 +100,7 @@ fn get_state(coords: (usize, usize), arr: &Array2<char>) -> Result<State> {
         'W' => State::Weakened,
         'F' => State::Flagged,
         '.' => State::Clean,
-        _ => return Err(format!("invalid state: {val}").into()),
+        _ => return Err(anyhow!(format!("invalid state: {val}"))),
     };
     Ok(res)
 }
@@ -128,7 +128,7 @@ fn change_state(coords: (usize, usize), arr: &mut Array2<char>, second_star: boo
             State::Infected => {
                 arr[[coords.0, coords.1]] = '.';
             }
-            _ => return Err("invalid state for one star".into()),
+            _ => return Err(anyhow!("invalid state for one star")),
         }
     }
 

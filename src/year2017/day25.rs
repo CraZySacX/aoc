@@ -1,12 +1,9 @@
 //! Advent of Code - Day 25 Solution
-use bytecount;
-use error::{Error, Result};
+
+use crate::utils::PrivateTryFromUsize;
+use anyhow::{anyhow, Error, Result};
 use regex::Regex;
-use std::collections::BTreeMap;
-use std::convert::TryFrom;
-use std::fmt;
-use std::io::BufRead;
-use utils::PrivateTryFromUsize;
+use std::{collections::BTreeMap, fmt, io::BufRead};
 
 /// The direction to move on the tape
 #[derive(Debug, Default)]
@@ -24,7 +21,7 @@ impl<'a> TryFrom<&'a str> for Move {
         Ok(match val {
             "left" => Move::Left,
             "right" => Move::Right,
-            _ => return Err(format!("Invalid move value: {val}").into()),
+            _ => return Err(anyhow!(format!("Invalid move value: {val}"))),
         })
     }
 }
@@ -92,30 +89,30 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
 
     for line in reader.lines().filter_map(|x| x.ok()) {
         if begin_re.is_match(&line) {
-            let caps = begin_re.captures(&line).ok_or("invalid begin captures")?;
-            let state_str = caps.get(1).ok_or("invalid state value")?.as_str();
+            let caps = begin_re.captures(&line).ok_or(anyhow!("invalid begin captures"))?;
+            let state_str = caps.get(1).ok_or(anyhow!("invalid state value"))?.as_str();
             let val = state_str.parse::<char>()?;
             start_state = val;
         } else if dc_re.is_match(&line) {
-            let caps = dc_re.captures(&line).ok_or("invalid diagnostic checksum captures")?;
-            let steps_str = caps.get(1).ok_or("invalid diagnostic checksum value")?.as_str();
+            let caps = dc_re.captures(&line).ok_or(anyhow!("invalid diagnostic checksum captures"))?;
+            let steps_str = caps.get(1).ok_or(anyhow!("invalid diagnostic checksum value"))?.as_str();
             let steps = steps_str.parse::<usize>()?;
             step_count = steps;
         } else if in_state_re.is_match(&line) {
-            let caps = in_state_re.captures(&line).ok_or("invalid in state captures")?;
-            let state_str = caps.get(1).ok_or("invalid in state value")?.as_str();
+            let caps = in_state_re.captures(&line).ok_or(anyhow!("invalid in state captures"))?;
+            let state_str = caps.get(1).ok_or(anyhow!("invalid in state value"))?.as_str();
             let val = state_str.parse::<char>()?;
             parsing_state = true;
             curr_state = val;
             states.insert(val, Default::default());
         } else if if_curr_re.is_match(&line) && parsing_state {
-            let caps = if_curr_re.captures(&line).ok_or("invalid if current value captures")?;
-            let val_str = caps.get(1).ok_or("invalid if current value")?.as_str();
+            let caps = if_curr_re.captures(&line).ok_or(anyhow!("invalid if current value captures"))?;
+            let val_str = caps.get(1).ok_or(anyhow!("invalid if current value"))?.as_str();
             let val = val_str.parse::<u8>()?;
             curr_val = val;
         } else if write_val_re.is_match(&line) && parsing_state {
-            let caps = write_val_re.captures(&line).ok_or("invalid write value captures")?;
-            let val_str = caps.get(1).ok_or("invalid write value")?.as_str();
+            let caps = write_val_re.captures(&line).ok_or(anyhow!("invalid write value captures"))?;
+            let val_str = caps.get(1).ok_or(anyhow!("invalid write value"))?.as_str();
             let val = val_str.parse::<u8>()?;
             let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
 
@@ -124,11 +121,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             } else if curr_val == 1 {
                 state_ptr.one_write = val;
             } else {
-                return Err("Invalid curr value".into());
+                return Err(anyhow!("Invalid curr value"));
             }
         } else if move_re.is_match(&line) {
-            let caps = move_re.captures(&line).ok_or("invalid move captures")?;
-            let move_str = caps.get(1).ok_or("invalid move value")?.as_str();
+            let caps = move_re.captures(&line).ok_or(anyhow!("invalid move captures"))?;
+            let move_str = caps.get(1).ok_or(anyhow!("invalid move value"))?.as_str();
             let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
 
             if curr_val == 0 {
@@ -136,11 +133,11 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             } else if curr_val == 1 {
                 state_ptr.one_move = TryFrom::try_from(move_str)?;
             } else {
-                return Err("Invalid curr value".into());
+                return Err(anyhow!("Invalid curr value"));
             }
         } else if cont_re.is_match(&line) {
-            let caps = cont_re.captures(&line).ok_or("invalid continue captures")?;
-            let cont_str = caps.get(1).ok_or("invalid continue value")?.as_str();
+            let caps = cont_re.captures(&line).ok_or(anyhow!("invalid continue captures"))?;
+            let cont_str = caps.get(1).ok_or(anyhow!("invalid continue value"))?.as_str();
             let val = cont_str.parse::<char>()?;
             let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
 
@@ -149,14 +146,14 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             } else if curr_val == 1 {
                 state_ptr.one_next = val;
             } else {
-                return Err("Invalid curr value".into());
+                return Err(anyhow!("Invalid curr value"));
             }
         } else if line.is_empty() && parsing_state {
             parsing_state = false;
         } else if line.is_empty() {
             // Do nothing.
         } else {
-            return Err(format!("Unable to parse line: {line}").into());
+            return Err(anyhow!(format!("Unable to parse line: {line}")));
         }
     }
 
@@ -164,8 +161,8 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     curr_state = start_state;
 
     for _ in 0..step_count {
-        let tape_val = tape.get_mut(curr_idx).ok_or("invalid tape value")?;
-        let state = states.get(&curr_state).ok_or("invalid state value")?;
+        let tape_val = tape.get_mut(curr_idx).ok_or(anyhow!("invalid tape value"))?;
+        let state = states.get(&curr_state).ok_or(anyhow!("invalid state value"))?;
 
         if *tape_val == 0 {
             *tape_val = state.zero_write;

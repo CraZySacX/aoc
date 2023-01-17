@@ -1,5 +1,5 @@
 //! Advent of Code - Day 20 'Particle Swarm' Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::HashMap;
 use std::convert::TryFrom;
@@ -90,42 +90,42 @@ fn add_particle_to_map(idx: usize, line: &str, particle_map: &mut HashMap<usize,
     let parts: Vec<&str> = line.split(", ").collect();
 
     let coords = if coords_re.is_match(parts[0]) {
-        let caps = coords_re.captures(parts[0]).ok_or("invalid coords captures")?;
-        let x_str = caps.get(1).ok_or("invalid x value")?.as_str();
-        let y_str = caps.get(2).ok_or("invalid y value")?.as_str();
-        let z_str = caps.get(3).ok_or("invalid z value")?.as_str();
+        let caps = coords_re.captures(parts[0]).ok_or(anyhow!("invalid coords captures"))?;
+        let x_str = caps.get(1).ok_or(anyhow!("invalid x value"))?.as_str();
+        let y_str = caps.get(2).ok_or(anyhow!("invalid y value"))?.as_str();
+        let z_str = caps.get(3).ok_or(anyhow!("invalid z value"))?.as_str();
         let x = x_str.parse::<i64>()?;
         let y = y_str.parse::<i64>()?;
         let z = z_str.parse::<i64>()?;
         Coords { x, y, z }
     } else {
-        return Err("invalid coordinates".into());
+        return Err(anyhow!("invalid coordinates"));
     };
 
     let velocity = if vel_re.is_match(parts[1]) {
-        let caps = vel_re.captures(parts[1]).ok_or("invalid velocity captures")?;
-        let vx_str = caps.get(1).ok_or("invalid vx value")?.as_str();
-        let vy_str = caps.get(2).ok_or("invalid vy value")?.as_str();
-        let vz_str = caps.get(3).ok_or("invalid vz value")?.as_str();
+        let caps = vel_re.captures(parts[1]).ok_or(anyhow!("invalid velocity captures"))?;
+        let vx_str = caps.get(1).ok_or(anyhow!("invalid vx value"))?.as_str();
+        let vy_str = caps.get(2).ok_or(anyhow!("invalid vy value"))?.as_str();
+        let vz_str = caps.get(3).ok_or(anyhow!("invalid vz value"))?.as_str();
         let vx = vx_str.parse::<i64>()?;
         let vy = vy_str.parse::<i64>()?;
         let vz = vz_str.parse::<i64>()?;
         Velocity { vx, vy, vz }
     } else {
-        return Err("invalid velocity".into());
+        return Err(anyhow!("invalid velocity"));
     };
 
     let acc = if acc_re.is_match(parts[2]) {
-        let caps = acc_re.captures(parts[2]).ok_or("invalid acceleration captures")?;
-        let ax_str = caps.get(1).ok_or("invalid ax value")?.as_str();
-        let ay_str = caps.get(2).ok_or("invalid ay value")?.as_str();
-        let az_str = caps.get(3).ok_or("invalid az value")?.as_str();
+        let caps = acc_re.captures(parts[2]).ok_or(anyhow!("invalid acceleration captures"))?;
+        let ax_str = caps.get(1).ok_or(anyhow!("invalid ax value"))?.as_str();
+        let ay_str = caps.get(2).ok_or(anyhow!("invalid ay value"))?.as_str();
+        let az_str = caps.get(3).ok_or(anyhow!("invalid az value"))?.as_str();
         let ax = ax_str.parse::<i64>()?;
         let ay = ay_str.parse::<i64>()?;
         let az = az_str.parse::<i64>()?;
         Acc { ax, ay, az }
     } else {
-        return Err("invalid acceleration".into());
+        return Err(anyhow!("invalid acceleration"));
     };
 
     let md: usize = TryFrom::try_from(coords.x.abs() + coords.y.abs() + coords.z.abs())?;
@@ -153,7 +153,10 @@ fn update_particle(particle: &mut Particle) -> Result<()> {
 
 /// Find the minimum Manhattan distance in the map.
 fn find_minimum_md(particle_map: &HashMap<usize, Particle>) -> Result<usize> {
-    let (min_idx, _) = particle_map.iter().min_by_key(|&(_, particle)| particle.md).ok_or("No minimum found")?;
+    let (min_idx, _) = particle_map
+        .iter()
+        .min_by_key(|&(_, particle)| particle.md)
+        .ok_or(anyhow!("No minimum found"))?;
 
     Ok(*min_idx)
 }

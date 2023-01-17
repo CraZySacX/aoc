@@ -1,5 +1,5 @@
 //! Advent of Code - Day 5 Solution
-use error::Result;
+use anyhow::Result;
 use std::collections::HashMap;
 use std::io::BufRead;
 
@@ -104,7 +104,7 @@ fn find_nice<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"ugknbfddgicrmopn";
@@ -127,7 +127,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"qjhvhtzxzqqjkmpb";

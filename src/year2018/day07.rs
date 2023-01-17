@@ -1,5 +1,6 @@
 //! Advent of Code - Day 7 "The Sum of Its Parts" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
+use getset::{Getters, Setters};
 use indexmap::IndexSet;
 use regex::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -45,17 +46,16 @@ fn duration_of(val: &str, base: u32) -> Result<u32> {
         "X" => base + 24,
         "Y" => base + 25,
         "Z" => base + 26,
-        _ => return Err("invalid instructions".into()),
+        _ => return Err(anyhow!("invalid instructions")),
     })
 }
 
 #[derive(Clone, Debug, Default, Getters, Setters)]
 struct Worker {
     id: u32,
-    #[get]
-    #[set]
+    #[getset(get, set)]
     work: Option<(String, u32)>,
-    #[get]
+    #[getset(get)]
     remaining: u32,
 }
 
@@ -101,7 +101,7 @@ fn find_duration<T: BufRead>(reader: T, test: bool) -> Result<u32> {
                 parents.push(first_tuple);
             }
         } else {
-            return Err("unable to parse input".into());
+            return Err(anyhow!("unable to parse input"));
         }
     }
 
@@ -217,7 +217,7 @@ fn consume_work(worker: &mut Worker, work: &(String, u32)) -> bool {
 
 fn complete(node_map: &BTreeMap<char, Vec<char>>) -> Result<char> {
     let ready: Vec<char> = node_map.iter().filter_map(|(x, y)| if y.is_empty() { Some(*x) } else { None }).collect();
-    ready.first().cloned().ok_or_else(|| "blah".into())
+    ready.first().cloned().ok_or(anyhow!("blah"))
 }
 
 fn remove_from_parents(node_map: &mut BTreeMap<char, Vec<char>>, key: char) {
@@ -235,8 +235,8 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
     let line_re = Regex::new(r#"Step ([A-Z]) must be finished before step ([A-Z])"#)?;
     for line in reader.lines().filter_map(|x| x.ok()) {
         for cap in line_re.captures_iter(&line) {
-            let first = (cap[1]).chars().next().ok_or("invalid char")?;
-            let second = (cap[2]).chars().next().ok_or("invalid char")?;
+            let first = (cap[1]).chars().next().ok_or(anyhow!("invalid char"))?;
+            let second = (cap[2]).chars().next().ok_or(anyhow!("invalid char"))?;
 
             {
                 node_map.entry(first).or_insert_with(|| Vec::with_capacity(25));
@@ -256,7 +256,7 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
     while !node_map.is_empty() {
         let completed = complete(&node_map)?;
         remove_from_parents(&mut node_map, completed);
-        node_map.remove(&completed).ok_or("blah")?;
+        node_map.remove(&completed).ok_or(anyhow!("blah"))?;
         result.push(completed);
     }
 
@@ -266,7 +266,7 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
 #[cfg(test)]
 mod one_star {
     use super::find_order;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"Step C must be finished before step A can begin.
@@ -287,7 +287,7 @@ Step F must be finished before step E can begin.";
 #[cfg(test)]
 mod two_star {
     use super::find_duration;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"Step C must be finished before step A can begin.

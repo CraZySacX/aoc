@@ -1,5 +1,5 @@
 //! Advent of Code - Day 5 "A Maze of Twisty Trampolines All Alike" Solution
-use error::Result;
+use anyhow::Result;
 use std::convert::TryFrom;
 use std::io::BufRead;
 

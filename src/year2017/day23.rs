@@ -1,6 +1,5 @@
 //! Advent of Code - Day 23 'Coprocessor Conflagration' Solution
-use error::Result;
-use primal;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::io::BufRead;
 
@@ -41,7 +40,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if id < 0 || id == commands.len() as i64 {
                 break;
             }
-            let next_command = commands.get(&id).ok_or("invalid command")?;
+            let next_command = commands.get(&id).ok_or(anyhow!("invalid command"))?;
             let (new_id, new_mul_count) = run_command((id, next_command), &mut register_map, count)?;
             id = new_id;
             count = new_mul_count;
@@ -66,7 +65,7 @@ fn parse_command(command: &str) -> Result<(String, String, Option<Value>)> {
     } else if token_strs.len() == 2 {
         Ok((token_strs[0].to_string(), token_strs[1].to_string(), None))
     } else {
-        Err("Invalid command".into())
+        Err(anyhow!("Invalid command"))
     }
 }
 
@@ -89,27 +88,27 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
         "set" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            *register_map.get_mut(register).ok_or("invalid register")? = actual_value;
+            *register_map.get_mut(register).ok_or(anyhow!("invalid register"))? = actual_value;
         }
         "sub" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x -= actual_value;
         }
         "mul" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x *= actual_value;
             mul_count += 1;
         }
@@ -117,14 +116,14 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
             let should_jump = if let Ok(val) = register.parse::<i64>() {
                 val
             } else {
-                *register_map.get(register).ok_or("invalid register")?
+                *register_map.get(register).ok_or(anyhow!("invalid register"))?
             };
 
             if should_jump != 0 {
                 let actual_value = match *value {
                     Some(Value::Number(x)) => x,
-                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                    _ => return Err("Invalid set command".into()),
+                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                    _ => return Err(anyhow!("Invalid set command")),
                 };
                 return Ok((id + actual_value, mul_count));
             }

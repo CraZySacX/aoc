@@ -1,9 +1,10 @@
 //! Advent of Code - Day 14 "Disk Defragmentation" Solution
-use error::Result;
+
+use crate::utils::PrivateTryFromUsize;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use std::convert::TryFrom;
 use std::io::BufRead;
-use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -65,12 +66,12 @@ fn parse_list_and_hash(hash: &mut Vec<u32>, line: &str, num_elements: u32, secon
             for j in curr_pos..u32::from(*length) + curr_pos {
                 let actual_idx = j % num_elements;
                 indices.push(actual_idx);
-                slice.push(*hash.get(actual_idx as usize).ok_or("invalid")?);
+                slice.push(*hash.get(actual_idx as usize).ok_or(anyhow!("invalid"))?);
             }
 
             slice.reverse();
             for (idx, val) in indices.iter().zip(slice.iter()) {
-                *hash.get_mut(*idx as usize).ok_or("invalid")? = *val;
+                *hash.get_mut(*idx as usize).ok_or(anyhow!("invalid"))? = *val;
             }
 
             curr_pos = (curr_pos + u32::from(*length) + skip_size) % num_elements;
@@ -140,7 +141,7 @@ fn to_binary_string(hex: &str) -> Result<String> {
             'd' => "1101",
             'e' => "1110",
             'f' => "1111",
-            _ => return Err("Invalid hex digit".into()),
+            _ => return Err(anyhow!("Invalid hex digit")),
         };
         binary_str.push_str(binary);
     }

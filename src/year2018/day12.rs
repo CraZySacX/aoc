@@ -1,5 +1,5 @@
 //! Advent of Code - Day 12 "Subterranean Sustainability" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use indexmap::IndexMap;
 use regex::Regex;
 use sliding_windows::{IterExt, Storage};
@@ -35,7 +35,7 @@ fn gen_maps<T: BufRead>(reader: T, state_map: &mut BTreeMap<isize, bool>, patter
                 match ch {
                     '#' => state_map.insert(isize::try_from(idx)?, true),
                     '.' => state_map.insert(isize::try_from(idx)?, false),
-                    _ => return Err("invalid state character".into()),
+                    _ => return Err(anyhow!("invalid state character")),
                 };
             }
         }
@@ -46,7 +46,7 @@ fn gen_maps<T: BufRead>(reader: T, state_map: &mut BTreeMap<isize, bool>, patter
             match &cap[2] {
                 "#" => pattern_map.insert(pattern, true),
                 "." => pattern_map.insert(pattern, false),
-                _ => return Err("invalid pattern character".into()),
+                _ => return Err(anyhow!("invalid pattern character")),
             };
         }
     }
@@ -97,21 +97,21 @@ fn grow_plants(action_map: HashMap<isize, bool>, state_map: &mut BTreeMap<isize,
 }
 
 fn find_min_plant(state_map: &BTreeMap<isize, bool>) -> Result<isize> {
-    Ok(state_map
+    state_map
         .iter()
         .filter(|(_, v)| **v)
         .min_by_key(|(k, _)| *k)
         .map(|(k, _)| *k)
-        .ok_or("no minimum key")?)
+        .ok_or(anyhow!("no minimum key"))
 }
 
 fn find_max_plant(state_map: &BTreeMap<isize, bool>) -> Result<isize> {
-    Ok(state_map
+    state_map
         .iter()
         .filter(|(_, v)| **v)
         .max_by_key(|(k, _)| *k)
         .map(|(k, _)| *k)
-        .ok_or("no maximum key")?)
+        .ok_or(anyhow!("no maximum key"))
 }
 
 fn add_left(state_map: &mut BTreeMap<isize, bool>) -> Result<()> {
@@ -137,7 +137,7 @@ fn add_right(state_map: &mut BTreeMap<isize, bool>) -> Result<()> {
 #[cfg(test)]
 mod one_star {
     use super::{gen_maps, run_generations};
-    use error::Result;
+    use anyhow::Result;
     use indexmap::IndexMap;
     use std::collections::BTreeMap;
     use std::io::Cursor;

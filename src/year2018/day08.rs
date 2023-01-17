@@ -1,5 +1,5 @@
 //! Advent of Code - Day 8 "Memory Manuver" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -16,8 +16,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 }
 
 fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
-    let children_count = license_vec.pop().ok_or("")?;
-    let metadata_count = license_vec.pop().ok_or("")?;
+    let children_count = license_vec.pop().ok_or(anyhow!(""))?;
+    let metadata_count = license_vec.pop().ok_or(anyhow!(""))?;
     let mut result = 0;
 
     if second_star {
@@ -28,7 +28,7 @@ fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
         }
 
         for _ in 0..metadata_count {
-            let metadata = license_vec.pop().ok_or("")?;
+            let metadata = license_vec.pop().ok_or(anyhow!(""))?;
             if children_count == 0 {
                 result += metadata;
             } else {
@@ -41,7 +41,7 @@ fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
         }
 
         for _ in 0..metadata_count {
-            result += license_vec.pop().ok_or("")?;
+            result += license_vec.pop().ok_or(anyhow!(""))?;
         }
     }
 
@@ -51,7 +51,7 @@ fn recurse(license_vec: &mut Vec<u32>, second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2";
@@ -66,7 +66,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2";

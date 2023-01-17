@@ -1,5 +1,5 @@
 //! Advent of Code - Day 10 "Knot Hash" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::io::BufRead;
 
 /// Find the solution for Advent of Code 2017
@@ -40,12 +40,12 @@ fn parse_list_and_hash(hash: &mut Vec<u32>, line: &str, num_elements: u32, secon
             for j in curr_pos..u32::from(*length) + curr_pos {
                 let actual_idx = j % num_elements;
                 indices.push(actual_idx);
-                slice.push(*hash.get(actual_idx as usize).ok_or("invalid")?);
+                slice.push(*hash.get(actual_idx as usize).ok_or(anyhow!("invalid"))?);
             }
 
             slice.reverse();
             for (idx, val) in indices.iter().zip(slice.iter()) {
-                *hash.get_mut(*idx as usize).ok_or("invalid")? = *val;
+                *hash.get_mut(*idx as usize).ok_or(anyhow!("invalid"))? = *val;
             }
 
             curr_pos = (curr_pos + u32::from(*length) + skip_size) % num_elements;

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 19 "Go With The Flow" Solution
-use error::{Error, Result};
+use anyhow::{anyhow, Error, Result};
 use regex::Regex;
 use std::collections::HashMap;
 use std::convert::TryFrom;
@@ -115,7 +115,7 @@ impl TryFrom<&str> for OpCode {
             "eqir" => OpCode::Eqir,
             "eqri" => OpCode::Eqri,
             "eqrr" => OpCode::Eqrr,
-            _ => return Err("invalid opcode".into()),
+            _ => return Err(anyhow!("invalid opcode")),
         })
     }
 }
@@ -229,7 +229,7 @@ fn print_registers(registers: &Registers) {
 #[cfg(test)]
 mod one_star {
     use super::run_program;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r"#ip 0

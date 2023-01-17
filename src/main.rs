@@ -7,27 +7,7 @@
 // modified, or distributed except according to those terms.
 
 //! `aoc` 0.1.0
-#![deny(missing_docs)]
-extern crate clap;
-#[macro_use]
-extern crate error_chain;
-#[macro_use]
-extern crate getset;
-#[macro_use]
-extern crate itertools;
-
-extern crate bytecount;
-extern crate chrono;
-extern crate indexmap;
-extern crate md5;
-extern crate ndarray;
-extern crate pathfinding;
-extern crate primal;
-extern crate regex;
-extern crate sliding_windows;
-
 mod constants;
-mod error;
 mod run;
 mod utils;
 mod year2015;

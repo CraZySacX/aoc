@@ -1,5 +1,5 @@
 //! Advent of Code - Day 5 "Alchemical Reduction" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::cmp::{max, min};
 use std::collections::HashMap;
 use std::io::BufRead;
@@ -19,13 +19,13 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if let Some(min) = results.values().min() {
                 return Ok(*min);
             } else {
-                return Err("unable to find minimum".into());
+                return Err(anyhow!("unable to find minimum"));
             }
         } else {
             return Ok(collapse_polymer(&mut line.as_bytes().to_vec()));
         }
     }
-    Err("unable to parse input".into())
+    Err(anyhow!("unable to parse input"))
 }
 
 fn collapse_polymer(bytes: &mut Vec<u8>) -> u32 {
@@ -57,7 +57,7 @@ fn collapse_polymer(bytes: &mut Vec<u8>) -> u32 {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = "dabAcCaCBAcCcaDA";
@@ -72,7 +72,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = "dabAcCaCBAcCcaDA";

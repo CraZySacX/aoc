@@ -1,6 +1,6 @@
 //! Advent of Code - Day 4 "Repose Record" Solution
+use anyhow::{anyhow, Result};
 use chrono::{TimeZone, Timelike, Utc};
-use error::{ErrorKind, Result};
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::fmt;
@@ -56,7 +56,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if evt.contains("falls asleep") {
                 minute_asleep = dt.minute();
             } else if evt.contains("wakes up") {
-                let minutes_map = guards_napping.get_mut(&current_guard).ok_or(ErrorKind::InvalidIdx)?;
+                let minutes_map = guards_napping.get_mut(&current_guard).ok_or(anyhow!("Invalid Index"))?;
                 for i in minute_asleep..dt.minute() {
                     *minutes_map.entry(i).or_insert(0) += 1;
                 }
@@ -115,7 +115,7 @@ const TEST_LINES: &str = r#"[1518-11-01 00:00] Guard #10 begins shift
 #[cfg(test)]
 mod one_star {
     use super::{find_solution, TEST_LINES};
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     #[test]
@@ -128,7 +128,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::{find_solution, TEST_LINES};
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     #[test]

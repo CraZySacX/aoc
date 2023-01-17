@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 "No Matter How You Slice It" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use regex::Regex;
 use std::collections::BTreeMap;
@@ -116,13 +116,13 @@ fn find_non_overlaps(rectangles: &BTreeMap<usize, Rectangle>) -> Result<usize> {
         }
     }
 
-    Err("failed to find an non-overlapping rectangle".into())
+    Err(anyhow!("failed to find an non-overlapping rectangle"))
 }
 
 #[cfg(test)]
 mod one_star {
     use super::{check_points, contains_point, Point, Rectangle};
-    use error::Result;
+    use anyhow::Result;
     use std::collections::BTreeMap;
 
     #[test]
@@ -166,7 +166,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::{find_non_overlaps, Point, Rectangle};
-    use error::Result;
+    use anyhow::Result;
     use std::collections::BTreeMap;
 
     #[test]

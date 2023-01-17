@@ -7,24 +7,25 @@
 // modified, or distributed except according to those terms.
 
 //! `aoc` runtime
+
+use crate::{
+    constants::{self, get_day_about, AoCDay, AoCYear},
+    utils::{self, Prefix},
+    year2015, year2016, year2017, year2018,
+};
+use anyhow::{anyhow, Result};
 use clap::{App, Arg, ArgMatches, SubCommand};
-use constants::{self, AoCDay, AoCYear};
-use error::Result;
-use std::convert::TryFrom;
-use std::fs::File;
-use std::io::{self, BufReader, Write};
-use std::path::PathBuf;
-use std::time::Instant;
-use utils::{self, Prefix};
-use year2015;
-use year2016;
-use year2017;
-use year2018;
+use std::{
+    fs::File,
+    io::{self, BufReader, Write},
+    path::PathBuf,
+    time::Instant,
+};
 
 /// Advent of Code `SubCommand`
 fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
     SubCommand::with_name(day.into())
-        .about(constants::get_day_about(day))
+        .about(get_day_about(day))
         .arg(
             Arg::with_name("file")
                 .short("f")
@@ -48,7 +49,7 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
     let mut filepath = PathBuf::from("data");
     filepath.push(year_str);
     filepath.push(day_str);
-    filepath.push(matches.value_of("file").ok_or("Invalid filename!")?);
+    filepath.push(matches.value_of("file").ok_or(anyhow!("Invalid filename!"))?);
 
     let reader = BufReader::new(File::open(filepath)?);
     let is_second_star = matches.is_present("second");
@@ -111,7 +112,7 @@ pub fn run() -> Result<i32> {
         .subcommand(subcommand(&AoCDay::AOCD25))
         .get_matches();
 
-    let year: AoCYear = TryFrom::try_from(matches.value_of("year").ok_or("Invalid year!")?)?;
+    let year: AoCYear = TryFrom::try_from(matches.value_of("year").ok_or(anyhow!("Invalid year!"))?)?;
 
     let match_tuple = match matches.subcommand() {
         (constants::DAY_1, Some(matches)) => (matches, AoCDay::AOCD01),
@@ -139,7 +140,7 @@ pub fn run() -> Result<i32> {
         (constants::DAY_23, Some(matches)) => (matches, AoCDay::AOCD23),
         (constants::DAY_24, Some(matches)) => (matches, AoCDay::AOCD24),
         (constants::DAY_25, Some(matches)) => (matches, AoCDay::AOCD25),
-        _ => return Err("Unable to determine the day you wish to run".into()),
+        _ => return Err(anyhow!("Unable to determine the day you wish to run")),
     };
 
     let now = Instant::now();

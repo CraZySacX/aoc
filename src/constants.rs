@@ -1,5 +1,6 @@
 //! Constants
-use error::{Error, Result};
+
+use anyhow::{anyhow, Error, Result};
 use std::convert::TryFrom;
 
 /// Advent of Code Year
@@ -33,7 +34,7 @@ impl<'a> TryFrom<&'a str> for AoCYear {
             "2016" => Ok(AoCYear::AOC2016),
             "2017" => Ok(AoCYear::AOC2017),
             "2018" => Ok(AoCYear::AOC2018),
-            _ => Err("Unable to convert to year!".into()),
+            _ => Err(anyhow!("Unable to convert to year!")),
         }
     }
 }

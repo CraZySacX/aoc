@@ -1,5 +1,5 @@
 //! Advent of Code - Day 8 "I Heard You Like Registers" Solution
-use error::{Error, Result};
+use anyhow::{anyhow, Error, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::io::BufRead;
@@ -18,7 +18,7 @@ impl<'a> TryFrom<&'a str> for Command {
         match command {
             "inc" => Ok(Command::Inc),
             "dec" => Ok(Command::Dec),
-            _ => Err("Invalid command!".into()),
+            _ => Err(anyhow!("Invalid command!")),
         }
     }
 }
@@ -49,7 +49,7 @@ impl<'a> TryFrom<&'a str> for Operator {
             "<=" => Ok(Operator::LessThanEqualTo),
             "<" => Ok(Operator::LessThan),
             "!=" => Ok(Operator::NotEqualTo),
-            _ => Err("Invalid operator!".into()),
+            _ => Err(anyhow!("Invalid operator!")),
         }
     }
 }
@@ -108,7 +108,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             }
         }
 
-        let max = register_map.values().max().ok_or("No max found")?;
+        let max = register_map.values().max().ok_or(anyhow!("No max found"))?;
         Ok(TryFrom::try_from(*max)?)
     }
 }
@@ -116,14 +116,14 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Generate a register map entry and the associated command
 fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMap<String, i32>, commands: &mut Vec<RegisterCommand>) -> Result<()> {
     let line_desc: Vec<&str> = line.split_whitespace().collect();
-    let name_str = line_desc.first().ok_or("Invalid register name!")?;
+    let name_str = line_desc.first().ok_or(anyhow!("Invalid register name!"))?;
     let name = String::from(*name_str);
-    let command_str = line_desc.get(1).ok_or("Invalid command!")?;
-    let value = line_desc.get(2).ok_or("Invalid command value")?.parse::<i32>()?;
-    let command_register_str = line_desc.get(4).ok_or("Invalid command register!")?;
+    let command_str = line_desc.get(1).ok_or(anyhow!("Invalid command!"))?;
+    let value = line_desc.get(2).ok_or(anyhow!("Invalid command value"))?.parse::<i32>()?;
+    let command_register_str = line_desc.get(4).ok_or(anyhow!("Invalid command register!"))?;
     let command_register = String::from(*command_register_str);
-    let operator_str = line_desc.get(5).ok_or("Invalid operator!")?;
-    let condition_value = line_desc.get(6).ok_or("Invalid condition value!")?.parse::<i32>()?;
+    let operator_str = line_desc.get(5).ok_or(anyhow!("Invalid operator!"))?;
+    let condition_value = line_desc.get(6).ok_or(anyhow!("Invalid condition value!"))?.parse::<i32>()?;
 
     register_map.entry(name.clone()).or_insert(0);
 
@@ -143,7 +143,7 @@ fn generate_register_map_entry_and_command(line: &str, register_map: &mut HashMa
 
 /// Check the command condition
 fn check_condition(register_map: &HashMap<String, i32>, condition: &Condition) -> Result<bool> {
-    let register_value = register_map.get(&condition.register).ok_or("Cannot read value from register")?;
+    let register_value = register_map.get(&condition.register).ok_or(anyhow!("Cannot read value from register"))?;
     let condition_value = &condition.value;
 
     match condition.op {

@@ -1,8 +1,9 @@
 //! Advent of Code - Day 12 "Digital Plumber" Solution
-use error::Result;
+
+use crate::utils::PrivateTryFromUsize;
+use anyhow::{anyhow, Result};
 use std::collections::{HashMap, HashSet};
 use std::io::BufRead;
-use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -32,9 +33,9 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Parse the line and add to group map.
 fn parse_and_add(line: &str, group_map: &mut HashMap<u32, Vec<u32>>) -> Result<()> {
     let piped: Vec<&str> = line.split(" <-> ").collect();
-    let group_str = piped.first().ok_or("Invalid group")?;
+    let group_str = piped.first().ok_or(anyhow!("Invalid group"))?;
     let group = group_str.parse::<u32>()?;
-    let piped_to_strs: Vec<&str> = piped.get(1).ok_or("Invalid pipes")?.split(", ").collect();
+    let piped_to_strs: Vec<&str> = piped.get(1).ok_or(anyhow!("Invalid pipes"))?.split(", ").collect();
     let mut piped_to_vec = Vec::new();
 
     for piped_to_str in piped_to_strs {
@@ -48,7 +49,7 @@ fn parse_and_add(line: &str, group_map: &mut HashMap<u32, Vec<u32>>) -> Result<(
 
 /// Get and add
 fn get_and_add(group: u32, group_map: &HashMap<u32, Vec<u32>>, group_set: &mut HashSet<u32>) -> Result<()> {
-    let piped_tos = group_map.get(&group).ok_or("Group not found")?;
+    let piped_tos = group_map.get(&group).ok_or(anyhow!("Group not found"))?;
     group_set.insert(group);
 
     for piped_to in piped_tos {

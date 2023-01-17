@@ -1,5 +1,5 @@
 //! Advent of Code - Day 10 "The Stars Align" Solution
-use error::Result;
+use anyhow::Result;
 use regex::Regex;
 use std::io::BufRead;
 
@@ -90,7 +90,7 @@ fn show_stars(star_map: &[(isize, isize, isize, isize)]) -> String {
 #[cfg(test)]
 mod one_star {
     use super::align;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"position=< 9,  1> velocity=< 0,  2>

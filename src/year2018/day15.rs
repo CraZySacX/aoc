@@ -1,5 +1,5 @@
 //! Advent of Code - Day 15 "Beverage Bandits" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::{Array2, Axis, Zip};
 use std::collections::{HashMap, VecDeque};
 use std::fmt;
@@ -134,7 +134,7 @@ fn generate_map(lines: &[String], max_i: usize, max_j: usize, elf_attack_power: 
                         unit: Some(Unit::new_goblin()),
                     }
                 }
-                _ => return Err("invalid game element type!".into()),
+                _ => return Err(anyhow!("invalid game element type!")),
             }
         }
     }
@@ -325,17 +325,17 @@ fn move_if_not_adjacent(
         queue.push_back(([i, j], move_queue, 0));
 
         while !queue.is_empty() {
-            let (coord, mut path, dist) = queue.pop_front().ok_or("")?;
+            let (coord, mut path, dist) = queue.pop_front().ok_or(anyhow!(""))?;
 
             if coord == target {
                 #[allow(clippy::comparison_chain)]
                 if dist < min_dist {
                     min_dist = dist;
-                    let first_step = path.pop_front().ok_or("")?;
+                    let first_step = path.pop_front().ok_or(anyhow!(""))?;
                     first_step_vec.clear();
                     first_step_vec.push(first_step);
                 } else if dist == min_dist {
-                    let first_step = path.pop_front().ok_or("")?;
+                    let first_step = path.pop_front().ok_or(anyhow!(""))?;
                     first_step_vec.push(first_step);
                 }
 
@@ -436,7 +436,7 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 
     for (action, coord) in move_vec {
         match action {
-            Action::Attack([_, _]) => return Err("Attack in Move Phase".into()),
+            Action::Attack([_, _]) => return Err(anyhow!("Attack in Move Phase")),
             Action::Move([i, j]) => {
                 board[coord] = board[[i, j]].clone();
                 moved = true;
@@ -651,7 +651,7 @@ fn print_board(board: &Array2<Element>, round: usize) {
 #[cfg(test)]
 mod one_star {
     use super::run_battle;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_BOARD: &str = r"#######
@@ -719,7 +719,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::run_battle;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_BOARD: &str = r"#######

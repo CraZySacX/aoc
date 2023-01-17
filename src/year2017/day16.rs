@@ -1,5 +1,5 @@
 //! Advent of Code - Day 16 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::io::BufRead;
 
@@ -58,27 +58,26 @@ fn generate_moves(line: &str, moves: &mut Vec<Move>) -> Result<()> {
 
     for token in tokens {
         if spin_re.is_match(token) {
-            let caps = spin_re.captures(token).ok_or("invalid spin captures")?;
-            let val_str = caps.get(1).ok_or("invalid spin value")?.as_str();
+            let caps = spin_re.captures(token).ok_or(anyhow!("invalid spin captures"))?;
+            let val_str = caps.get(1).ok_or(anyhow!("invalid spin value"))?.as_str();
             let val = val_str.parse::<u32>()?;
             moves.push(Move::Spin(val));
         } else if exchange_re.is_match(token) {
-            let caps = exchange_re.captures(token).ok_or("invalid exchange captures")?;
-            let pos1_str = caps.get(1).ok_or("invalid exchange pos1")?.as_str();
-            let pos2_str = caps.get(2).ok_or("invalid exchange pos2")?.as_str();
+            let caps = exchange_re.captures(token).ok_or(anyhow!("invalid exchange captures"))?;
+            let pos1_str = caps.get(1).ok_or(anyhow!("invalid exchange pos1"))?.as_str();
+            let pos2_str = caps.get(2).ok_or(anyhow!("invalid exchange pos2"))?.as_str();
             let pos1 = pos1_str.parse::<u8>()?;
             let pos2 = pos2_str.parse::<u8>()?;
             moves.push(Move::Exchange(pos1, pos2));
         } else if partner_re.is_match(token) {
-            let caps = partner_re.captures(token).ok_or("invalid partner captures")?;
-            let name1_str = caps.get(1).ok_or("invalid partner name1")?.as_str();
-            let name2_str = caps.get(2).ok_or("invalid partner name2")?.as_str();
-            let name1 = name1_str.chars().next().ok_or("name1 not a char")?;
-            let name2 = name2_str.chars().next().ok_or("name2 not a char")?;
+            let caps = partner_re.captures(token).ok_or(anyhow!("invalid partner captures"))?;
+            let name1_str = caps.get(1).ok_or(anyhow!("invalid partner name1"))?.as_str();
+            let name2_str = caps.get(2).ok_or(anyhow!("invalid partner name2"))?.as_str();
+            let name1 = name1_str.chars().next().ok_or(anyhow!("name1 not a char"))?;
+            let name2 = name2_str.chars().next().ok_or(anyhow!("name2 not a char"))?;
             moves.push(Move::Partner(name1, name2));
         } else {
-            let no_match_found = format!("Invalid token: {token}");
-            return Err(no_match_found.into());
+            return Err(anyhow!(format!("Invalid token: {token}")));
         }
     }
     Ok(())

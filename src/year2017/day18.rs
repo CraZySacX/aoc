@@ -1,5 +1,5 @@
 //! Advent of Code - Day 18 'Duet' Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::fs::File;
@@ -36,11 +36,11 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             if id == -1 {
                 break;
             }
-            let next_command = commands.get(&id).ok_or("invalid command")?;
+            let next_command = commands.get(&id).ok_or(anyhow!("invalid command"))?;
             id = run_command((id, next_command), &mut register_map)?;
         }
 
-        let rcv = register_map.get(&"receive".to_string()).ok_or("invalid rcv")?;
+        let rcv = register_map.get(&"receive".to_string()).ok_or(anyhow!("invalid rcv"))?;
         Ok(TryFrom::try_from(*rcv)?)
     }
 }
@@ -65,7 +65,7 @@ fn thread_me() -> Result<u32> {
         initialize(&mut commands, &mut register_map).expect("");
         *register_map.entry("p".to_string()).or_insert(1) = 1;
         if run_solution_in_thread(1, &commands, &mut register_map, &sender1, &receiver0).is_ok() {
-            let count = *register_map.get(&"prog1".to_string()).ok_or("invalid key").expect("");
+            let count = *register_map.get(&"prog1".to_string()).ok_or(anyhow!("invalid key")).expect("");
             sender2.send(count).expect("");
         } else {
             sender2.send(-1).expect("");
@@ -105,7 +105,7 @@ fn run_solution_in_thread(
         if id == -1 || id < 0 || id == commands.len() as i64 {
             break;
         }
-        let next_command = commands.get(&id).ok_or("invalid command")?;
+        let next_command = commands.get(&id).ok_or(anyhow!("invalid command"))?;
         id = run_command_snd_rcv(prog_id, (id, next_command), register_map, sender, receiver)?;
     }
     Ok(())
@@ -125,7 +125,7 @@ fn parse_command(command: &str) -> Result<(String, String, Option<Value>)> {
     } else if token_strs.len() == 2 {
         Ok((token_strs[0].to_string(), token_strs[1].to_string(), None))
     } else {
-        Err("Invalid command".into())
+        Err(anyhow!("Invalid command"))
     }
 }
 
@@ -149,47 +149,47 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
         "set" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            *register_map.get_mut(register).ok_or("invalid register")? = actual_value;
+            *register_map.get_mut(register).ok_or(anyhow!("invalid register"))? = actual_value;
         }
         "add" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x += actual_value;
         }
         "mul" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x *= actual_value;
         }
         "mod" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x %= actual_value;
         }
         "snd" => {
-            let snd = register_map.get(register).ok_or("invalid register")?;
+            let snd = register_map.get(register).ok_or(anyhow!("invalid register"))?;
             last_sound = Some(*snd);
         }
         "rcv" => {
-            let rcv = register_map.get(register).ok_or("invalid register")?;
+            let rcv = register_map.get(register).ok_or(anyhow!("invalid register"))?;
 
             if *rcv != 0 {
-                let last_sound = register_map.get(&"last_sound".to_string()).ok_or("invalid snd")?;
+                let last_sound = register_map.get(&"last_sound".to_string()).ok_or(anyhow!("invalid snd"))?;
                 receive = Some(*last_sound)
             }
         }
@@ -197,14 +197,14 @@ fn run_command((id, command): (i64, &(String, String, Option<Value>)), register_
             let should_jump = if let Ok(val) = register.parse::<i64>() {
                 val
             } else {
-                *register_map.get(register).ok_or("invalid register")?
+                *register_map.get(register).ok_or(anyhow!("invalid register"))?
             };
 
             if should_jump > 0 {
                 let actual_value = match *value {
                     Some(Value::Number(x)) => x,
-                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                    _ => return Err("Invalid set command".into()),
+                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                    _ => return Err(anyhow!("Invalid set command")),
                 };
                 return Ok(id + actual_value);
             }
@@ -241,36 +241,36 @@ fn run_command_snd_rcv(
         "set" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            *register_map.get_mut(register).ok_or("invalid register")? = actual_value;
+            *register_map.get_mut(register).ok_or(anyhow!("invalid register"))? = actual_value;
         }
         "add" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x += actual_value;
         }
         "mul" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x *= actual_value;
         }
         "mod" => {
             let actual_value = match *value {
                 Some(Value::Number(x)) => x,
-                Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                _ => return Err("Invalid set command".into()),
+                Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                _ => return Err(anyhow!("Invalid set command")),
             };
-            let x = register_map.get_mut(register).ok_or("invalid register")?;
+            let x = register_map.get_mut(register).ok_or(anyhow!("invalid register"))?;
             *x %= actual_value;
         }
         "snd" => {
@@ -279,25 +279,25 @@ fn run_command_snd_rcv(
                 *counter += 1;
                 write!(io::stdout(), "\rCount: {}", *counter)?;
             }
-            let snd = register_map.get(register).ok_or("invalid register")?;
+            let snd = register_map.get(register).ok_or(anyhow!("invalid register"))?;
             sender.send(*snd)?;
         }
         "rcv" => {
             let val = receiver.recv()?;
-            *register_map.get_mut(register).ok_or("invalid register")? = val;
+            *register_map.get_mut(register).ok_or(anyhow!("invalid register"))? = val;
         }
         "jgz" => {
             let should_jump = if let Ok(val) = register.parse::<i64>() {
                 val
             } else {
-                *register_map.get(register).ok_or("invalid register")?
+                *register_map.get(register).ok_or(anyhow!("invalid register"))?
             };
 
             if should_jump > 0 {
                 let actual_value = match *value {
                     Some(Value::Number(x)) => x,
-                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or("invalid register")?,
-                    _ => return Err("Invalid set command".into()),
+                    Some(Value::Register(ref x)) => *register_map.get(x).ok_or(anyhow!("invalid register"))?,
+                    _ => return Err(anyhow!("Invalid set command")),
                 };
                 return Ok(id + actual_value);
             }

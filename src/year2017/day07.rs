@@ -1,5 +1,5 @@
 //! Advent of Code - Day 7 "Recursive Circus" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::io::BufRead;
 
@@ -35,7 +35,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     if second_star {
         let idx = find_root(&nodes)?;
         assign_children(&mut nodes, &children)?;
-        let root = nodes.get(idx).ok_or("Invalid root node")?;
+        let root = nodes.get(idx).ok_or(anyhow!("Invalid root node"))?;
         let mut curr_weights = children_weight(&nodes, root).expect("");
         let mut curr_tuple = are_my_children_balanced(&curr_weights, 0).expect("");
         let mut is_balanced = curr_tuple.2;
@@ -49,7 +49,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         Ok(curr_tuple.1)
     } else {
         let idx = find_root(&nodes)?;
-        let node = nodes.get(idx).ok_or("Not a good index")?;
+        let node = nodes.get(idx).ok_or(anyhow!("Not a good index"))?;
         writeln!(io::stdout(), "Node {}: {}", node.id, node.name)?;
         Ok(0)
     }
@@ -59,10 +59,10 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 fn parse_line(line: &str, id: usize, nodes: &mut Vec<Node>, children: &mut HashMap<usize, Vec<String>>) -> Result<()> {
     let node_def: Vec<&str> = line.split(" -> ").collect();
 
-    let node_desc = node_def.first().ok_or("Unable to get node description")?;
+    let node_desc = node_def.first().ok_or(anyhow!("Unable to get node description"))?;
     let desc: Vec<&str> = node_desc.split(' ').collect();
-    let name = desc.first().ok_or("Unable to deternmine node name")?;
-    let weight_str = desc.get(1).ok_or("Unable to determine node weight")?;
+    let name = desc.first().ok_or(anyhow!("Unable to deternmine node name"))?;
+    let weight_str = desc.get(1).ok_or(anyhow!("Unable to determine node weight"))?;
     let weight = weight_str.trim_matches(|c| c == '(' || c == ')').parse::<u32>()?;
 
     if let Some(children_desc) = node_def.get(1) {
@@ -110,9 +110,9 @@ fn find_root(nodes: &[Node]) -> Result<usize> {
     if count == 1 {
         Ok(id)
     } else if count == 0 {
-        Err("No root found".into())
+        Err(anyhow!("No root found"))
     } else {
-        Err("Too many roots found".into())
+        Err(anyhow!("Too many roots found"))
     }
 }
 
@@ -135,7 +135,7 @@ fn assign_children(nodes: &mut [Node], children: &HashMap<usize, Vec<String>>) -
     }
 
     for (k, v) in child_ids {
-        let mut node = nodes.get_mut(k).ok_or("Invalid node id")?;
+        let mut node = nodes.get_mut(k).ok_or(anyhow!("Invalid node id"))?;
         node.children = Some(v);
     }
 
@@ -149,10 +149,10 @@ fn children_weight(nodes: &[Node], start_node: &Node) -> Result<Vec<(usize, u32)
         weights.push((start_node.id, start_node.weight));
     } else {
         let node_clone = (*start_node).clone();
-        let children = node_clone.children.ok_or("Bad children")?;
+        let children = node_clone.children.ok_or(anyhow!("Bad children"))?;
 
         for node_id in children {
-            let node = nodes.get(node_id).ok_or("Cannot find child node")?;
+            let node = nodes.get(node_id).ok_or(anyhow!("Cannot find child node"))?;
             let total_child_weight: u32 = children_weight(nodes, node)?.iter().fold(0, |acc, x| acc + x.1);
             weights.push((node_id, total_child_weight));
         }

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 2 "Corruption Checksum" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::cmp;
 use std::io::BufRead;
 
@@ -62,7 +62,7 @@ fn row_evenly_divisible_value(line: &str) -> Result<u32> {
             }
         }
     }
-    Err("No evenly divisible values".into())
+    Err(anyhow!("No evenly divisible values"))
 }
 
 #[cfg(test)]

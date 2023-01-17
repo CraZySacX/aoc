@@ -1,5 +1,5 @@
 //! Advent of Code - Day 14 "Chocolate Charts" Solution
-use error::Result;
+use anyhow::Result;
 use std::collections::VecDeque;
 use std::io::BufRead;
 
@@ -87,7 +87,7 @@ fn score_recipes(count: &str, second_star: bool) -> Result<String> {
 #[cfg(test)]
 mod one_star {
     use super::score_recipes;
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {
@@ -102,7 +102,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::score_recipes;
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {

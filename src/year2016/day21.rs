@@ -1,5 +1,5 @@
 //! Advent of Code - Day 21 Solution
-use error::Result;
+use anyhow::Result;
 use std::io::BufRead;
 
 /// Find the solution

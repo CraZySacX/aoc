@@ -1,5 +1,5 @@
 //! Advent of Code - Day 11 "Hex Ed" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::convert::TryFrom;
 use std::io::BufRead;
 
@@ -68,7 +68,7 @@ fn move_in_direction(direction: &str, coords: &mut (i32, i32, i32)) -> Result<()
             coords.0 -= 1;
             coords.1 += 1;
         }
-        _ => return Err("Invalid movement direction".into()),
+        _ => return Err(anyhow!("Invalid movement direction")),
     }
     Ok(())
 }

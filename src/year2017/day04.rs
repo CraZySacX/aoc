@@ -1,5 +1,5 @@
 //! Advent of Code - Day 4 "High Entropy Passphrases" Solution
-use error::Result;
+use anyhow::Result;
 use std::collections::HashSet;
 use std::io::BufRead;
 use std::iter::FromIterator;

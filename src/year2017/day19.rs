@@ -1,5 +1,5 @@
 //! Advent of Code - Day 19 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use std::convert::TryFrom;
 use std::fmt;
@@ -63,10 +63,10 @@ fn traverse_map(network_map: &Array2<u8>) -> Result<(String, u32)> {
 
     loop {
         if curr_row == max_row {
-            return Err(format!("Invalid row value: {curr_row}").into());
+            return Err(anyhow!(format!("Invalid row value: {curr_row}")));
         }
         if curr_col == max_col {
-            return Err(format!("Invalid col value: {curr_col}").into());
+            return Err(anyhow!(format!("Invalid col value: {curr_col}")));
         }
 
         let curr_byte = network_map[[curr_row, curr_col]];
@@ -140,7 +140,7 @@ fn get_next_neighbor(row: usize, col: usize, max_row: usize, max_col: usize, dir
         }
     }
 
-    Err("Unable to find valid next neighbor".into())
+    Err(anyhow!("Unable to find valid next neighbor"))
 }
 
 /// Get the next direction

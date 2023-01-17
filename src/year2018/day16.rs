@@ -1,5 +1,5 @@
 //! Advent of Code - Day 16 "Chronal Classification" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::io::BufRead;
@@ -130,7 +130,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     }
 
     if before_vec.len() != after_vec.len() {
-        return Err("Bad input file".into());
+        return Err(anyhow!("Bad input file"));
     }
 
     let instructions = instructions_vec.split_off(before_vec.len());
@@ -190,7 +190,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
         let mut registers = [0, 0, 0, 0];
         for ins in instructions {
-            let opcode = op_map.get(&ins[0]).ok_or("invalid opcode")?;
+            let opcode = op_map.get(&ins[0]).ok_or(anyhow!("invalid opcode"))?;
             opcode.execute(&mut registers, ins);
         }
         Ok(registers[0] as u32)
@@ -202,7 +202,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r"Before: [3, 2, 1, 1]
@@ -225,7 +225,7 @@ After:  [3, 2, 2, 1]
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::fs::File;
     use std::io::BufReader;
 

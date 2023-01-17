@@ -1,5 +1,5 @@
 //! Advent of Code - Day 1 "Chronal Calibration" Solution
-use error::Result;
+use anyhow::Result;
 use std::collections::HashSet;
 use std::io::BufRead;
 
@@ -45,7 +45,7 @@ fn val(acc_vec: &[(bool, i32)], second_star: bool) -> Result<i32> {
 #[cfg(test)]
 mod one_star {
     use super::val;
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {
@@ -59,7 +59,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::val;
-    use error::Result;
+    use anyhow::Result;
 
     #[test]
     fn solution() -> Result<()> {

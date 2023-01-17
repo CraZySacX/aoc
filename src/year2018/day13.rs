@@ -1,5 +1,6 @@
 //! Advent of Code - Day 13 "Mine Cart Madness" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
+use getset::Getters;
 use ndarray::{Array2, Axis};
 use std::cmp::{Ord, Ordering, PartialOrd};
 use std::collections::BTreeMap;
@@ -36,7 +37,7 @@ impl fmt::Display for TrackKind {
 #[derive(Default, Getters)]
 struct Track {
     kind: TrackKind,
-    #[get]
+    #[getset(get)]
     cart: Option<Cart>,
 }
 
@@ -274,7 +275,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
 
             let carts = find_carts(mine_arr);
             if carts.len() == 1 {
-                let (cart_point, direction) = carts.iter().next().ok_or("")?;
+                let (cart_point, direction) = carts.iter().next().ok_or(anyhow!(""))?;
                 let i = cart_point.i;
                 let j = cart_point.j;
 
@@ -343,8 +344,8 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                         turn_state,
                     });
                 }
-                TrackKind::Collision => return Err("Can't move into a collision area!".into()),
-                TrackKind::Empty => return Err("Can't move into an empty area".into()),
+                TrackKind::Collision => return Err(anyhow!("Can't move into a collision area!")),
+                TrackKind::Empty => return Err(anyhow!("Can't move into an empty area")),
             }
         }
     }
@@ -373,7 +374,7 @@ fn print_mine_arr(mine_arr: &Array2<Track>) {
 #[cfg(test)]
 mod one_star {
     use super::run_carts;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_STATE: &str = r"|
@@ -407,7 +408,7 @@ v
 #[cfg(test)]
 mod two_star {
     use super::run_carts;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_STATE: &str = r"/>-<\

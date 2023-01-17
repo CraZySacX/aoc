@@ -1,5 +1,5 @@
 //! Advent of Code - Day 24 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::collections::HashSet;
 use std::io::BufRead;
 
@@ -34,10 +34,10 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             }
         }
 
-        let max = ml_scores.iter().map(|&(s, _)| s).max().ok_or("no max")?;
+        let max = ml_scores.iter().map(|&(s, _)| s).max().ok_or(anyhow!("no max"))?;
         Ok(max)
     } else {
-        let max = scores.iter().map(|&(s, _)| s).max().ok_or("no max")?;
+        let max = scores.iter().map(|&(s, _)| s).max().ok_or(anyhow!("no max"))?;
         Ok(max)
     }
 }

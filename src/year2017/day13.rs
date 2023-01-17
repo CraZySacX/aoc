@@ -1,8 +1,9 @@
 //! Advent of Code - Day 13 "Packet Scanners" Solution
-use error::Result;
+
+use crate::utils::PrivateTryFromUsize;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::io::BufRead;
-use utils::PrivateTryFromUsize;
 
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
@@ -37,8 +38,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 /// Add a layer to the layer map.
 fn add_layer_to_map(line: &str, layer_map: &mut HashMap<usize, u32>) -> Result<()> {
     let layer_desc_vec: Vec<&str> = line.split(": ").collect();
-    let layer = layer_desc_vec.first().ok_or("Invalid layer number")?.parse::<usize>()?;
-    let depth = layer_desc_vec.get(1).ok_or("Invalid depty number")?.parse::<u32>()?;
+    let layer = layer_desc_vec.first().ok_or(anyhow!("Invalid layer number"))?.parse::<usize>()?;
+    let depth = layer_desc_vec.get(1).ok_or(anyhow!("Invalid depty number"))?.parse::<u32>()?;
 
     layer_map.insert(layer, depth);
 
@@ -47,7 +48,7 @@ fn add_layer_to_map(line: &str, layer_map: &mut HashMap<usize, u32>) -> Result<(
 
 /// Find the maximum layer number.
 fn find_maximum_layer(layer_map: &HashMap<usize, u32>) -> Result<usize> {
-    let max_layer = layer_map.keys().max().ok_or("Unable to find maximum layer")?;
+    let max_layer = layer_map.keys().max().ok_or(anyhow!("Unable to find maximum layer"))?;
     Ok(*max_layer)
 }
 
@@ -69,7 +70,7 @@ fn traverse_firewall(layers: &mut HashMap<usize, Option<u32>>, delay: u32, secon
 
     // Loop over layers
     for i in 0..layers.len() {
-        let curr_layer = layers.get(&i).ok_or("invalid layer")?;
+        let curr_layer = layers.get(&i).ok_or(anyhow!("invalid layer"))?;
 
         // Get the max depth for this layer. It may be `None`, in which case we will never be
         // caught at this level, so skip.
@@ -82,7 +83,7 @@ fn traverse_firewall(layers: &mut HashMap<usize, Option<u32>>, delay: u32, secon
             // and scanner have met, and the packet is caught.
             if second_star && (current_picosecond + delay) % scan_length == 0 {
                 // Uh oh, we got caught.
-                return Err("We got caught".into());
+                return Err(anyhow!("We got caught"));
             } else if !second_star && current_picosecond % scan_length == 0 {
                 // Uh oh, we got caught, bump up severity
                 severity += current_picosecond * max_depth;

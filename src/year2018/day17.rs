@@ -1,5 +1,5 @@
 //! Advent of Code - Day 17 "Reservoir Research" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use regex::Regex;
 use std::collections::HashMap;
@@ -70,7 +70,7 @@ fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usi
                         range_vec.push(i);
                     }
                 }
-                _ => return Err("invalid coordinate".into()),
+                _ => return Err(anyhow!("invalid coordinate")),
             }
         }
     }
@@ -140,10 +140,10 @@ fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut A
 }
 
 fn calculate_mins_maxes(x_coord_map: &HashMap<usize, Vec<usize>>, y_coord_map: &HashMap<usize, Vec<usize>>) -> Result<(usize, usize, usize, usize)> {
-    let mut min_x = *x_coord_map.keys().min().ok_or("no min x")?;
-    let mut max_x = *x_coord_map.keys().max().ok_or("no max x")?;
-    let mut min_y = *y_coord_map.keys().min().ok_or("no min y")?;
-    let mut max_y = *y_coord_map.keys().max().ok_or("no max y")?;
+    let mut min_x = *x_coord_map.keys().min().ok_or(anyhow!("no min x"))?;
+    let mut max_x = *x_coord_map.keys().max().ok_or(anyhow!("no max x"))?;
+    let mut min_y = *y_coord_map.keys().min().ok_or(anyhow!("no min y"))?;
+    let mut max_y = *y_coord_map.keys().max().ok_or(anyhow!("no max y"))?;
 
     for yv in x_coord_map.values() {
         for y in yv {
@@ -169,9 +169,9 @@ fn calculate_mins_maxes(x_coord_map: &HashMap<usize, Vec<usize>>, y_coord_map: &
         }
     }
 
-    min_x = min_x.checked_sub(1).ok_or("underflow x")?;
-    max_x = max_x.checked_add(2).ok_or("overflow x")?;
-    max_y = max_y.checked_add(1).ok_or("overflow y")?;
+    min_x = min_x.checked_sub(1).ok_or(anyhow!("underflow x"))?;
+    max_x = max_x.checked_add(2).ok_or(anyhow!("overflow x"))?;
+    max_y = max_y.checked_add(1).ok_or(anyhow!("overflow y"))?;
 
     Ok((min_x, max_x, min_y, max_y))
 }
@@ -228,7 +228,7 @@ fn print_scan_arr(mins_maxes: (usize, usize, usize, usize), scan_arr: &Array2<So
 #[cfg(test)]
 mod one_star {
     use super::run_scan;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CODE: &str = r"x=495, y=2..7
@@ -250,7 +250,7 @@ y=13, x=498..504";
 // #[cfg(test)]
 // mod two_star {
 //     use super::find_solution;
-//     use error::Result;
+//     use anyhow::Result;
 //     use std::io::Cursor;
 
 //     const TEST_CODE: &str = r"x=495, y=2..7

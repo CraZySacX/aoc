@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::io::BufRead;
 
@@ -24,7 +24,7 @@ fn count_houses<T: BufRead>(reader: T) -> Result<usize> {
                 '>' => x += 1,
                 'v' => y -= 1,
                 '<' => x -= 1,
-                _ => return Err("invalid floor".into()),
+                _ => return Err(anyhow!("invalid floor")),
             }
 
             *house_map.entry((x, y)).or_insert(0) += 1;
@@ -76,7 +76,7 @@ fn count_houses_2<T: BufRead>(reader: T) -> Result<usize> {
                         r_x -= 1
                     }
                 }
-                _ => return Err("invalid floor".into()),
+                _ => return Err(anyhow!("invalid floor")),
             }
 
             if is_santa {
@@ -95,7 +95,7 @@ fn count_houses_2<T: BufRead>(reader: T) -> Result<usize> {
 #[cfg(test)]
 mod one_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r">";
@@ -114,7 +114,7 @@ mod one_star {
 #[cfg(test)]
 mod two_star {
     use super::find_solution;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"^v";

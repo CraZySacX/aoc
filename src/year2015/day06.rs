@@ -1,5 +1,5 @@
 //! Advent of Code - Day 6 Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use ndarray::Array2;
 use regex::Regex;
 use std::io::BufRead;
@@ -36,7 +36,7 @@ fn decorate<T: BufRead>(reader: T) -> Result<usize> {
                     // println!("Toggling    {},{} through {},{}", x1, y1, x2, y2);
                     toggle(&mut lights, x1, y1, x2, y2);
                 }
-                _ => return Err("invalid command".into()),
+                _ => return Err(anyhow!("invalid command")),
             }
         }
     }
@@ -94,7 +94,7 @@ fn brighten<T: BufRead>(reader: T) -> Result<usize> {
                     // println!("Toggling    {},{} through {},{}", x1, y1, x2, y2);
                     really_brighten(&mut lights, x1, y1, x2, y2);
                 }
-                _ => return Err("invalid command".into()),
+                _ => return Err(anyhow!("invalid command")),
             }
         }
     }
@@ -131,7 +131,7 @@ fn really_brighten(lights: &mut Array2<usize>, x1: usize, y1: usize, x2: usize, 
 #[cfg(test)]
 mod one_star {
     use super::decorate;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"turn on 0,0 through 999,999";
@@ -151,7 +151,7 @@ turn off 499,499 through 500,500";
 #[cfg(test)]
 mod two_star {
     use super::brighten;
-    use error::Result;
+    use anyhow::Result;
     use std::io::Cursor;
 
     const TEST_CHAIN: &str = r"turn on 0,0 through 0,0";

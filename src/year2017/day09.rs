@@ -1,5 +1,5 @@
 //! Advent of Code - Day 9 "Stream Processing" Solution
-use error::Result;
+use anyhow::{anyhow, Result};
 use std::io::BufRead;
 
 /// Calculate the largest value in a register.
@@ -54,7 +54,7 @@ fn process_line_as_chars(line: &str) -> Result<(u32, u32)> {
                 garbage_count += 1;
                 continue;
             }
-            _ => return Err("Unknown character encountered!".into()),
+            _ => return Err(anyhow!("Unknown character encountered!")),
         }
     }
     Ok((scores.iter().sum(), garbage_count))
