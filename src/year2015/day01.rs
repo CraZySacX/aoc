@@ -17,7 +17,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 fn find_floor<T: BufRead>(reader: T) -> Result<isize> {
     let mut floor: isize = 0;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for ch in line.chars() {
             match ch {
                 '(' => floor += 1,
@@ -34,7 +34,7 @@ fn find_basement<T: BufRead>(reader: T) -> Result<u32> {
     let mut floor = 0;
     let mut idx = 1;
 
-    'outer: for line in reader.lines().filter_map(|x| x.ok()) {
+    'outer: for line in reader.lines().map_while(Result::ok) {
         for ch in line.chars() {
             match ch {
                 '(' => floor += 1,

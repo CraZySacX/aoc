@@ -255,7 +255,7 @@ fn check_lumberyard(lca: &Array2<char>, i: usize, j: usize, max_i: usize, max_j:
 fn lca<T: BufRead>(reader: T, max_i: usize, max_j: usize, _second_star: bool, test: bool) -> Result<Array2<char>> {
     let mut lca = Array2::<char>::default((max_i, max_j));
 
-    for (j, line) in reader.lines().filter_map(|x| x.ok()).enumerate() {
+    for (j, line) in reader.lines().map_while(Result::ok).enumerate() {
         for (i, ch) in line.chars().enumerate() {
             match ch {
                 '.' => lca[[i, j]] = ch,

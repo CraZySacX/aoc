@@ -87,7 +87,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
     let mut curr_state = 'A';
     let mut curr_val = 0;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         if begin_re.is_match(&line) {
             let caps = begin_re.captures(&line).ok_or(anyhow!("invalid begin captures"))?;
             let state_str = caps.get(1).ok_or(anyhow!("invalid state value"))?.as_str();

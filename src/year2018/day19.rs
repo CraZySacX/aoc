@@ -141,7 +141,7 @@ fn run_program<T: BufRead>(reader: T, second_star: bool, test: bool) -> Result<u
 
     let mut instructions_vec = Vec::new();
     let mut register = 0;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         if ip_re.is_match(&line) {
             for caps in ip_re.captures_iter(&line) {
                 register = (caps[1]).parse::<usize>()?;

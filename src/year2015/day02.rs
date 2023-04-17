@@ -9,7 +9,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r"(\d+)x(\d+)x(\d+)")?;
     let mut answer = 0;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         let mut length = 0;
         let mut width = 0;
         let mut height = 0;

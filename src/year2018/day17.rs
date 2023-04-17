@@ -48,7 +48,7 @@ fn run_scan<T: BufRead>(reader: T, _second_star: bool, test: bool) -> Result<usi
     let mut x_coord_map = HashMap::new();
     let mut y_coord_map = HashMap::new();
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for caps in vein_re.captures_iter(&line) {
             let c1 = (caps[1]).to_string();
             let v1 = (caps[2]).parse::<usize>()?;

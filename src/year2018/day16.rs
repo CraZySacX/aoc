@@ -98,7 +98,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut after_vec = Vec::new();
     let mut instructions_vec = Vec::new();
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         if before_re.is_match(&line) {
             for caps in before_re.captures_iter(&line) {
                 let opcode = (caps[1]).parse::<usize>()?;

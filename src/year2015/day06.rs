@@ -14,7 +14,7 @@ fn decorate<T: BufRead>(reader: T) -> Result<usize> {
     let mut lights: Array2<bool> = Array2::default((1000, 1000));
     let line_re = Regex::new(r"(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)")?;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let action = &cap[1];
             let x1 = (cap[2]).parse::<usize>()?;
@@ -72,7 +72,7 @@ fn brighten<T: BufRead>(reader: T) -> Result<usize> {
     let mut lights: Array2<usize> = Array2::zeros((1000, 1000));
     let line_re = Regex::new(r"(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)")?;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let action = &cap[1];
             let x1 = (cap[2]).parse::<usize>()?;

@@ -572,7 +572,7 @@ fn run_battle<T>(reader: T, max_i: usize, max_j: usize, second_star: bool, test:
 where
     T: BufRead,
 {
-    let lines: Vec<String> = reader.lines().filter_map(|x| x.ok()).collect();
+    let lines: Vec<String> = reader.lines().map_while(Result::ok).collect();
     let mut board = Array2::default((0, 0));
     let mut dead_elf = true;
     let mut round_count = 0;

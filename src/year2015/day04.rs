@@ -14,7 +14,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
 
 fn find_lowest<T: BufRead>(reader: T, start_str: &str) -> Result<u32> {
     let mut count = 1;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         loop {
             let check = format!("{line}{count}");
             let digest = md5::compute(check.as_bytes());

@@ -91,7 +91,7 @@ fn is_nice2(line: &[char]) -> bool {
 
 fn find_nice<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut nice = 0;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         let ch: Vec<char> = line.chars().collect();
 
         if (second_star && is_nice2(&ch)) || (!second_star && is_nice(&ch)) {

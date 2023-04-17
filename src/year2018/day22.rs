@@ -75,7 +75,7 @@ fn determine_risk<T: BufRead>(reader: T, second_star: bool, test: bool, max_i: u
     let mut depth = 0;
     let mut target_coord = (0, 0);
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         if depth_re.is_match(&line) {
             for caps in depth_re.captures_iter(&line) {
                 depth = (caps[1]).parse::<usize>()?;

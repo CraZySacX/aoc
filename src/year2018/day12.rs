@@ -27,7 +27,7 @@ fn gen_maps<T: BufRead>(reader: T, state_map: &mut BTreeMap<isize, bool>, patter
     let initial_state_re = Regex::new(r"^initial state: ([\.#]+)")?;
     let patt_re = Regex::new(r"([\.#]+) => ([\.#])")?;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in initial_state_re.captures_iter(&line) {
             let state_str = &cap[1];
 

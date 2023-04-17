@@ -134,7 +134,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
 fn gen_mine<T: BufRead>(reader: T, i: usize, j: usize) -> Result<Array2<Track>> {
     let mut mine_arr: Array2<Track> = Array2::default((i, j));
-    for (j, line) in reader.lines().filter_map(|x| x.ok()).enumerate() {
+    for (j, line) in reader.lines().map_while(Result::ok).enumerate() {
         for (i, ch) in line.chars().enumerate() {
             let (kind, cart) = match ch {
                 '/' => (TrackKind::CurveRight, None),

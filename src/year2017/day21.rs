@@ -11,7 +11,7 @@ use std::io::BufRead;
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let subst = reader
         .lines()
-        .filter_map(|l| l.ok())
+        .map_while(Result::ok)
         .flat_map(|line| {
             let (k, v) = line
                 .trim()

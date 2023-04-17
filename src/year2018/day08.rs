@@ -4,8 +4,8 @@ use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut license_vec = Vec::new();
-    for line in reader.lines().filter_map(|x| x.ok()) {
-        for tok in line.split(' ').map(|x| x.parse::<u32>()).filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
+        for tok in line.split(' ').map(|x| x.parse::<u32>()).map_while(Result::ok) {
             license_vec.push(tok);
         }
     }

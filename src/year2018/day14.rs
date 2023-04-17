@@ -5,7 +5,7 @@ use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut recipe_count = String::new();
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         recipe_count.push_str(&line);
     }
 

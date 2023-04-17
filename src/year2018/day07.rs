@@ -233,7 +233,7 @@ fn find_order<T: BufRead>(reader: T) -> Result<String> {
 
     // Parse the input file and load the map.
     let line_re = Regex::new(r#"Step ([A-Z]) must be finished before step ([A-Z])"#)?;
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let first = (cap[1]).chars().next().ok_or(anyhow!("invalid char"))?;
             let second = (cap[2]).chars().next().ok_or(anyhow!("invalid char"))?;

@@ -17,7 +17,7 @@ fn count_houses<T: BufRead>(reader: T) -> Result<usize> {
 
     house_map.entry((x, y)).or_insert(1_usize);
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for ch in line.chars() {
             match ch {
                 '^' => y += 1,
@@ -45,7 +45,7 @@ fn count_houses_2<T: BufRead>(reader: T) -> Result<usize> {
     house_map.entry((s_x, s_y)).or_insert(1_usize);
     *house_map.entry((r_x, r_y)).or_insert(1_usize) += 1;
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for ch in line.chars() {
             match ch {
                 '^' => {

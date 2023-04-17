@@ -14,7 +14,7 @@ fn align<T: BufRead>(reader: T, test: bool) -> Result<String> {
     let line_re = Regex::new(r"position=<(.*), (.*)> velocity=<(.*), (.*)>")?;
     let mut star_map: Vec<(isize, isize, isize, isize)> = Vec::new();
 
-    for line in reader.lines().filter_map(|x| x.ok()) {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let x = (cap[1]).trim().parse::<isize>()?;
             let y = (cap[2]).trim().parse::<isize>()?;
