@@ -135,7 +135,7 @@ fn assign_children(nodes: &mut [Node], children: &HashMap<usize, Vec<String>>) -
     }
 
     for (k, v) in child_ids {
-        let mut node = nodes.get_mut(k).ok_or(anyhow!("Invalid node id"))?;
+        let node = nodes.get_mut(k).ok_or(anyhow!("Invalid node id"))?;
         node.children = Some(v);
     }
 

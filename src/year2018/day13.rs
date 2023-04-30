@@ -230,7 +230,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
 
         // Remove the cart from the old track.
         {
-            let mut track = &mut mine_arr[[i, j]];
+            let track = &mut mine_arr[[i, j]];
             track.cart = None;
         }
 
@@ -267,7 +267,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
 
         if collision {
             {
-                let mut track = &mut mine_arr[nidx];
+                let track = &mut mine_arr[nidx];
                 if track.cart().is_some() {
                     track.cart = None;
                 }
@@ -288,7 +288,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                 return Ok(Some((fidx[0], fidx[1])));
             }
         } else {
-            let mut track = &mut mine_arr[nidx];
+            let track = &mut mine_arr[nidx];
 
             // Otherwise, setup the new track position.
             match track.kind {
