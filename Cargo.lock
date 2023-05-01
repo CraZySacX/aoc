@@ -171,9 +171,9 @@ checksum = "6a987beff54b60ffa6d51982e1aa1146bc42f19bd26be28b0586f252fccf5317"
 
 [[package]]
 name = "matrixmultiply"
-version = "0.3.5"
+version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f0f0cb8fdceebf83cff284ae2c862792f989731d5eda7bd5b3fd3722003fe8be"
+checksum = "fcce854c9e76cfd191182c280eb5460cb8efd2cb4e58a1fd56bc41102d7e5802"
 dependencies = [
  "autocfg",
  "rawpointer",
