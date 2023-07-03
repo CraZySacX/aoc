@@ -31,7 +31,7 @@ impl fmt::Display for Rectangle {
 }
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    let line_re = Regex::new(r#"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)"#)?;
+    let line_re = Regex::new(r"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)")?;
     let mut rectangles = BTreeMap::new();
 
     for line in reader.lines().flatten() {

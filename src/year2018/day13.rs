@@ -261,7 +261,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
             if track.cart().is_some() {
                 track.kind = TrackKind::Collision;
                 track.cart = None;
-                return Ok(Some((nidx[0], nidx[1])));
+                return Ok(Some(nidx.into()));
             }
         }
 
@@ -285,7 +285,7 @@ fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut 
                     CartDirection::Left => [i - 1, j],
                     CartDirection::Right => [i + 1, j],
                 };
-                return Ok(Some((fidx[0], fidx[1])));
+                return Ok(Some(fidx.into()));
             }
         } else {
             let track = &mut mine_arr[nidx];

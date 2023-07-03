@@ -6,7 +6,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    let line_re = Regex::new(r#"(\d+), (\d+)"#)?;
+    let line_re = Regex::new(r"(\d+), (\d+)")?;
     let mut coords: Vec<(i32, i32)> = Vec::new();
 
     for line in reader.lines().flatten() {

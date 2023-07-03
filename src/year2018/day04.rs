@@ -19,8 +19,8 @@ impl fmt::Display for Guard {
 }
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    let line_re = Regex::new(r#"\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})\] (.*)"#)?;
-    let guard_re = Regex::new(r#"Guard #(\d+) begins shift"#)?;
+    let line_re = Regex::new(r"\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})\] (.*)")?;
+    let guard_re = Regex::new(r"Guard #(\d+) begins shift")?;
     let mut sorted_events = BTreeMap::new();
 
     for line in reader.lines().flatten() {

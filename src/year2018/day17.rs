@@ -105,7 +105,7 @@ fn move_flowing_water(mins_maxes: (usize, usize, usize, usize), scan_arr: &mut A
     let mut flowing_water: Vec<[usize; 2]> = scan_arr
         .indexed_iter()
         .filter_map(|(x, y)| if y.kind == SoilKind::FlowingWater { Some(x) } else { None })
-        .map(|x| [x.0, x.1])
+        .map(Into::into)
         .collect();
 
     flowing_water.sort_by(|a, b| if a[1] == b[1] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) });

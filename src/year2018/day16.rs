@@ -137,8 +137,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     let tuples_vec: Vec<(Registers, Instruction, Registers)> = before_vec
         .into_iter()
-        .zip(instructions_vec.into_iter())
-        .zip(after_vec.into_iter())
+        .zip(instructions_vec)
+        .zip(after_vec)
         .map(|((rb, i), ra)| (rb, i, ra))
         .collect();
 

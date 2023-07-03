@@ -94,7 +94,8 @@ fn change_direction(coords: (usize, usize), curr_direction: &Direction, arr: &Ar
 
 /// Determine the state of the current coord.
 fn get_state(coords: (usize, usize), arr: &Array2<char>) -> Result<State> {
-    let val = arr[[coords.0, coords.1]];
+    let coords: [usize; 2] = coords.into();
+    let val = arr[coords];
     let res = match val {
         '#' => State::Infected,
         'W' => State::Weakened,
@@ -108,25 +109,26 @@ fn get_state(coords: (usize, usize), arr: &Array2<char>) -> Result<State> {
 fn change_state(coords: (usize, usize), arr: &mut Array2<char>, second_star: bool) -> Result<bool> {
     let mut new_infection = false;
     let curr_state = get_state(coords, arr)?;
+    let coords: [usize; 2] = coords.into();
 
     if second_star {
         match curr_state {
-            State::Clean => arr[[coords.0, coords.1]] = 'W',
+            State::Clean => arr[coords] = 'W',
             State::Weakened => {
-                arr[[coords.0, coords.1]] = '#';
+                arr[coords] = '#';
                 new_infection = true;
             }
-            State::Infected => arr[[coords.0, coords.1]] = 'F',
-            State::Flagged => arr[[coords.0, coords.1]] = '.',
+            State::Infected => arr[coords] = 'F',
+            State::Flagged => arr[coords] = '.',
         }
     } else {
         match curr_state {
             State::Clean => {
-                arr[[coords.0, coords.1]] = '#';
+                arr[coords] = '#';
                 new_infection = true;
             }
             State::Infected => {
-                arr[[coords.0, coords.1]] = '.';
+                arr[coords] = '.';
             }
             _ => return Err(anyhow!("invalid state for one star")),
         }
