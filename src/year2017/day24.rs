@@ -15,10 +15,10 @@ struct Component {
 /// Find the solution for Advent of Code 2017
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     // use std::io::{self, Write};
-    let mut all = reader.lines().filter_map(to_component).collect::<HashSet<Component>>();
+    let all = reader.lines().filter_map(to_component).collect::<HashSet<Component>>();
 
     let mut scores = Vec::new();
-    next(0, &[], &mut all, &mut scores);
+    next(0, &[], &all, &mut scores);
 
     if second_star {
         let mut max_length = 0;
@@ -57,7 +57,7 @@ fn to_component(line_res: ::std::result::Result<String, ::std::io::Error>) -> Op
 }
 
 /// Find the next component given a start, the current path, and the set of components.
-fn next(start: u32, path: &[Component], components: &mut HashSet<Component>, scores: &mut Vec<(u32, usize)>) {
+fn next(start: u32, path: &[Component], components: &HashSet<Component>, scores: &mut Vec<(u32, usize)>) {
     let mut found = false;
     for c in components.iter() {
         if c.left == start || c.right == start {
@@ -65,7 +65,7 @@ fn next(start: u32, path: &[Component], components: &mut HashSet<Component>, sco
             new_components.remove(c);
             let mut new_path = path.to_owned();
             new_path.push(*c);
-            next(if c.left == start { c.right } else { c.left }, &new_path, &mut new_components, scores);
+            next(if c.left == start { c.right } else { c.left }, &new_path, &new_components, scores);
             found = true;
         }
     }

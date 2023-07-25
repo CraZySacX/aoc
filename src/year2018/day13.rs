@@ -191,8 +191,8 @@ fn run_carts<T: BufRead>(reader: T, i: usize, j: usize, second_star: bool, test:
 
     let mut res;
     loop {
-        let mut cart_map = find_carts(&mine_arr);
-        res = move_carts(&mut cart_map, &mut mine_arr, second_star)?;
+        let cart_map = find_carts(&mine_arr);
+        res = move_carts(&cart_map, &mut mine_arr, second_star)?;
 
         if test {
             print_mine_arr(&mine_arr);
@@ -216,7 +216,7 @@ fn find_carts(mine_arr: &Array2<Track>) -> BTreeMap<CartPoint, CartDirection> {
     cart_map
 }
 
-fn move_carts(cart_map: &mut BTreeMap<CartPoint, CartDirection>, mine_arr: &mut Array2<Track>, second_star: bool) -> Result<Option<(usize, usize)>> {
+fn move_carts(cart_map: &BTreeMap<CartPoint, CartDirection>, mine_arr: &mut Array2<Track>, second_star: bool) -> Result<Option<(usize, usize)>> {
     for (cart_point, direction) in cart_map.iter() {
         let i = cart_point.i;
         let j = cart_point.j;

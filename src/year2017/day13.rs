@@ -20,8 +20,8 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
     if second_star {
         for i in 0.. {
-            let mut layers_to_check = layers.clone();
-            if traverse_firewall(&mut layers_to_check, i, true).is_err() {
+            let layers_to_check = layers.clone();
+            if traverse_firewall(&layers_to_check, i, true).is_err() {
                 continue;
             }
             result = i;
@@ -29,7 +29,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         }
     } else {
         // Traverse the firewall
-        result = traverse_firewall(&mut layers, 0, false)?;
+        result = traverse_firewall(&layers, 0, false)?;
     }
 
     Ok(result)
@@ -65,7 +65,7 @@ fn setup_initial_state(maximum_layer: usize, layer_map: &HashMap<usize, u32>, la
 }
 
 /// Traverse the firewall
-fn traverse_firewall(layers: &mut HashMap<usize, Option<u32>>, delay: u32, second_star: bool) -> Result<u32> {
+fn traverse_firewall(layers: &HashMap<usize, Option<u32>>, delay: u32, second_star: bool) -> Result<u32> {
     let mut severity = 0;
 
     // Loop over layers
@@ -118,7 +118,7 @@ mod one_star {
         assert_eq!(layers.get(&4), Some(&Some(4)));
         assert_eq!(layers.get(&5), Some(&None));
         assert_eq!(layers.get(&6), Some(&Some(4)));
-        let severity = super::traverse_firewall(&mut layers, 0, false).expect("");
+        let severity = super::traverse_firewall(&layers, 0, false).expect("");
         assert_eq!(severity, 24);
     }
 }
@@ -159,6 +159,6 @@ mod two_star {
         // assert_eq!(super::traverse_firewall(&mut layers, 9).expect(""), 0);
         // layers.clear();
         // super::setup_initial_state(maximum_layer, &layer_map, &mut layers).expect("");
-        assert_eq!(super::traverse_firewall(&mut layers, 10, true).expect(""), 0);
+        assert_eq!(super::traverse_firewall(&layers, 10, true).expect(""), 0);
     }
 }
