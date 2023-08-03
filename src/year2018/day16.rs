@@ -81,7 +81,7 @@ fn execute_opcode(
         *count += 1;
     }
     if second_star && regs == after {
-        let opcode_vec = opcode_map.entry(ins[0]).or_insert_with(Vec::new);
+        let opcode_vec = opcode_map.entry(ins[0]).or_default();
 
         if !opcode_vec.contains(&opcode) {
             opcode_vec.push(opcode);

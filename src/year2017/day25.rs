@@ -114,7 +114,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             let caps = write_val_re.captures(&line).ok_or(anyhow!("invalid write value captures"))?;
             let val_str = caps.get(1).ok_or(anyhow!("invalid write value"))?.as_str();
             let val = val_str.parse::<u8>()?;
-            let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
+            let state_ptr = states.entry(curr_state).or_default();
 
             if curr_val == 0 {
                 state_ptr.zero_write = val;
@@ -126,7 +126,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
         } else if move_re.is_match(&line) {
             let caps = move_re.captures(&line).ok_or(anyhow!("invalid move captures"))?;
             let move_str = caps.get(1).ok_or(anyhow!("invalid move value"))?.as_str();
-            let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
+            let state_ptr = states.entry(curr_state).or_default();
 
             if curr_val == 0 {
                 state_ptr.zero_move = TryFrom::try_from(move_str)?;
@@ -139,7 +139,7 @@ pub fn find_solution<T: BufRead>(reader: T, _second_star: bool) -> Result<u32> {
             let caps = cont_re.captures(&line).ok_or(anyhow!("invalid continue captures"))?;
             let cont_str = caps.get(1).ok_or(anyhow!("invalid continue value"))?.as_str();
             let val = cont_str.parse::<char>()?;
-            let state_ptr = states.entry(curr_state).or_insert_with(Default::default);
+            let state_ptr = states.entry(curr_state).or_default();
 
             if curr_val == 0 {
                 state_ptr.zero_next = val;
