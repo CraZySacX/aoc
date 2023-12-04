@@ -23,7 +23,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let guard_re = Regex::new(r"Guard #(\d+) begins shift")?;
     let mut sorted_events = BTreeMap::new();
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let y = (cap[1]).parse::<i32>()?;
             let mon = (cap[2]).parse::<u8>()?;

@@ -6,7 +6,7 @@ use std::io::BufRead;
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut acc_vec = Vec::new();
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         let chars: Vec<char> = line.chars().collect();
         let num_str: String = chars[1..].iter().collect();
         let num_to_add = num_str.parse::<i32>()?;

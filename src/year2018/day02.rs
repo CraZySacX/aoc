@@ -8,7 +8,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let mut threes = 0;
     let mut all_ids = Vec::new();
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         if second_star {
             all_ids.push(line);
         } else {

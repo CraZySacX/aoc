@@ -34,7 +34,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)")?;
     let mut rectangles = BTreeMap::new();
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let id = (cap[1]).parse::<usize>()?;
             let l = (cap[2]).parse::<usize>()?;

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
-    if let Some(line) = reader.lines().flatten().next() {
+    if let Some(line) = reader.lines().map_while(Result::ok).next() {
         if second_star {
             let mut results = HashMap::new();
             for lower in 97..=122 {

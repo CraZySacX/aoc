@@ -9,7 +9,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r"(\d+), (\d+)")?;
     let mut coords: Vec<(i32, i32)> = Vec::new();
 
-    for line in reader.lines().flatten() {
+    for line in reader.lines().map_while(Result::ok) {
         for cap in line_re.captures_iter(&line) {
             let x = &cap[1].parse::<i32>()?;
             let y = &cap[2].parse::<i32>()?;
