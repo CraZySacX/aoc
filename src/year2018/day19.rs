@@ -2,7 +2,6 @@
 use anyhow::{anyhow, Error, Result};
 use regex::Regex;
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::fmt;
 use std::io::BufRead;
 

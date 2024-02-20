@@ -2,7 +2,6 @@
 use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// A particle has x,y,z coords, a velocity, an acceleration,

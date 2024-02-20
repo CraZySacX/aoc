@@ -2,7 +2,6 @@
 use anyhow::Result;
 use std::collections::HashSet;
 use std::io::BufRead;
-use std::iter::FromIterator;
 
 /// Parse the file at `filename` and generate the checksum.
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

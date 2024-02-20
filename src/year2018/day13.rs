@@ -2,7 +2,7 @@
 use anyhow::{anyhow, Result};
 use getset::Getters;
 use ndarray::{Array2, Axis};
-use std::cmp::{Ord, Ordering, PartialOrd};
+use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::BufRead;

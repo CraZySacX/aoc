@@ -1,6 +1,5 @@
 //! Useful utilities
 use anyhow::{anyhow, Error, Result};
-use std::convert::TryFrom;
 use std::time::Duration;
 
 /// Nanoseconds per nanosecond

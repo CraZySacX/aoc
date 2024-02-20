@@ -4,7 +4,6 @@ use ndarray::{Array2, Axis};
 use regex::Regex;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap};
-use std::convert::TryFrom;
 use std::fmt;
 use std::io::BufRead;
 use std::slice::Iter;

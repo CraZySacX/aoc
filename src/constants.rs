@@ -1,7 +1,6 @@
 //! Constants
 
 use anyhow::{anyhow, Error, Result};
-use std::convert::TryFrom;
 
 /// Advent of Code Year
 pub enum AoCYear {

@@ -3,7 +3,6 @@
 use crate::utils::PrivateTryFromUsize;
 use anyhow::{anyhow, Result};
 use ndarray::Array2;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Find the solution for Advent of Code 2017

@@ -1,7 +1,6 @@
 //! Advent of Code - Day 18 'Duet' Solution
 use anyhow::{anyhow, Result};
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::sync::mpsc::{channel, Receiver, Sender};

@@ -1,7 +1,6 @@
 //! Advent of Code - Day 19 Solution
 use anyhow::{anyhow, Result};
 use ndarray::Array2;
-use std::convert::TryFrom;
 use std::fmt;
 use std::io::{self, BufRead, Write};
 

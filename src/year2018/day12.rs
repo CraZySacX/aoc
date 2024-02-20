@@ -4,7 +4,6 @@ use indexmap::IndexMap;
 use regex::Regex;
 use sliding_windows::{IterExt, Storage};
 use std::collections::{BTreeMap, HashMap};
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

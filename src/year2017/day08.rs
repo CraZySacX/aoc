@@ -1,7 +1,6 @@
 //! Advent of Code - Day 8 "I Heard You Like Registers" Solution
 use anyhow::{anyhow, Error, Result};
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Register commands

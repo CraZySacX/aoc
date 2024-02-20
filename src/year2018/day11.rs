@@ -1,7 +1,6 @@
 //! Advent of Code - Day 11 "Chronal Charge" Solution
 use anyhow::Result;
 use ndarray::Array2;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

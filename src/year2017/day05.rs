@@ -1,6 +1,5 @@
 //! Advent of Code - Day 5 "A Maze of Twisty Trampolines All Alike" Solution
 use anyhow::Result;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Parse the file at `filename` and generate the checksum.

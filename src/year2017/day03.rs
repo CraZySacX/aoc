@@ -1,7 +1,6 @@
 //! Advent of Code - Day 3 "Spiral Memory" Solution
 use anyhow::{anyhow, Result};
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::BufRead;
 
 /// Parse the file at `filename` and generate the checksum.
