@@ -39,7 +39,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             id = run_command((id, next_command), &mut register_map)?;
         }
 
-        let rcv = register_map.get(&"receive".to_string()).ok_or(anyhow!("invalid rcv"))?;
+        let rcv = register_map.get("receive").ok_or(anyhow!("invalid rcv"))?;
         Ok(TryFrom::try_from(*rcv)?)
     }
 }
@@ -64,7 +64,7 @@ fn thread_me() -> Result<u32> {
         initialize(&mut commands, &mut register_map).expect("");
         *register_map.entry("p".to_string()).or_insert(1) = 1;
         if run_solution_in_thread(1, &commands, &mut register_map, &sender1, &receiver0).is_ok() {
-            let count = *register_map.get(&"prog1".to_string()).ok_or(anyhow!("invalid key")).expect("");
+            let count = *register_map.get("prog1").ok_or(anyhow!("invalid key")).expect("");
             sender2.send(count).expect("");
         } else {
             sender2.send(-1).expect("");
@@ -318,17 +318,17 @@ mod one_star {
         let mut register_map: HashMap<String, i64> = HashMap::new();
         let command = super::parse_command("set a 1").expect("");
         assert_eq!(command.0, "set".to_string());
-        assert_eq!(command.1, "a".to_string());
+        assert_eq!(command.1, "a");
         assert_eq!(command.2, Some(super::Value::Number(1)));
         commands.insert(0, command);
         let command_1 = super::parse_command("mul a a").expect("");
         assert_eq!(command_1.0, "mul".to_string());
-        assert_eq!(command_1.1, "a".to_string());
+        assert_eq!(command_1.1, "a");
         assert_eq!(command_1.2, Some(super::Value::Register("a".to_string())));
         commands.insert(1, command_1);
         let command_2 = super::parse_command("snd a").expect("");
         assert_eq!(command_2.0, "snd".to_string());
-        assert_eq!(command_2.1, "a".to_string());
+        assert_eq!(command_2.1, "a");
         assert_eq!(command_2.2, None);
         commands.insert(2, command_2);
         super::initialize_register_map(&commands, &mut register_map).expect("");
@@ -336,54 +336,54 @@ mod one_star {
 
         let command_3 = super::parse_command("set a 1").expect("");
         let mut next_id = super::run_command((0, &command_3), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 1);
         assert_eq!(next_id, 1);
         let command_4 = super::parse_command("add a 2").expect("");
         next_id = super::run_command((next_id, &command_4), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 3);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 3);
         assert_eq!(next_id, 2);
         let command_5 = super::parse_command("mul a a").expect("");
         next_id = super::run_command((next_id, &command_5), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 9);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 9);
         assert_eq!(next_id, 3);
         let command_6 = super::parse_command("mod a 5").expect("");
         next_id = super::run_command((next_id, &command_6), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 4);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 4);
         assert_eq!(next_id, 4);
         let command_7 = super::parse_command("snd a").expect("");
         next_id = super::run_command((next_id, &command_7), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 4);
-        assert_eq!(*register_map.get(&"last_sound".to_string()).ok_or(0).expect(""), 4);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 4);
+        assert_eq!(*register_map.get("last_sound").ok_or(0).expect(""), 4);
         assert_eq!(next_id, 5);
         let command_8 = super::parse_command("set a 0").expect("");
         next_id = super::run_command((next_id, &command_8), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(1).expect(""), 0);
+        assert_eq!(*register_map.get("a").ok_or(1).expect(""), 0);
         assert_eq!(next_id, 6);
         let command_9 = super::parse_command("rcv a").expect("");
         next_id = super::run_command((next_id, &command_9), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(1).expect(""), 0);
+        assert_eq!(*register_map.get("a").ok_or(1).expect(""), 0);
         assert_eq!(next_id, 7);
         let command_10 = super::parse_command("jgz a -1").expect("");
         next_id = super::run_command((next_id, &command_10), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(1).expect(""), 0);
+        assert_eq!(*register_map.get("a").ok_or(1).expect(""), 0);
         assert_eq!(next_id, 8);
         let command_11 = super::parse_command("set a 1").expect("");
         next_id = super::run_command((next_id, &command_11), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 1);
         assert_eq!(next_id, 9);
         let command_12 = super::parse_command("jgz a -2").expect("");
         next_id = super::run_command((next_id, &command_12), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 1);
         assert_eq!(next_id, 7);
         let command_13 = super::parse_command("jgz a -1").expect("");
         next_id = super::run_command((next_id, &command_13), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 1);
         assert_eq!(next_id, 6);
         let command_14 = super::parse_command("rcv a").expect("");
         next_id = super::run_command((next_id, &command_14), &mut register_map).expect("");
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or(0).expect(""), 1);
+        assert_eq!(*register_map.get("a").ok_or(0).expect(""), 1);
         assert_eq!(next_id, -1);
-        assert_eq!(*register_map.get(&"receive".to_string()).ok_or(0).expect(""), 4);
+        assert_eq!(*register_map.get("receive").ok_or(0).expect(""), 4);
     }
 }
 

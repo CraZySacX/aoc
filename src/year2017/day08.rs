@@ -187,9 +187,9 @@ mod one_star {
         super::generate_map_entry(&mut register_map, &mut commands).expect("");
         assert_eq!(register_map.len(), 3);
         assert_eq!(commands.len(), 4);
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or("").expect(""), 0);
-        assert_eq!(*register_map.get(&"b".to_string()).ok_or("").expect(""), 0);
-        assert_eq!(*register_map.get(&"c".to_string()).ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("a").ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("b").ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("c").ok_or("").expect(""), 0);
 
         for command in &commands {
             if super::check_condition(&register_map, &command.condition).expect("") {
@@ -213,9 +213,9 @@ mod two_star {
         super::generate_map_entry(&mut register_map, &mut commands).expect("");
         assert_eq!(register_map.len(), 3);
         assert_eq!(commands.len(), 4);
-        assert_eq!(*register_map.get(&"a".to_string()).ok_or("").expect(""), 0);
-        assert_eq!(*register_map.get(&"b".to_string()).ok_or("").expect(""), 0);
-        assert_eq!(*register_map.get(&"c".to_string()).ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("a").ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("b").ok_or("").expect(""), 0);
+        assert_eq!(*register_map.get("c").ok_or("").expect(""), 0);
 
         let mut maximum_attained = ::std::i32::MIN;
 

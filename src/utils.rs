@@ -77,9 +77,9 @@ fn as_x(duration: &Duration, output: &Prefix) -> Result<f64> {
     Ok(converted_secs + converted_nanos)
 }
 
-///
+/// private try from
 pub trait PrivateTryFromUsize: Sized {
-    ///
+    /// private try from
     fn private_try_from(n: usize) -> Result<Self>;
 }
 
@@ -121,7 +121,7 @@ macro_rules! try_from_upper_bounded {
     )*}
 }
 
-///
+/// ptr_try_from_impls
 #[cfg(target_pointer_width = "16")]
 mod ptr_try_from_impls {
     use super::PrivateTryFromUsize;
@@ -130,7 +130,7 @@ mod ptr_try_from_impls {
     try_from_unbounded!(i32, i64, i128);
 }
 
-///
+/// ptr_try_from_impls
 #[cfg(target_pointer_width = "32")]
 mod ptr_try_from_impls {
     use super::PrivateTryFromUsize;
@@ -141,7 +141,7 @@ mod ptr_try_from_impls {
     try_from_unbounded!(i64, i128);
 }
 
-///
+/// ptr_try_from_impls
 #[cfg(target_pointer_width = "64")]
 mod ptr_try_from_impls {
     use super::PrivateTryFromUsize;

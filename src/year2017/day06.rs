@@ -49,7 +49,7 @@ fn reallocate_memory(line: &str, find_again: bool) -> Result<u32> {
         }
 
         // Check if we have seen the resulting vec
-        if seen.get(&vals_vec).is_some() {
+        if seen.contains(&vals_vec) {
             // If we have, but we want to find the next occurence
             // then reset some state and continue.
             if once_more {
