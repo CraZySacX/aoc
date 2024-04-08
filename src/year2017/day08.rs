@@ -86,7 +86,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     }
 
     if second_star {
-        let mut maximum_attained = i32::min_value();
+        let mut maximum_attained = i32::MIN;
 
         for command in &commands {
             if check_condition(&register_map, &command.condition).expect("") {
@@ -217,7 +217,7 @@ mod two_star {
         assert_eq!(*register_map.get("b").ok_or("").expect(""), 0);
         assert_eq!(*register_map.get("c").ok_or("").expect(""), 0);
 
-        let mut maximum_attained = ::std::i32::MIN;
+        let mut maximum_attained = i32::MIN;
 
         for command in &commands {
             if super::check_condition(&register_map, &command.condition).expect("") {

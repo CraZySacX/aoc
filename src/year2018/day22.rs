@@ -221,7 +221,7 @@ fn navigate(target: (usize, usize), depth: usize, type_memo: &mut HashMap<(usize
             continue;
         }
 
-        if *seen.get(&(state.pos, state.equipped)).unwrap_or(&usize::max_value()) <= state.time {
+        if *seen.get(&(state.pos, state.equipped)).unwrap_or(&usize::MAX) <= state.time {
             continue;
         } else {
             seen.insert((state.pos, state.equipped), state.time);

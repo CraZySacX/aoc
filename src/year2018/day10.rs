@@ -43,10 +43,10 @@ fn move_stars(star_map: &mut Vec<(isize, isize, isize, isize)>) {
 
 fn show_stars(star_map: &[(isize, isize, isize, isize)]) -> String {
     let mut output = String::new();
-    let mut min_x = isize::max_value();
-    let mut min_y = isize::max_value();
-    let mut max_x = isize::min_value();
-    let mut max_y = isize::min_value();
+    let mut min_x = isize::MAX;
+    let mut min_y = isize::MAX;
+    let mut max_x = isize::MIN;
+    let mut max_y = isize::MIN;
 
     for star in star_map {
         if star.0 < min_x {

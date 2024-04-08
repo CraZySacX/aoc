@@ -22,7 +22,7 @@ pub fn find_solution<T: BufRead>(reader: T, use_div: bool) -> Result<u32> {
 /// Find the difference between the max and min of a whitespace separated string
 fn row_min_max_diff(line: &str) -> Result<u32> {
     let vals_iter = line.split_whitespace();
-    let mut min = u32::max_value();
+    let mut min = u32::MAX;
     let mut max = 0;
 
     for val_str in vals_iter {

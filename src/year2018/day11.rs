@@ -53,7 +53,7 @@ fn submatrix_sum_queries(serial_number: usize, second_star: bool) -> Result<(usi
         }
     }
 
-    let mut max_power_level = isize::min_value();
+    let mut max_power_level = isize::MIN;
     let mut max_cell = (0, 0, 0, 0);
 
     if second_star {

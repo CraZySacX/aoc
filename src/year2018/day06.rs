@@ -68,7 +68,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
 
 fn find_closest(point: (i32, i32), coords: &[(i32, i32)]) -> Vec<(i32, i32)> {
     let distances: HashMap<usize, i32> = coords.iter().enumerate().map(|(idx, coord)| (idx, manhattan_distance(point, *coord))).collect();
-    let mut min = i32::max_value();
+    let mut min = i32::MAX;
     let mut result = Vec::new();
     for (idx, distance) in distances {
         #[allow(clippy::comparison_chain)]

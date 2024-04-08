@@ -111,7 +111,7 @@ macro_rules! try_from_upper_bounded {
         impl PrivateTryFromUsize for $target {
             #[inline]
             fn private_try_from(u: usize) -> ::anyhow::Result<$target> {
-                if u > (<$target>::max_value() as usize) {
+                if u > (<$target>::MAX as usize) {
                     Err(::anyhow::anyhow!("failed"))
                 } else {
                     Ok(u as $target)

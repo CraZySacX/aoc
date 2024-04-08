@@ -170,7 +170,7 @@ fn calculate_attack(board: &Array2<Element>, curr_unit: &Unit, coord: [usize; 2]
 
 fn attack_adjacent(board: &Array2<Element>, curr_unit: &Unit, i: usize, j: usize, max_i: usize, max_j: usize) -> Option<[usize; 2]> {
     let mut target = None;
-    let mut min_hit_points = usize::max_value();
+    let mut min_hit_points = usize::MAX;
 
     let above = [i, j - 1];
     let left = [i - 1, j];
@@ -303,7 +303,7 @@ fn move_if_not_adjacent(
         })
         .collect();
 
-    let mut min_dist = usize::max_value();
+    let mut min_dist = usize::MAX;
 
     if actual_locs.is_empty() {
         return Ok(None);
