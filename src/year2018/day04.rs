@@ -32,13 +32,12 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
             let m = (cap[5]).parse::<u8>()?;
             let rest = &cap[6];
             let dt = OffsetDateTime::now_utc()
-                .replace_year(y)?
-                .replace_month(Month::try_from(mon)?)?
                 .replace_day(d)?
+                .replace_month(Month::try_from(mon)?)?
+                .replace_year(y)?
                 .replace_hour(h)?
                 .replace_minute(m)?
                 .replace_second(0)?;
-
             sorted_events.insert(dt, rest.to_string());
         }
     }
