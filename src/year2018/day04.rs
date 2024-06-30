@@ -2,21 +2,8 @@
 use anyhow::{anyhow, Result};
 use regex::Regex;
 use std::collections::BTreeMap;
-use std::fmt;
 use std::io::BufRead;
 use time::{Month, OffsetDateTime};
-
-#[derive(Clone, Debug, Default, Eq, Ord, PartialEq, PartialOrd)]
-struct Guard {
-    id: u32,
-    minute_map: BTreeMap<u32, u32>,
-}
-
-impl fmt::Display for Guard {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Guard #{}", self.id)
-    }
-}
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
     let line_re = Regex::new(r"\[(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})\] (.*)")?;
