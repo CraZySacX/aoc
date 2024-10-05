@@ -15,7 +15,7 @@ enum Move {
     Right,
 }
 
-impl<'a> TryFrom<&'a str> for Move {
+impl TryFrom<&str> for Move {
     type Error = Error;
     fn try_from(val: &str) -> Result<Self> {
         Ok(match val {

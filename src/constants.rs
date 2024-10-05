@@ -25,7 +25,7 @@ impl<'a> From<&'a AoCYear> for &'a str {
     }
 }
 
-impl<'a> TryFrom<&'a str> for AoCYear {
+impl TryFrom<&str> for AoCYear {
     type Error = Error;
     fn try_from(year: &str) -> Result<Self> {
         match year {

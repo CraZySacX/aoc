@@ -29,7 +29,7 @@ pub enum Prefix {
     Seconds,
 }
 
-impl<'a> TryFrom<&'a str> for Prefix {
+impl TryFrom<&str> for Prefix {
     type Error = Error;
     fn try_from(prefix: &str) -> Result<Self> {
         match prefix {

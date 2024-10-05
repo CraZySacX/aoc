@@ -11,7 +11,7 @@ enum Command {
     Dec,
 }
 
-impl<'a> TryFrom<&'a str> for Command {
+impl TryFrom<&str> for Command {
     type Error = Error;
     fn try_from(command: &str) -> Result<Self> {
         match command {
@@ -38,7 +38,7 @@ enum Operator {
     NotEqualTo,
 }
 
-impl<'a> TryFrom<&'a str> for Operator {
+impl TryFrom<&str> for Operator {
     type Error = Error;
     fn try_from(command: &str) -> Result<Self> {
         match command {
