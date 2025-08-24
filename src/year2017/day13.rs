@@ -81,7 +81,7 @@ fn traverse_firewall(layers: &HashMap<usize, Option<u32>>, delay: u32, second_st
             // Each scanner loops back to the 0 level at `((max_depth - 1) * 2)` picoseconds.
             // This means that if `current_picosecond % ((max_depth - 1) * 2) == 0`, then the packet
             // and scanner have met, and the packet is caught.
-            if second_star && (current_picosecond + delay) % scan_length == 0 {
+            if second_star && (current_picosecond + delay).is_multiple_of(scan_length) {
                 // Uh oh, we got caught.
                 return Err(anyhow!("We got caught"));
             } else if !second_star && current_picosecond % scan_length == 0 {
