@@ -1,5 +1,5 @@
 //! Advent of Code - Day 18 "Settlers of The North Pole" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::{Array2, Axis};
 use std::collections::HashMap;
 use std::io::BufRead;

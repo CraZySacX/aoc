@@ -1,5 +1,5 @@
 //! Advent of Code - Day 6 "Memory Reallocation" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashSet;
 use std::io::BufRead;
 

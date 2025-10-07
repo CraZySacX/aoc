@@ -7,6 +7,7 @@
 // modified, or distributed except according to those terms.
 
 //! `aoc` 0.1.0
+mod cli;
 mod constants;
 mod run;
 mod utils;

@@ -1,5 +1,5 @@
 //! Advent of Code - Day 15 "Beverage Bandits" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::{Array2, Axis, Zip};
 use std::collections::{HashMap, VecDeque};
 use std::fmt;
@@ -154,16 +154,15 @@ fn find_enemy_targets(board: &Array2<Element>, unit_kind: UnitKind) -> Vec<[usiz
 fn calculate_attack(board: &Array2<Element>, curr_unit: &Unit, coord: [usize; 2], target: &mut Option<[usize; 2]>, min_hit_points: &mut usize) {
     let element = &board[coord];
 
-    if element.kind == ElementKind::Unit {
-        if let Some(ref unit) = element.unit {
-            if unit.kind != curr_unit.kind {
-                let hit_points = unit.hit_points;
+    if element.kind == ElementKind::Unit
+        && let Some(ref unit) = element.unit
+        && unit.kind != curr_unit.kind
+    {
+        let hit_points = unit.hit_points;
 
-                if hit_points < *min_hit_points {
-                    *target = Some(coord);
-                    *min_hit_points = hit_points;
-                }
-            }
+        if hit_points < *min_hit_points {
+            *target = Some(coord);
+            *min_hit_points = hit_points;
         }
     }
 }
@@ -215,48 +214,44 @@ fn move_if_not_adjacent(
     if j > 0 {
         let above = &board[[i, j - 1]];
 
-        if above.kind == ElementKind::Unit {
-            if let Some(ref adj_unit) = above.unit {
-                if adj_unit.kind != curr_unit.kind {
-                    return Ok(None);
-                }
-            }
+        if above.kind == ElementKind::Unit
+            && let Some(ref adj_unit) = above.unit
+            && adj_unit.kind != curr_unit.kind
+        {
+            return Ok(None);
         }
     }
 
     if i > 0 {
         let left = &board[[i - 1, j]];
 
-        if left.kind == ElementKind::Unit {
-            if let Some(ref adj_unit) = left.unit {
-                if adj_unit.kind != curr_unit.kind {
-                    return Ok(None);
-                }
-            }
+        if left.kind == ElementKind::Unit
+            && let Some(ref adj_unit) = left.unit
+            && adj_unit.kind != curr_unit.kind
+        {
+            return Ok(None);
         }
     }
 
     if i < max_i - 1 {
         let right = &board[[i + 1, j]];
 
-        if right.kind == ElementKind::Unit {
-            if let Some(ref adj_unit) = right.unit {
-                if adj_unit.kind != curr_unit.kind {
-                    return Ok(None);
-                }
-            }
+        if right.kind == ElementKind::Unit
+            && let Some(ref adj_unit) = right.unit
+            && adj_unit.kind != curr_unit.kind
+        {
+            return Ok(None);
         }
     }
 
     if j < max_j - 1 {
         let down = &board[[i, j + 1]];
 
-        if down.kind == ElementKind::Unit {
-            if let Some(ref adj_unit) = down.unit {
-                if adj_unit.kind != curr_unit.kind {
-                    return Ok(None);
-                }
-            }
+        if down.kind == ElementKind::Unit
+            && let Some(ref adj_unit) = down.unit
+            && adj_unit.kind != curr_unit.kind
+        {
+            return Ok(None);
         }
     }
 
@@ -464,13 +459,13 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
         match curr_cell.kind {
             ElementKind::Wall | ElementKind::Cavern => {}
             ElementKind::Unit => {
-                if let Some(ref unit) = curr_cell.unit {
-                    if !unit.has_attacked {
-                        if let Some(target) = attack_adjacent(board, unit, i, j, max_i, max_j) {
-                            attack_vec.push((Action::Attack([i, j]), target, Some(unit.attack_power)));
-                        } else {
-                            attack_vec.push((Action::No, [0, 0], None));
-                        }
+                if let Some(ref unit) = curr_cell.unit
+                    && !unit.has_attacked
+                {
+                    if let Some(target) = attack_adjacent(board, unit, i, j, max_i, max_j) {
+                        attack_vec.push((Action::Attack([i, j]), target, Some(unit.attack_power)));
+                    } else {
+                        attack_vec.push((Action::No, [0, 0], None));
                     }
                 }
             }
@@ -484,16 +479,16 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
                 if let Some(ref mut unit) = board[[i, j]].unit {
                     unit.has_attacked = true;
                 }
-                if let Some(ref mut unit) = board[coord].unit {
-                    if let Some(atk_pwr) = atk_pwr_opt {
-                        unit.hit_points = unit.hit_points.saturating_sub(atk_pwr);
+                if let Some(ref mut unit) = board[coord].unit
+                    && let Some(atk_pwr) = atk_pwr_opt
+                {
+                    unit.hit_points = unit.hit_points.saturating_sub(atk_pwr);
 
-                        if unit.hit_points == 0 {
-                            dead = true;
+                    if unit.hit_points == 0 {
+                        dead = true;
 
-                            if second_star && unit.kind == UnitKind::Elf {
-                                return Ok(2);
-                            }
+                        if second_star && unit.kind == UnitKind::Elf {
+                            return Ok(2);
                         }
                     }
                 }
@@ -516,11 +511,11 @@ fn take_turn(board: &mut Array2<Element>, i: usize, j: usize, max_i: usize, max_
 fn reset_units(board: &mut Array2<Element>, i: usize, j: usize) {
     let element = &mut board[[i, j]];
 
-    if element.kind == ElementKind::Unit {
-        if let Some(ref mut unit) = element.unit {
-            unit.has_moved = false;
-            unit.has_attacked = false;
-        }
+    if element.kind == ElementKind::Unit
+        && let Some(ref mut unit) = element.unit
+    {
+        unit.has_moved = false;
+        unit.has_attacked = false;
     }
 }
 

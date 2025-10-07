@@ -1,5 +1,5 @@
 //! Advent of Code - Day 16 "Chronal Classification" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::io::BufRead;

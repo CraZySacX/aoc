@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 "No Matter How You Slice It" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::Array2;
 use regex::Regex;
 use std::collections::BTreeMap;
@@ -63,10 +63,10 @@ fn check_points(all_claims: &BTreeMap<usize, Rectangle>, width: usize, height: u
             let point = Point { x, y };
 
             for rectangle in all_claims.values() {
-                if contains_point(*rectangle, point) {
-                    if let Some(ps) = cloth.get_mut((x, y)) {
-                        *ps += 1;
-                    }
+                if contains_point(*rectangle, point)
+                    && let Some(ps) = cloth.get_mut((x, y))
+                {
+                    *ps += 1;
                 }
             }
         }
@@ -121,7 +121,7 @@ fn find_non_overlaps(rectangles: &BTreeMap<usize, Rectangle>) -> Result<usize> {
 
 #[cfg(test)]
 mod one_star {
-    use super::{check_points, contains_point, Point, Rectangle};
+    use super::{Point, Rectangle, check_points, contains_point};
     use anyhow::Result;
     use std::collections::BTreeMap;
 
@@ -165,7 +165,7 @@ mod one_star {
 
 #[cfg(test)]
 mod two_star {
-    use super::{find_non_overlaps, Point, Rectangle};
+    use super::{Point, Rectangle, find_non_overlaps};
     use anyhow::Result;
     use std::collections::BTreeMap;
 

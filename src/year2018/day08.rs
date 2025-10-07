@@ -1,5 +1,5 @@
 //! Advent of Code - Day 8 "Memory Manuver" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::io::BufRead;
 
 pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {

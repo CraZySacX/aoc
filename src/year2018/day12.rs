@@ -1,5 +1,5 @@
 //! Advent of Code - Day 12 "Subterranean Sustainability" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use indexmap::IndexMap;
 use regex::Regex;
 use sliding_windows::{IterExt, Storage};

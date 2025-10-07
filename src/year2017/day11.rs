@@ -1,5 +1,5 @@
 //! Advent of Code - Day 11 "Hex Ed" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::io::BufRead;
 
 /// Find the solution for Advent of Code 2017

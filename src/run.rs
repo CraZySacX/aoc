@@ -9,50 +9,29 @@
 //! `aoc` runtime
 
 use crate::{
-    constants::{self, get_day_about, AoCDay, AoCYear},
-    utils::{self, Prefix},
+    cli::{AoC2Subcommand, Args, Command},
+    constants::{AoCDay, AoCYear},
     year2015, year2016, year2017, year2018,
 };
-use anyhow::{anyhow, Result};
-use clap::{App, Arg, ArgMatches, SubCommand};
+use anyhow::Result;
+use clap::Parser;
 use std::{
     fs::File,
     io::{self, BufReader, Write},
     path::PathBuf,
-    time::Instant,
 };
 
-/// Advent of Code `SubCommand`
-fn subcommand<'a, 'b>(day: &AoCDay) -> App<'a, 'b> {
-    SubCommand::with_name(day.into())
-        .about(get_day_about(day))
-        .arg(
-            Arg::with_name("file")
-                .short("f")
-                .long("file")
-                .takes_value(true)
-                .required(true)
-                .default_value("data_file"),
-        )
-        .arg(
-            Arg::with_name("second")
-                .short("s")
-                .long("second")
-                .help("Run the alrgorithm to calculate the value for the 2nd star"),
-        )
-}
-
 /// Find the solution.
-pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Result<u32> {
+pub fn find_solution(matches: &AoC2Subcommand, year: &AoCYear, day: &AoCDay) -> Result<u32> {
     let year_str: &str = year.into();
     let day_str: &str = day.into();
     let mut filepath = PathBuf::from("data");
     filepath.push(year_str);
     filepath.push(day_str);
-    filepath.push(matches.value_of("file").ok_or(anyhow!("Invalid filename!"))?);
+    filepath.push(matches.file().as_str());
 
     let reader = BufReader::new(File::open(filepath)?);
-    let is_second_star = matches.is_present("second");
+    let is_second_star = *matches.second();
 
     match *year {
         AoCYear::AOC2018 => Ok(year2018::find_solution(reader, day, is_second_star)?),
@@ -64,100 +43,39 @@ pub fn find_solution(matches: &ArgMatches, year: &AoCYear, day: &AoCDay) -> Resu
 
 /// CLI Runtime
 pub fn run() -> Result<i32> {
-    let matches = App::new(env!("CARGO_PKG_NAME"))
-        .version(env!("CARGO_PKG_VERSION"))
-        .author(env!("CARGO_PKG_AUTHORS"))
-        .about("Run Advent of Code daily problems")
-        .usage("\u{1f31f}   solution: aoc <day>\n    \u{1f31f}\u{1f31f} solution: aoc <day> -s")
-        .arg(
-            Arg::with_name("year")
-                .short("y")
-                .long("year")
-                .default_value("2018")
-                .required(true)
-                .help("Specify the year you wish to work with"),
-        )
-        .arg(
-            Arg::with_name("time")
-                .short("t")
-                .long("time")
-                .help("Generate benchmark time, in s, ms, us, or ns")
-                .takes_value(true)
-                .possible_values(&["ns", "us", "ms", "s"]),
-        )
-        .subcommand(subcommand(&AoCDay::AOCD01))
-        .subcommand(subcommand(&AoCDay::AOCD02))
-        .subcommand(subcommand(&AoCDay::AOCD03))
-        .subcommand(subcommand(&AoCDay::AOCD04))
-        .subcommand(subcommand(&AoCDay::AOCD05))
-        .subcommand(subcommand(&AoCDay::AOCD06))
-        .subcommand(subcommand(&AoCDay::AOCD07))
-        .subcommand(subcommand(&AoCDay::AOCD08))
-        .subcommand(subcommand(&AoCDay::AOCD09))
-        .subcommand(subcommand(&AoCDay::AOCD10))
-        .subcommand(subcommand(&AoCDay::AOCD11))
-        .subcommand(subcommand(&AoCDay::AOCD12))
-        .subcommand(subcommand(&AoCDay::AOCD13))
-        .subcommand(subcommand(&AoCDay::AOCD14))
-        .subcommand(subcommand(&AoCDay::AOCD15))
-        .subcommand(subcommand(&AoCDay::AOCD16))
-        .subcommand(subcommand(&AoCDay::AOCD17))
-        .subcommand(subcommand(&AoCDay::AOCD18))
-        .subcommand(subcommand(&AoCDay::AOCD19))
-        .subcommand(subcommand(&AoCDay::AOCD20))
-        .subcommand(subcommand(&AoCDay::AOCD21))
-        .subcommand(subcommand(&AoCDay::AOCD22))
-        .subcommand(subcommand(&AoCDay::AOCD23))
-        .subcommand(subcommand(&AoCDay::AOCD24))
-        .subcommand(subcommand(&AoCDay::AOCD25))
-        .get_matches();
+    // Parse the command line
+    let matches = Args::try_parse()?;
 
-    let year: AoCYear = TryFrom::try_from(matches.value_of("year").ok_or(anyhow!("Invalid year!"))?)?;
+    let year = AoCYear::try_from(&matches.year()[..])?;
 
-    let match_tuple = match matches.subcommand() {
-        (constants::DAY_1, Some(matches)) => (matches, AoCDay::AOCD01),
-        (constants::DAY_2, Some(matches)) => (matches, AoCDay::AOCD02),
-        (constants::DAY_3, Some(matches)) => (matches, AoCDay::AOCD03),
-        (constants::DAY_4, Some(matches)) => (matches, AoCDay::AOCD04),
-        (constants::DAY_5, Some(matches)) => (matches, AoCDay::AOCD05),
-        (constants::DAY_6, Some(matches)) => (matches, AoCDay::AOCD06),
-        (constants::DAY_7, Some(matches)) => (matches, AoCDay::AOCD07),
-        (constants::DAY_8, Some(matches)) => (matches, AoCDay::AOCD08),
-        (constants::DAY_9, Some(matches)) => (matches, AoCDay::AOCD09),
-        (constants::DAY_10, Some(matches)) => (matches, AoCDay::AOCD10),
-        (constants::DAY_11, Some(matches)) => (matches, AoCDay::AOCD11),
-        (constants::DAY_12, Some(matches)) => (matches, AoCDay::AOCD12),
-        (constants::DAY_13, Some(matches)) => (matches, AoCDay::AOCD13),
-        (constants::DAY_14, Some(matches)) => (matches, AoCDay::AOCD14),
-        (constants::DAY_15, Some(matches)) => (matches, AoCDay::AOCD15),
-        (constants::DAY_16, Some(matches)) => (matches, AoCDay::AOCD16),
-        (constants::DAY_17, Some(matches)) => (matches, AoCDay::AOCD17),
-        (constants::DAY_18, Some(matches)) => (matches, AoCDay::AOCD18),
-        (constants::DAY_19, Some(matches)) => (matches, AoCDay::AOCD19),
-        (constants::DAY_20, Some(matches)) => (matches, AoCDay::AOCD20),
-        (constants::DAY_21, Some(matches)) => (matches, AoCDay::AOCD21),
-        (constants::DAY_22, Some(matches)) => (matches, AoCDay::AOCD22),
-        (constants::DAY_23, Some(matches)) => (matches, AoCDay::AOCD23),
-        (constants::DAY_24, Some(matches)) => (matches, AoCDay::AOCD24),
-        (constants::DAY_25, Some(matches)) => (matches, AoCDay::AOCD25),
-        _ => return Err(anyhow!("Unable to determine the day you wish to run")),
+    let match_tuple = match matches.command() {
+        Command::Day01(command) => (command, AoCDay::AOCD01),
+        Command::Day02(command) => (command, AoCDay::AOCD02),
+        Command::Day03(command) => (command, AoCDay::AOCD03),
+        Command::Day04(command) => (command, AoCDay::AOCD04),
+        Command::Day05(command) => (command, AoCDay::AOCD05),
+        Command::Day06(command) => (command, AoCDay::AOCD06),
+        Command::Day07(command) => (command, AoCDay::AOCD07),
+        Command::Day08(command) => (command, AoCDay::AOCD08),
+        Command::Day09(command) => (command, AoCDay::AOCD09),
+        Command::Day10(command) => (command, AoCDay::AOCD10),
+        Command::Day11(command) => (command, AoCDay::AOCD11),
+        Command::Day12(command) => (command, AoCDay::AOCD12),
+        Command::Day13(command) => (command, AoCDay::AOCD13),
+        Command::Day14(command) => (command, AoCDay::AOCD14),
+        Command::Day15(command) => (command, AoCDay::AOCD15),
+        Command::Day16(command) => (command, AoCDay::AOCD16),
+        Command::Day17(command) => (command, AoCDay::AOCD17),
+        Command::Day18(command) => (command, AoCDay::AOCD18),
+        Command::Day19(command) => (command, AoCDay::AOCD19),
+        Command::Day20(command) => (command, AoCDay::AOCD20),
+        Command::Day21(command) => (command, AoCDay::AOCD21),
+        Command::Day22(command) => (command, AoCDay::AOCD22),
+        Command::Day23(command) => (command, AoCDay::AOCD23),
+        Command::Day24(command) => (command, AoCDay::AOCD24),
+        Command::Day25(command) => (command, AoCDay::AOCD25),
     };
 
-    let now = Instant::now();
     writeln!(io::stdout(), "{}", find_solution(match_tuple.0, &year, &match_tuple.1)?)?;
-    let duration = now.elapsed();
-
-    if let Some(output_type) = matches.value_of("time") {
-        let prefix: Prefix = TryFrom::try_from(output_type)?;
-
-        let elapsed = match prefix {
-            Prefix::Nanos => utils::as_ns(&duration)?,
-            Prefix::Micros => utils::as_us(&duration)?,
-            Prefix::Millis => utils::as_ms(&duration)?,
-            Prefix::Seconds => utils::as_s(&duration)?,
-        };
-
-        writeln!(io::stdout(), "Elapsed: {elapsed}{output_type}")?;
-    }
     Ok(0)
 }

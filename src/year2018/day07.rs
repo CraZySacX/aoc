@@ -1,5 +1,5 @@
 //! Advent of Code - Day 7 "The Sum of Its Parts" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use getset::{Getters, Setters};
 use indexmap::IndexSet;
 use regex::Regex;
@@ -190,11 +190,11 @@ fn complete_work(workers: &mut Vec<Worker>) -> Vec<(String, u32)> {
 
     for worker in workers {
         let mut clear = false;
-        if let Some(work) = worker.work() {
-            if worker.remaining == 0 {
-                result.push(work.clone());
-                clear = true;
-            }
+        if let Some(work) = worker.work()
+            && worker.remaining == 0
+        {
+            result.push(work.clone());
+            clear = true;
         }
 
         if clear {

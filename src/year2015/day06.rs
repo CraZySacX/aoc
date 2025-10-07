@@ -1,5 +1,5 @@
 //! Advent of Code - Day 6 Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::Array2;
 use regex::Regex;
 use std::io::BufRead;

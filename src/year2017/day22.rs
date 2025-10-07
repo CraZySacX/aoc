@@ -1,5 +1,5 @@
 //! Advent of Code - Day 22 Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::Array2;
 use std::io::BufRead;
 

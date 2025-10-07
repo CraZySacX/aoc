@@ -1,5 +1,5 @@
 //! Advent of Code - Day 2 "Corruption Checksum" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::cmp;
 use std::io::BufRead;
 

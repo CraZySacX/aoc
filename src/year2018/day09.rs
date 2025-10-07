@@ -1,5 +1,5 @@
 //! Advent of Code - Day 9 "Marble Mania" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use regex::Regex;
 use std::collections::VecDeque;
 use std::io::BufRead;

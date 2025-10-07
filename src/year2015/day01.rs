@@ -1,5 +1,5 @@
 //! Advent of Code - Day 1 "Not Quite Lisp" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::io::BufRead;
 
 /// Find the solution

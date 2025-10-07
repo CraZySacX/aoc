@@ -1,7 +1,7 @@
 //! Advent of Code - Day 12 "Digital Plumber" Solution
 
 use crate::utils::PrivateTryFromUsize;
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::{HashMap, HashSet};
 use std::io::BufRead;
 

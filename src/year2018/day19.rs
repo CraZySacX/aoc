@@ -1,5 +1,5 @@
 //! Advent of Code - Day 19 "Go With The Flow" Solution
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 use regex::Regex;
 use std::collections::HashMap;
 use std::fmt;
@@ -196,14 +196,14 @@ fn update_register_with_ip(registers: &mut Registers, ip: &Ip) {
 }
 
 fn execute(registers: &mut Registers, ip: &Ip, ins_vec: &[HashMap<OpCode, Instruction>], test: bool) {
-    if let Some(ins_map) = ins_vec.get(ip.value) {
-        if ins_map.len() == 1 {
-            for (opcode, ins) in ins_map.iter() {
-                if test {
-                    print!("{opcode} {} {} {} ", ins[0], ins[1], ins[2]);
-                }
-                opcode.execute(registers, *ins);
+    if let Some(ins_map) = ins_vec.get(ip.value)
+        && ins_map.len() == 1
+    {
+        for (opcode, ins) in ins_map.iter() {
+            if test {
+                print!("{opcode} {} {} {} ", ins[0], ins[1], ins[2]);
             }
+            opcode.execute(registers, *ins);
         }
     }
 }

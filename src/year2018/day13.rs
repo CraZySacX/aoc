@@ -1,5 +1,5 @@
 //! Advent of Code - Day 13 "Mine Cart Madness" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use getset::Getters;
 use ndarray::{Array2, Axis};
 use std::cmp::Ordering;

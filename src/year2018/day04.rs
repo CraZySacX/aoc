@@ -1,5 +1,5 @@
 //! Advent of Code - Day 4 "Repose Record" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::io::BufRead;
@@ -106,7 +106,7 @@ const TEST_LINES: &str = r#"[1518-11-01 00:00] Guard #10 begins shift
 
 #[cfg(test)]
 mod one_star {
-    use super::{find_solution, TEST_LINES};
+    use super::{TEST_LINES, find_solution};
     use anyhow::Result;
     use std::io::Cursor;
 
@@ -119,7 +119,7 @@ mod one_star {
 
 #[cfg(test)]
 mod two_star {
-    use super::{find_solution, TEST_LINES};
+    use super::{TEST_LINES, find_solution};
     use anyhow::Result;
     use std::io::Cursor;
 

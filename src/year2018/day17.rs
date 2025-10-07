@@ -1,5 +1,5 @@
 //! Advent of Code - Day 17 "Reservoir Research" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::Array2;
 use regex::Regex;
 use std::collections::HashMap;

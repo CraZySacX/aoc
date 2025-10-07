@@ -1,5 +1,5 @@
 //! Advent of Code - Day 22 "Mode Maze" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use ndarray::{Array2, Axis};
 use regex::Regex;
 use std::cmp::Ordering;

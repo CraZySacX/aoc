@@ -1,5 +1,5 @@
 //! Advent of Code - Day 24 Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashSet;
 use std::io::BufRead;
 

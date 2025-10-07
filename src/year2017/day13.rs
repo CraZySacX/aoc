@@ -1,7 +1,7 @@
 //! Advent of Code - Day 13 "Packet Scanners" Solution
 
 use crate::utils::PrivateTryFromUsize;
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::io::BufRead;
 

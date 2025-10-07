@@ -1,6 +1,6 @@
 //! Constants
 
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 
 /// Advent of Code Year
 pub enum AoCYear {
@@ -174,85 +174,3 @@ pub const DAY_23: &str = "day23";
 pub const DAY_24: &str = "day24";
 /// Day 25
 pub const DAY_25: &str = "day25";
-
-/// Advent of Code Day 1 about string
-const DAY_1_ABOUT: &str = "Advent of Code - Day 01";
-/// Advent of Code Day 2 about string
-const DAY_2_ABOUT: &str = "Advent of Code - Day 02";
-/// Advent of Code Day 3 about string
-const DAY_3_ABOUT: &str = "Advent of Code - Day 03";
-/// Advent of Code Day 4 about string
-const DAY_4_ABOUT: &str = "Advent of Code - Day 04";
-/// Advent of Code Day 5 about string
-const DAY_5_ABOUT: &str = "Advent of Code - Day 05";
-/// Advent of Code Day 6 about string
-const DAY_6_ABOUT: &str = "Advent of Code - Day 06";
-/// Advent of Code Day 7 about string
-const DAY_7_ABOUT: &str = "Advent of Code - Day 07";
-/// Advent of Code Day 8 about string
-const DAY_8_ABOUT: &str = "Advent of Code - Day 08";
-/// Advent of Code Day 9 about string
-const DAY_9_ABOUT: &str = "Advent of Code - Day 09";
-/// Advent of Code Day 10 about string
-const DAY_10_ABOUT: &str = "Advent of Code - Day 10";
-/// Advent of Code Day 11 about string
-const DAY_11_ABOUT: &str = "Advent of Code - Day 11";
-/// Advent of Code Day 12 about string
-const DAY_12_ABOUT: &str = "Advent of Code - Day 12";
-/// Advent of Code Day 13 about string
-const DAY_13_ABOUT: &str = "Advent of Code - Day 13";
-/// Advent of Code Day 14 about string
-const DAY_14_ABOUT: &str = "Advent of Code - Day 14";
-/// Advent of Code Day 15 about string
-const DAY_15_ABOUT: &str = "Advent of Code - Day 15";
-/// Advent of Code Day 16 about string
-const DAY_16_ABOUT: &str = "Advent of Code - Day 16";
-/// Advent of Code Day 17 about string
-const DAY_17_ABOUT: &str = "Advent of Code - Day 17";
-/// Advent of Code Day 18 about string
-const DAY_18_ABOUT: &str = "Advent of Code - Day 18";
-/// Advent of Code Day 19 about string
-const DAY_19_ABOUT: &str = "Advent of Code - Day 19";
-/// Advent of Code Day 20 about string
-const DAY_20_ABOUT: &str = "Advent of Code - Day 20";
-/// Advent of Code Day 21 about string
-const DAY_21_ABOUT: &str = "Advent of Code - Day 21";
-/// Advent of Code Day 22 about string
-const DAY_22_ABOUT: &str = "Advent of Code - Day 22";
-/// Advent of Code Day 23 about string
-const DAY_23_ABOUT: &str = "Advent of Code - Day 23";
-/// Advent of Code Day 24 about string
-const DAY_24_ABOUT: &str = "Advent of Code - Day 24";
-/// Advent of Code Day 25 about string
-const DAY_25_ABOUT: &str = "Advent of Code - Day 25";
-
-/// Get the constants tuple for a given day.
-pub fn get_day_about<'a>(day: &AoCDay) -> &'a str {
-    match *day {
-        AoCDay::AOCD01 => DAY_1_ABOUT,
-        AoCDay::AOCD02 => DAY_2_ABOUT,
-        AoCDay::AOCD03 => DAY_3_ABOUT,
-        AoCDay::AOCD04 => DAY_4_ABOUT,
-        AoCDay::AOCD05 => DAY_5_ABOUT,
-        AoCDay::AOCD06 => DAY_6_ABOUT,
-        AoCDay::AOCD07 => DAY_7_ABOUT,
-        AoCDay::AOCD08 => DAY_8_ABOUT,
-        AoCDay::AOCD09 => DAY_9_ABOUT,
-        AoCDay::AOCD10 => DAY_10_ABOUT,
-        AoCDay::AOCD11 => DAY_11_ABOUT,
-        AoCDay::AOCD12 => DAY_12_ABOUT,
-        AoCDay::AOCD13 => DAY_13_ABOUT,
-        AoCDay::AOCD14 => DAY_14_ABOUT,
-        AoCDay::AOCD15 => DAY_15_ABOUT,
-        AoCDay::AOCD16 => DAY_16_ABOUT,
-        AoCDay::AOCD17 => DAY_17_ABOUT,
-        AoCDay::AOCD18 => DAY_18_ABOUT,
-        AoCDay::AOCD19 => DAY_19_ABOUT,
-        AoCDay::AOCD20 => DAY_20_ABOUT,
-        AoCDay::AOCD21 => DAY_21_ABOUT,
-        AoCDay::AOCD22 => DAY_22_ABOUT,
-        AoCDay::AOCD23 => DAY_23_ABOUT,
-        AoCDay::AOCD24 => DAY_24_ABOUT,
-        AoCDay::AOCD25 => DAY_25_ABOUT,
-    }
-}

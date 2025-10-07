@@ -1,5 +1,5 @@
 //! Advent of Code - Day 9 "Stream Processing" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::io::BufRead;
 
 /// Calculate the largest value in a register.
@@ -10,11 +10,7 @@ pub fn find_solution<T: BufRead>(reader: T, second_star: bool) -> Result<u32> {
         score = process_line_as_chars(line)?;
     }
 
-    if second_star {
-        Ok(score.1)
-    } else {
-        Ok(score.0)
-    }
+    if second_star { Ok(score.1) } else { Ok(score.0) }
 }
 
 /// Process a line as a stream of chars.

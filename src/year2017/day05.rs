@@ -30,11 +30,7 @@ fn jump_away(jump_vec: &mut [i32], crazy_jumps: bool) -> Result<u32> {
         if idx < list_len {
             let next_idx = jump_vec[idx];
             jump_vec[idx] = if crazy_jumps {
-                if next_idx > 2 {
-                    next_idx - 1
-                } else {
-                    next_idx + 1
-                }
+                if next_idx > 2 { next_idx - 1 } else { next_idx + 1 }
             } else {
                 next_idx + 1
             };

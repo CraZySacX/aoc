@@ -1,5 +1,5 @@
 //! Advent of Code - Day 20 'Particle Swarm' Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use regex::Regex;
 use std::collections::HashMap;
 use std::io::BufRead;

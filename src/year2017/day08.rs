@@ -1,5 +1,5 @@
 //! Advent of Code - Day 8 "I Heard You Like Registers" Solution
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 use std::collections::HashMap;
 use std::io::BufRead;
 

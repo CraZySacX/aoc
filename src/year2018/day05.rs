@@ -1,5 +1,5 @@
 //! Advent of Code - Day 5 "Alchemical Reduction" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::cmp::{max, min};
 use std::collections::HashMap;
 use std::io::BufRead;

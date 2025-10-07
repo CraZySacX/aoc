@@ -1,5 +1,5 @@
 //! Advent of Code - Day 6 "Chronal Coordinates" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use indexmap::IndexSet;
 use regex::Regex;
 use std::collections::{BTreeMap, HashMap};

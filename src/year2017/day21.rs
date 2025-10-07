@@ -1,8 +1,8 @@
 //! Advent of Code - Day 21 'Fractal Art' Solution
 
 use crate::utils::PrivateTryFromUsize;
-use anyhow::{anyhow, Result};
-use itertools::{iproduct, Itertools};
+use anyhow::{Result, anyhow};
+use itertools::{Itertools, iproduct};
 use pathfinding::matrix::Matrix;
 use std::collections::HashMap;
 use std::io::BufRead;

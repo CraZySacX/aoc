@@ -1,5 +1,5 @@
 //! Advent of Code - Day 3 "Spiral Memory" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::io::BufRead;
 

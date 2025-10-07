@@ -1,5 +1,5 @@
 //! Advent of Code - Day 7 "Recursive Circus" Solution
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::collections::HashMap;
 use std::io::BufRead;
 

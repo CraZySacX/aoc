@@ -1,7 +1,7 @@
 //! Advent of Code - Day 25 Solution
 
 use crate::utils::PrivateTryFromUsize;
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 use regex::Regex;
 use std::{collections::BTreeMap, fmt, io::BufRead};
 
